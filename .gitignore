@@ -5,3 +5,4 @@ HowMuch.xcworkspace
 HowMuch.xcodeproj/xcuserdata
 HowMuch.xcodeproj/project.xcworkspace/xcuserdata
 HowMuch/tessdata
+Podfile.lock
