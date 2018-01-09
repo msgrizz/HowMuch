@@ -49,25 +49,19 @@ class ViewController: UIViewController {
         path.addLine(to: CGPoint(x: 10, y: 20))
         path.close()
         
-//        path.addArc(withCenter: center, radius: 20, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
-        
         layer.path = path.cgPath
         layer.strokeColor = UIColor.red.cgColor
-        layer.borderWidth = 3
         
         layer.position = CGPoint(x: center.x - 10, y: center.y - 10)
-//        layer.frame = CGRect(origin: , size: CGSize(width: 20, height: 20))
         imageView.layer.addSublayer(layer)
     }
     
     
     
     private func startLiveVideo() {
-        //1
         session.sessionPreset = AVCaptureSession.Preset.photo
         let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
         
-        //2
         let deviceInput = try! AVCaptureDeviceInput(device: captureDevice!)
         let deviceOutput = AVCaptureVideoDataOutput()
         deviceOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
@@ -75,7 +69,6 @@ class ViewController: UIViewController {
         session.addInput(deviceInput)
         session.addOutput(deviceOutput)
         
-        //3
         let imageLayer = AVCaptureVideoPreviewLayer(session: session)
         imageLayer.frame = imageView.bounds
         imageView.layer.addSublayer(imageLayer)
@@ -101,13 +94,18 @@ class ViewController: UIViewController {
     
     
     func detectTextHandler(request: VNRequest, error: Error?) {
+        if let error = error {
+            print(error)
+            return
+        }
+        
         guard let observations = request.results else {
             print("no result")
             return
         }
         
         let regions = observations.flatMap({$0 as? VNTextObservation})
-        
+
         DispatchQueue.main.async() {
             self.imageView.layer.sublayers?.removeSubrange(2...)
             
@@ -153,6 +151,7 @@ class ViewController: UIViewController {
     }
     
     
+    
     func getWordRegion(box: VNTextObservation) -> RegionRects? {
         guard let boxes = box.characterBoxes else {
             return nil
@@ -175,12 +174,12 @@ class ViewController: UIViewController {
             let topRight = char.topRight
             
             // Если высота следующего символа вдруг резко падает - дальше не читаем
-            let height = topRight.y - bottomRight.y
-            if height > maxHeight {
-                maxHeight = height
-            } else if height < (maxHeight * 0.85) {
-                break
-            }
+//            let height = topRight.y - bottomRight.y
+//            if height > maxHeight {
+//                maxHeight = height
+//            } else if height < (maxHeight * 0.85) {
+//                break
+//            }
             
             charRects.append(CGRect(x: bottomLeft.x * viewWidth,
                                   y: (1 - topRight.y) * viewHeight,
@@ -253,14 +252,12 @@ class ViewController: UIViewController {
                 tesseract.charWhitelist = "0123456789-." + ViewController.gabrageString
 
                 tesseract.engineMode = .tesseractOnly
-                // 3
                 tesseract.pageSegmentationMode = .singleWord
-                // 4
 //                tesseract.image = img.g8_blackAndWhite()
                 tesseract.image = img.g8_grayScale()
-                // 5
+                
                 tesseract.recognize()
-                // 6
+                
                 DispatchQueue.main.async {
                     self.textView.text = "Cannot recognize"
 //                    print(tesseract.recognizedText)

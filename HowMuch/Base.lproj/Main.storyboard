@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Text Detection-->
+        <!--Price detection-->
         <scene sceneID="xZ7-1P-gne">
             <objects>
-                <viewController id="sUm-rZ-Uzf" customClass="ViewController" customModule="Text_Detection_Starter_Project" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="sUm-rZ-Uzf" customClass="ViewController" customModule="HowMuch" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="g5A-07-oaV"/>
                         <viewControllerLayoutGuide type="bottom" id="hkc-3r-lWU"/>
@@ -55,7 +55,9 @@
                             <constraint firstItem="gZ0-YA-GUH" firstAttribute="top" secondItem="G3u-JN-vRh" secondAttribute="bottom" constant="8" id="zeY-bM-PRj"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Text Detection" largeTitleDisplayMode="always" id="PXc-39-tmk"/>
+                    <navigationItem key="navigationItem" title="Price detection" largeTitleDisplayMode="always" id="PXc-39-tmk">
+                        <barButtonItem key="rightBarButtonItem" systemItem="rewind" id="eDR-XY-Hwn"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="captureImageView" destination="dXf-Nx-IrJ" id="UjC-ax-1uW"/>
                         <outlet property="imageView" destination="G3u-JN-vRh" id="2LP-bR-Uht"/>
