@@ -17,6 +17,8 @@
 		9B6FEAD72005482300CEF94F /* CurrencyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAD62005482300CEF94F /* CurrencyProvider.swift */; };
 		9B6FEAD92005482A00CEF94F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAD82005482A00CEF94F /* ViewController.swift */; };
 		9B6FEADB2005483100CEF94F /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEADA2005483100CEF94F /* CurrencyModel.swift */; };
+		9B6FEADE200932B500CEF94F /* CGPoint+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEADD200932B500CEF94F /* CGPoint+Extention.swift */; };
+		9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEADF200932CD00CEF94F /* CGRect+Extention.swift */; };
 		9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61620016406001AC1E8 /* libstdc++.tbd */; };
 		9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61820016410001AC1E8 /* CoreImage.framework */; };
 		9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */; };
@@ -37,6 +39,8 @@
 		9B6FEAD62005482300CEF94F /* CurrencyProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencyProvider.swift; path = HowMuch/Services/CurrencyProvider.swift; sourceTree = SOURCE_ROOT; };
 		9B6FEAD82005482A00CEF94F /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9B6FEADA2005483100CEF94F /* CurrencyModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
+		9B6FEADD200932B500CEF94F /* CGPoint+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extention.swift"; sourceTree = "<group>"; };
+		9B6FEADF200932CD00CEF94F /* CGRect+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Extention.swift"; sourceTree = "<group>"; };
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,8 +107,9 @@
 		9B6FEA9F2002A3AA00CEF94F /* HowMuch */ = {
 			isa = PBXGroup;
 			children = (
+				9B6FEADC2009329E00CEF94F /* Extensions */,
 				9B6FEAD5200547FF00CEF94F /* Services */,
-				9B6FEAD4200547FA00CEF94F /* UI */,
+				9B6FEAD4200547FA00CEF94F /* View */,
 				9B6FEAD3200547E800CEF94F /* Models */,
 				9B6FEAA22002A53100CEF94F /* AppDelegate.swift */,
 				9B6FEAA32002A53100CEF94F /* Assets.xcassets */,
@@ -124,12 +129,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		9B6FEAD4200547FA00CEF94F /* UI */ = {
+		9B6FEAD4200547FA00CEF94F /* View */ = {
 			isa = PBXGroup;
 			children = (
 				9B6FEAD82005482A00CEF94F /* ViewController.swift */,
 			);
-			path = UI;
+			path = View;
 			sourceTree = "<group>";
 		};
 		9B6FEAD5200547FF00CEF94F /* Services */ = {
@@ -139,6 +144,15 @@
 			);
 			name = Services;
 			path = "New Group";
+			sourceTree = "<group>";
+		};
+		9B6FEADC2009329E00CEF94F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9B6FEADD200932B500CEF94F /* CGPoint+Extention.swift */,
+				9B6FEADF200932CD00CEF94F /* CGRect+Extention.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -273,6 +287,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B6FEAD92005482A00CEF94F /* ViewController.swift in Sources */,
+				9B6FEADE200932B500CEF94F /* CGPoint+Extention.swift in Sources */,
+				9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */,
 				9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */,
 				9B6FEADB2005483100CEF94F /* CurrencyModel.swift in Sources */,
 				9B6FEAD72005482300CEF94F /* CurrencyProvider.swift in Sources */,

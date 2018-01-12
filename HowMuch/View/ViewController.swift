@@ -366,16 +366,3 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 }
 
 
-extension CGRect {
-    var center: CGPoint {
-        return CGPoint(x: maxX - width / 2, y: maxY - height / 2)
-    }
-}
-
-extension CGPoint {
-    func distance(to point: CGPoint) -> CGFloat {
-        let xDist = x - point.x
-        let yDist = y - point.y
-        return CGFloat(sqrt((xDist * xDist) + (yDist * yDist)))
-    }
-}

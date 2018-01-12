@@ -9,11 +9,11 @@
 import Foundation
 
 
-enum CurrencyType: Int {
-    case usd = 0
-    case rub = 1
-    case eur = 2
-    case byn = 3
+enum CurrencyType: String {
+    case usd = "USD"
+    case rub = "RUB"
+    case eur = "EUR"
+    case byn = "BYN"
 }
 
 
@@ -21,14 +21,14 @@ enum CurrencyType: Int {
 struct Currency {
     let type: CurrencyType
     let name: String
-    let shortName: String
+    let sign: Character
     let flag: Character
     
     
-    static let usd = Currency(type: CurrencyType.usd, name: "Доллар США", shortName: "USD", flag: "🇺🇲" )
-    static let rub = Currency(type: CurrencyType.rub, name: "Российский рубль", shortName: "RUB", flag: "🇷🇺" )
-    static let eur = Currency(type: CurrencyType.eur, name: "Евро", shortName: "EUR", flag: "🇪🇺"  )
-    static let byn = Currency(type: CurrencyType.byn, name: "Белорусский рубль", shortName: "BYN", flag: "🇧🇾" )
+    static let usd = Currency(type: CurrencyType.usd, name: "Доллар США", sign: "$", flag: "🇺🇲" )
+    static let rub = Currency(type: CurrencyType.rub, name: "Российский рубль", sign: "₽", flag: "🇷🇺" )
+    static let eur = Currency(type: CurrencyType.eur, name: "Евро", sign: "€", flag: "🇪🇺"  )
+    static let byn = Currency(type: CurrencyType.byn, name: "Белорусский рубль", sign: "B", flag: "🇧🇾" )
     
     static let all = [usd, rub, eur, byn]
 }

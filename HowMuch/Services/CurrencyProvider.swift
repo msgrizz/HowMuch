@@ -10,6 +10,7 @@ import Foundation
 
 class CurrencyProvider {
     static var shared = CurrencyProvider()
+    static let ratesNotification = Notification.Name("rates")
     
 
     func getRate(from: CurrencyType, to: CurrencyType) -> Float {
@@ -17,6 +18,7 @@ class CurrencyProvider {
         let toRate = rates[to]!
         return fromRate / toRate
     }
+    
     
     
 
@@ -27,9 +29,13 @@ class CurrencyProvider {
         .eur: 1.19209,
         .byn: 0.50
     ]
-    private var rates: [CurrencyType : Float] = CurrencyProvider.defaultRetes
-    private static let currencyRatesKey = "CurrencyRates"
     
+    private var rates: [CurrencyType : Float] = CurrencyProvider.defaultRetes {
+        didSet {
+            NotificationCenter.default.post(name: CurrencyProvider.ratesNotification, object: nil)
+        }
+    }
+    private static let currencyRatesKey = "CurrencyRates"
     
     
     private init() {
@@ -54,21 +60,54 @@ class CurrencyProvider {
         guard let rates = userDefaults.dictionary(forKey: CurrencyProvider.currencyRatesKey) else {
             return nil
         }
-        
-        return Dictionary(uniqueKeysWithValues: rates.flatMap { key, value in
-            guard let intKey = Int(key),
-                let currencyType = CurrencyType(rawValue: intKey),
-                let value = value as? Float
-                else {
-                return nil
-            }
-            return (currencyType, value)
-        })
+        return parseRates(from: rates)
     }
     
     
     
     func syncRates() {
+        let session = URLSession(configuration: .default)
         
+        if var urlComponents = URLComponents(string: "https://api.fixer.io/latest") {
+            urlComponents.query = "base=USD"
+            guard let url = urlComponents.url else { return }
+            
+            let dataTask = session.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    print("Sync rates network error: \(error)")
+                } else if let data = data,
+                    let response = response as? HTTPURLResponse,
+                    response.statusCode == 200 {
+                    
+                    let newRates = self.parseRates(from: data)
+                    self.rates = self.rates.merging(newRates, uniquingKeysWith: { $1 })
+                }
+            }
+            dataTask.resume()
+        }
+    }
+    
+    
+    func parseRates(from data: Data) -> [CurrencyType : Float] {
+        guard let obj = try? JSONSerialization.jsonObject(with: data, options: []),
+            let dict = obj as? [String: Any],
+            let ratesDict = dict["rates"] as? [String: Any]
+        else {
+            return [:]
+        }
+        return parseRates(from: ratesDict)
+    }
+    
+    
+    
+    func parseRates(from dict: [String: Any]) -> [CurrencyType : Float] {
+        return Dictionary(uniqueKeysWithValues: dict.flatMap { key, value in
+            guard let currencyType = CurrencyType(rawValue: key.lowercased()),
+                let value = value as? Float
+                else {
+                    return nil
+            }
+            return (currencyType, value)
+        })
     }
 }
