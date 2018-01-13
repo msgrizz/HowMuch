@@ -14,7 +14,6 @@
 		9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA32002A53100CEF94F /* Assets.xcassets */; };
 		9B6FEAAA2002A53100CEF94F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA42002A53100CEF94F /* Info.plist */; };
 		9B6FEAC42002A79200CEF94F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAC02002A79100CEF94F /* LaunchScreen.storyboard */; };
-		9B6FEAC52002A79200CEF94F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAC22002A79100CEF94F /* Main.storyboard */; };
 		9B6FEAD72005482300CEF94F /* CurrencyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAD62005482300CEF94F /* CurrencyProvider.swift */; };
 		9B6FEAD92005482A00CEF94F /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAD82005482A00CEF94F /* CameraViewController.swift */; };
 		9B6FEADB2005483100CEF94F /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEADA2005483100CEF94F /* CurrencyModel.swift */; };
@@ -54,7 +53,6 @@
 		9B6FEAA32002A53100CEF94F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = HowMuch/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		9B6FEAA42002A53100CEF94F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = HowMuch/Info.plist; sourceTree = SOURCE_ROOT; };
 		9B6FEAC12002A79100CEF94F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = HowMuch/Base.lproj/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
-		9B6FEAC32002A79100CEF94F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = HowMuch/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
 		9B6FEAD62005482300CEF94F /* CurrencyProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencyProvider.swift; path = HowMuch/Services/CurrencyProvider.swift; sourceTree = SOURCE_ROOT; };
 		9B6FEAD82005482A00CEF94F /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B6FEADA2005483100CEF94F /* CurrencyModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
@@ -154,7 +152,6 @@
 				9B6FEAA32002A53100CEF94F /* Assets.xcassets */,
 				9B6FEAA42002A53100CEF94F /* Info.plist */,
 				9B6FEAC02002A79100CEF94F /* LaunchScreen.storyboard */,
-				9B6FEAC22002A79100CEF94F /* Main.storyboard */,
 				9B6FEAA02002A53100CEF94F /* tessdata */,
 			);
 			path = HowMuch;
@@ -304,7 +301,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B6FEAAA2002A53100CEF94F /* Info.plist in Resources */,
-				9B6FEAC52002A79200CEF94F /* Main.storyboard in Resources */,
 				9B6FEAC42002A79200CEF94F /* LaunchScreen.storyboard in Resources */,
 				9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */,
 				9B6FEAA62002A53100CEF94F /* tessdata in Resources */,
@@ -465,15 +461,6 @@
 				9B6FEAC12002A79100CEF94F /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			path = ..;
-			sourceTree = "<group>";
-		};
-		9B6FEAC22002A79100CEF94F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9B6FEAC32002A79100CEF94F /* Base */,
-			);
-			name = Main.storyboard;
 			path = ..;
 			sourceTree = "<group>";
 		};

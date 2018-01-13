@@ -26,6 +26,7 @@ class CameraViewController: UIViewController {
         
         title = "Распознавание ценника"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settings"), style: .plain, target: self, action: #selector(openSettings))
+        navigationController?.navigationBar.isTranslucent = false
         
         view.addSubview(cameraView)
         view.addSubview(bottomPanelView)
@@ -43,10 +44,9 @@ class CameraViewController: UIViewController {
     }
     
     
-    @objc func openSettings() {        
-        if let vc = navigationController?.storyboard?.instantiateViewController(withIdentifier: SettingViewController.identifier) {
-            navigationController?.pushViewController(vc, animated: true)
-        }        
+    @objc func openSettings() {
+        let vc = SettingViewController(style: .grouped)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     
