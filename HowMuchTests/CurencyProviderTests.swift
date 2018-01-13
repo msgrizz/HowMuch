@@ -11,7 +11,7 @@ import XCTest
 
 class CueencyProviderTests: XCTestCase {
     
-    let currencyProvider = CurrencyProvider.shared
+    let currencyProvider = CurrencyService.shared
     override func setUp() {
         super.setUp()
     }

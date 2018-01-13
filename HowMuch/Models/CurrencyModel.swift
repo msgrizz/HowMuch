@@ -9,11 +9,15 @@
 import Foundation
 
 
-enum CurrencyType: String {
+enum CurrencyType: String, CustomStringConvertible {
     case usd = "USD"
     case rub = "RUB"
     case eur = "EUR"
     case byn = "BYN"
+    
+    public var description: String {
+        return self.rawValue
+    }
 }
 
 

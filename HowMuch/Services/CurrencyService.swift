@@ -1,5 +1,5 @@
 //
-//  CurrencyProvider.swift
+//  CurrencyService.swift
 //  HowMuch
 //
 //  Created by Максим Казаков on 09/01/2018.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-public class CurrencyProvider {
-    static var shared = CurrencyProvider()
+public class CurrencyService {
+    static var shared = CurrencyService()
     static let ratesNotification = Notification.Name("rates")
     
 
@@ -30,9 +30,9 @@ public class CurrencyProvider {
         .byn: 0.50
     ]
     
-    private var rates: [CurrencyType : Float] = CurrencyProvider.defaultRetes {
+    private var rates: [CurrencyType : Float] = CurrencyService.defaultRetes {
         didSet {
-            NotificationCenter.default.post(name: CurrencyProvider.ratesNotification, object: nil)
+            NotificationCenter.default.post(name: CurrencyService.ratesNotification, object: nil)
         }
     }
     private static let currencyRatesKey = "CurrencyRates"
@@ -50,14 +50,17 @@ public class CurrencyProvider {
     
     private func saveToLocalStorage(rates: [CurrencyType : Float]) {
         let userDefaults = UserDefaults.standard
-        userDefaults.set(rates, forKey: CurrencyProvider.currencyRatesKey)
+        let plistRates: [String: Float] = Dictionary(uniqueKeysWithValues: rates.flatMap { key, value in
+            return (key.rawValue, value)
+        })
+        userDefaults.set(plistRates, forKey: CurrencyService.currencyRatesKey)
     }
     
     
     
     private func loadFromLocalStorage() -> [CurrencyType : Float]? {
         let userDefaults = UserDefaults.standard
-        guard let rates = userDefaults.dictionary(forKey: CurrencyProvider.currencyRatesKey) else {
+        guard let rates = userDefaults.dictionary(forKey: CurrencyService.currencyRatesKey) else {
             return nil
         }
         return parseRates(from: rates)
@@ -65,7 +68,7 @@ public class CurrencyProvider {
     
     
     
-    func syncRates() {
+    private func syncRates() {
         let session = URLSession(configuration: .default)
         
         if var urlComponents = URLComponents(string: "https://api.fixer.io/latest") {
@@ -79,8 +82,9 @@ public class CurrencyProvider {
                     let response = response as? HTTPURLResponse,
                     response.statusCode == 200 {
                     
-                    let newRates = self.parseRates(from: data)
-                    self.rates = self.rates.merging(newRates, uniquingKeysWith: { $1 })
+                    DispatchQueue.main.async {
+                        self.updateRates(from: data)
+                    }
                 }
             }
             dataTask.resume()
@@ -88,7 +92,16 @@ public class CurrencyProvider {
     }
     
     
-    func parseRates(from data: Data) -> [CurrencyType : Float] {
+    
+    private func updateRates(from data: Data) {
+        let newRates = parseRates(from: data)
+        rates = rates.merging(newRates, uniquingKeysWith: { $1 })
+        saveToLocalStorage(rates: rates)
+    }
+    
+    
+    
+    private func parseRates(from data: Data) -> [CurrencyType : Float] {
         guard let obj = try? JSONSerialization.jsonObject(with: data, options: []),
             let dict = obj as? [String: Any],
             let ratesDict = dict["rates"] as? [String: Any]
@@ -100,14 +113,14 @@ public class CurrencyProvider {
     
     
     
-    func parseRates(from dict: [String: Any]) -> [CurrencyType : Float] {
+    private func parseRates(from dict: [String: Any]) -> [CurrencyType : Float] {
         return Dictionary(uniqueKeysWithValues: dict.flatMap { key, value in
-            guard let currencyType = CurrencyType(rawValue: key.lowercased()),
-                let value = value as? Float
+            guard let currencyType = CurrencyType(rawValue: key),
+                let float = value as? Float
                 else {
                     return nil
             }
-            return (currencyType, value)
+            return (currencyType, 1 / float)
         })
     }
 }

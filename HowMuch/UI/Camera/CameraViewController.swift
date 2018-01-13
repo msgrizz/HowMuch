@@ -12,6 +12,8 @@ import Vision
 import TesseractOCR
 
 
+
+
 class CameraViewController: UIViewController {
     struct RegionRects {
         let wordRect: CGRect
@@ -30,18 +32,22 @@ class CameraViewController: UIViewController {
         
         view.addSubview(cameraView)
         view.addSubview(bottomPanelView)
-        bottomPanelView.addSubview(sourceLabel)
-        bottomPanelView.addSubview(resultLabel)
         setupConstraints()
         
         bottomPanelView.layer.backgroundColor = UIColor.blue.cgColor
-        sourceLabel.layer.backgroundColor = UIColor.red.cgColor
-        resultLabel.layer.backgroundColor = UIColor.green.cgColor
         
         
         startLiveVideo()
         startTextDetection()
     }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let signs = presenter.signs
+        bottomPanelView.setupCurrencies(fromCurrency: signs.from, toCurrency: signs.to)
+    }
+    
     
     
     @objc func openSettings() {
@@ -54,15 +60,15 @@ class CameraViewController: UIViewController {
         cameraView.layer.sublayers?[0].frame = cameraView.bounds
         drawCross()
     }
-
+    
     
     // MARK: -Private
     private var cameraView = UIImageView()
     private var cameraLayer: AVCaptureVideoPreviewLayer!
     
-    private let bottomPanelView = UIView()
-    private let sourceLabel = UILabel()
-    private let resultLabel = UILabel()
+    private let bottomPanelView = ConvertPanelView()
+    private let presenter = CameraPresenter()
+    
     
     private var session = AVCaptureSession()
     private var requests = [VNRequest]()
@@ -83,7 +89,7 @@ class CameraViewController: UIViewController {
             cameraView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
             cameraView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
             cameraView.bottomAnchor.constraint(equalTo: bottomPanelView.topAnchor, constant: 0),
-        ])
+            ])
         
         bottomPanelView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -91,23 +97,7 @@ class CameraViewController: UIViewController {
             bottomPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
             bottomPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
             bottomPanelView.heightAnchor.constraint(equalToConstant: 80)
-        ])
-        
-        sourceLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            sourceLabel.bottomAnchor.constraint(equalTo: bottomPanelView.bottomAnchor, constant: 0),
-            sourceLabel.leadingAnchor.constraint(equalTo: bottomPanelView.leadingAnchor, constant: 0),
-            sourceLabel.widthAnchor.constraint(equalTo: bottomPanelView.widthAnchor, multiplier: 0.5),
-            sourceLabel.heightAnchor.constraint(equalTo: bottomPanelView.heightAnchor)
-        ])
-        
-        resultLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            resultLabel.bottomAnchor.constraint(equalTo: bottomPanelView.bottomAnchor, constant: 0),
-            resultLabel.trailingAnchor.constraint(equalTo: bottomPanelView.trailingAnchor, constant: 0),
-            resultLabel.widthAnchor.constraint(equalTo: bottomPanelView.widthAnchor, multiplier: 0.5),
-            resultLabel.heightAnchor.constraint(equalTo: bottomPanelView.heightAnchor)
-        ])
+            ])
     }
     
     
@@ -174,9 +164,8 @@ class CameraViewController: UIViewController {
         }
         
         let regions = observations.flatMap({$0 as? VNTextObservation})
-
+        
         DispatchQueue.main.async() {
-            self.cameraView.layer.sublayers?.removeSubrange(2...)
             
             let rects = regions.flatMap {
                 return self.getWordRegion(box: $0)
@@ -185,38 +174,21 @@ class CameraViewController: UIViewController {
                 return
             }
             let centerPoint = self.cameraView.bounds.center
-//            rects.forEach{ self.drawWordBorder(rect: $0.wordRect, borderColor: UIColor.green) }
             
-            
+            self.cameraView.layer.sublayers?.removeSubrange(2...)
             // обработка со слова в центре
-            let centerRect = rects.first{
-                $0.wordRect.contains(centerPoint)
+            guard let centerRect = rects.first(where: { $0.wordRect.contains(centerPoint)} ) else {
+                return
             }
-            if let rect = centerRect {
-                let wordRect = rect.wordRect
-                self.drawWordBorder(rect: wordRect)
-                self.capturePrice(rect: wordRect)
-                rect.charRects.forEach{
-                    self.drawWordBorder(rect: $0, borderColor: UIColor.blue)
-                }
-            }
+            
+            
+            let wordRect = centerRect.wordRect
+            self.drawWordBorder(rect: wordRect)
+            self.capturePrice(rect: wordRect)
+            //                rect.charRects.forEach{
+            //                    self.drawWordBorder(rect: $0, borderColor: UIColor.blue)
+            //                }
         }
-    }
-    
-    
-    
-    private func highlightLetters(box: VNRectangleObservation) {
-        let xCord = box.topLeft.x * cameraView.frame.size.width
-        let yCord = (1 - box.topLeft.y) * cameraView.frame.size.height
-        let width = (box.topRight.x - box.bottomLeft.x) * cameraView.frame.size.width
-        let height = (box.topLeft.y - box.bottomLeft.y) * cameraView.frame.size.height
-        
-        let outline = CALayer()
-        outline.frame = CGRect(x: xCord, y: yCord, width: width, height: height)
-        outline.borderWidth = 1.0
-        outline.borderColor = UIColor.blue.cgColor
-        
-        cameraView.layer.addSublayer(outline)
     }
     
     
@@ -235,7 +207,7 @@ class CameraViewController: UIViewController {
         var minY: CGFloat = 9999.0
         
         var charRects = [CGRect]()
-//        var maxHeight: CGFloat = 0
+        //        var maxHeight: CGFloat = 0
         
         for char in boxes {
             let bottomLeft = char.bottomLeft
@@ -243,17 +215,17 @@ class CameraViewController: UIViewController {
             let topRight = char.topRight
             
             // Если высота следующего символа вдруг резко падает - дальше не читаем
-//            let height = topRight.y - bottomRight.y
-//            if height > maxHeight {
-//                maxHeight = height
-//            } else if height < (maxHeight * 0.85) {
-//                break
-//            }
+            //            let height = topRight.y - bottomRight.y
+            //            if height > maxHeight {
+            //                maxHeight = height
+            //            } else if height < (maxHeight * 0.85) {
+            //                break
+            //            }
             
             charRects.append(CGRect(x: bottomLeft.x * viewWidth,
-                                  y: (1 - topRight.y) * viewHeight,
-                                  width: (bottomRight.x - bottomLeft.x) * viewWidth,
-                                  height: (topRight.y - bottomRight.y) * viewHeight))
+                                    y: (1 - topRight.y) * viewHeight,
+                                    width: (bottomRight.x - bottomLeft.x) * viewWidth,
+                                    height: (topRight.y - bottomRight.y) * viewHeight))
             
             
             if char.bottomRight.y < minY {
@@ -301,7 +273,7 @@ class CameraViewController: UIViewController {
             return
         }
         let img = UIImage(cgImage: cgimg)
-//        captureImageView.image = img
+        //        captureImageView.image = img
         
         if recognizeInProcess {
             return
@@ -314,25 +286,25 @@ class CameraViewController: UIViewController {
                 // например валюта. Частый случай, что валюту он начинает распознавать как цифры, если
                 // символ этой валюты не добавлять в whitelist
                 tesseract.charWhitelist = "0123456789-." + CameraViewController.gabrageString
-
+                
                 tesseract.engineMode = .tesseractOnly
                 tesseract.pageSegmentationMode = .singleWord
-//                tesseract.image = img.g8_blackAndWhite()
+                //                tesseract.image = img.g8_blackAndWhite()
                 tesseract.image = img.g8_grayScale()
                 
                 tesseract.recognize()
                 
                 DispatchQueue.main.async {
-//                    self.textView.text = "Cannot recognize"
-//                    print(tesseract.recognizedText)
+                    //                    self.textView.text = "Cannot recognize"
+                    //                    print(tesseract.recognizedText)
                     if let resultText = tesseract.recognizedText,
                         !resultText.isEmpty {
                         let trimed = self.handleStringCost(src: resultText)
                         print("--TRIMED: \(trimed)")
                         
-                        if let double = Double(trimed) {
-//                            self.textView.text = trimed
-//                            print(double)
+                        if let sourceValue = Float(trimed) {
+                            let resultValue = self.presenter.calculate(from: sourceValue)
+                            self.bottomPanelView.setupValues(from: sourceValue, to: resultValue)
                         }
                     }
                     
@@ -348,7 +320,7 @@ class CameraViewController: UIViewController {
         trimed = trimed.replacingOccurrences(of: " ", with: "")
         return trimed
     }
-
+    
     
     
     
@@ -384,10 +356,8 @@ class CameraViewController: UIViewController {
         CVPixelBufferUnlockBaseAddress(imageBuffer!, CVPixelBufferLockFlags.readOnly);
         
         
-        
-        
         // Create an image object from the Quartz image
-//        let image = UIImage.init(cgImage: quartzImage!);
+        //        let image = UIImage.init(cgImage: quartzImage!);
         let image = UIImage.init(cgImage: quartzImage!, scale: 1.0, orientation: UIImageOrientation.right)
         
         let newSize = CGSize(width: cameraView.frame.width, height: cameraView.frame.height)
