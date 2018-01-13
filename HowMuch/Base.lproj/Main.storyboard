@@ -5,14 +5,13 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Price detection-->
         <scene sceneID="xZ7-1P-gne">
             <objects>
-                <viewController id="sUm-rZ-Uzf" customClass="ViewController" customModule="HowMuch" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="sUm-rZ-Uzf" customClass="CameraViewController" customModule="HowMuch" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="g5A-07-oaV"/>
                         <viewControllerLayoutGuide type="bottom" id="hkc-3r-lWU"/>
@@ -20,53 +19,32 @@
                     <view key="view" contentMode="scaleToFill" id="uNu-gH-O9F">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="G3u-JN-vRh">
-                                <rect key="frame" x="0.0" y="64" width="375" height="520"/>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dXf-Nx-IrJ">
-                                <rect key="frame" x="0.0" y="592" width="251" height="75"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="75" id="w2e-zJ-1VX"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gZ0-YA-GUH">
-                                <rect key="frame" x="259" y="592" width="100" height="75"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="h5e-Zc-LCv"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="hkc-3r-lWU" firstAttribute="top" secondItem="gZ0-YA-GUH" secondAttribute="bottom" id="3RE-Sc-gtl"/>
-                            <constraint firstItem="hkc-3r-lWU" firstAttribute="top" secondItem="dXf-Nx-IrJ" secondAttribute="bottom" id="5mg-Wh-a73"/>
-                            <constraint firstAttribute="trailing" secondItem="G3u-JN-vRh" secondAttribute="trailing" id="Ima-3x-F3l"/>
-                            <constraint firstItem="G3u-JN-vRh" firstAttribute="leading" secondItem="uNu-gH-O9F" secondAttribute="leading" id="aKe-sc-ngT"/>
-                            <constraint firstItem="dXf-Nx-IrJ" firstAttribute="top" secondItem="G3u-JN-vRh" secondAttribute="bottom" constant="8" id="hHH-79-ZsT"/>
-                            <constraint firstItem="G3u-JN-vRh" firstAttribute="top" secondItem="g5A-07-oaV" secondAttribute="bottom" id="mSb-Cd-GqK"/>
-                            <constraint firstItem="gZ0-YA-GUH" firstAttribute="leading" secondItem="dXf-Nx-IrJ" secondAttribute="trailing" constant="8" id="nss-f3-0lf"/>
-                            <constraint firstItem="dXf-Nx-IrJ" firstAttribute="leading" secondItem="uNu-gH-O9F" secondAttribute="leading" id="tCS-7J-oez"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="gZ0-YA-GUH" secondAttribute="trailing" id="zdH-di-V7x"/>
-                            <constraint firstItem="gZ0-YA-GUH" firstAttribute="top" secondItem="G3u-JN-vRh" secondAttribute="bottom" constant="8" id="zeY-bM-PRj"/>
-                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Price detection" largeTitleDisplayMode="always" id="PXc-39-tmk">
-                        <barButtonItem key="rightBarButtonItem" systemItem="rewind" id="eDR-XY-Hwn"/>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="captureImageView" destination="dXf-Nx-IrJ" id="UjC-ax-1uW"/>
-                        <outlet property="imageView" destination="G3u-JN-vRh" id="2LP-bR-Uht"/>
-                        <outlet property="textView" destination="gZ0-YA-GUH" id="EvO-03-BEG"/>
-                    </connections>
+                    <navigationItem key="navigationItem" title="Price detection" largeTitleDisplayMode="always" id="PXc-39-tmk"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KwP-w7-o8p" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1253.5999999999999" y="138.98050974512745"/>
+        </scene>
+        <!--Setting View Controller-->
+        <scene sceneID="y9P-2L-j6P">
+            <objects>
+                <tableViewController storyboardIdentifier="SettingViewController" id="rYO-bv-bM9" customClass="SettingViewController" customModule="HowMuch" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="1" sectionFooterHeight="18" id="zbH-9P-AJz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="rYO-bv-bM9" id="Uva-ga-Ykp"/>
+                            <outlet property="delegate" destination="rYO-bv-bM9" id="lDJ-6W-ztb"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pm0-1y-vBU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2005.5999999999999" y="142.57871064467767"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="yJb-ga-FWE">

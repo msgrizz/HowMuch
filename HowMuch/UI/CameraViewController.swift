@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CameraViewController.swift
 //  Text Detection Starter Project
 //
 //  Created by Sai Kambampati on 6/21/17.
@@ -12,35 +12,107 @@ import Vision
 import TesseractOCR
 
 
-struct RegionRects {
-    let wordRect: CGRect
-    let charRects: [CGRect]
-}
-
-
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var imageView: UIImageView!
-    
-    @IBOutlet weak var captureImageView: UIImageView!
+class CameraViewController: UIViewController {
+    struct RegionRects {
+        let wordRect: CGRect
+        let charRects: [CGRect]
+    }
     
     
-    @IBOutlet weak var textView: UILabel!
     
-    var session = AVCaptureSession()
-    var requests = [VNRequest]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Распознавание ценника"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settings"), style: .plain, target: self, action: #selector(openSettings))
+        
+        view.addSubview(cameraView)
+        view.addSubview(bottomPanelView)
+        bottomPanelView.addSubview(sourceLabel)
+        bottomPanelView.addSubview(resultLabel)
+        setupConstraints()
+        
+        bottomPanelView.layer.backgroundColor = UIColor.blue.cgColor
+        sourceLabel.layer.backgroundColor = UIColor.red.cgColor
+        resultLabel.layer.backgroundColor = UIColor.green.cgColor
+        
         
         startLiveVideo()
         startTextDetection()
     }
     
+    
+    @objc func openSettings() {        
+        if let vc = navigationController?.storyboard?.instantiateViewController(withIdentifier: SettingViewController.identifier) {
+            navigationController?.pushViewController(vc, animated: true)
+        }        
+    }
+    
+    
+    override func viewDidLayoutSubviews() {
+        cameraView.layer.sublayers?[0].frame = cameraView.bounds
+        drawCross()
+    }
 
     
-    func drawCross() {
-        let center = imageView.bounds.center
+    // MARK: -Private
+    private var cameraView = UIImageView()
+    private var cameraLayer: AVCaptureVideoPreviewLayer!
+    
+    private let bottomPanelView = UIView()
+    private let sourceLabel = UILabel()
+    private let resultLabel = UILabel()
+    
+    private var session = AVCaptureSession()
+    private var requests = [VNRequest]()
+    
+    static private let gabrageString = "$£p"
+    static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
+    private var captureBuffer: CMSampleBuffer!
+    private var pixelBuffer: CVImageBuffer!
+    private var recognizeInProcess = false
+    
+    
+    private func setupConstraints() {
+        let guide = view.safeAreaLayoutGuide
+        
+        cameraView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cameraView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
+            cameraView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
+            cameraView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
+            cameraView.bottomAnchor.constraint(equalTo: bottomPanelView.topAnchor, constant: 0),
+        ])
+        
+        bottomPanelView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            bottomPanelView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: 0),
+            bottomPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
+            bottomPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
+            bottomPanelView.heightAnchor.constraint(equalToConstant: 80)
+        ])
+        
+        sourceLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            sourceLabel.bottomAnchor.constraint(equalTo: bottomPanelView.bottomAnchor, constant: 0),
+            sourceLabel.leadingAnchor.constraint(equalTo: bottomPanelView.leadingAnchor, constant: 0),
+            sourceLabel.widthAnchor.constraint(equalTo: bottomPanelView.widthAnchor, multiplier: 0.5),
+            sourceLabel.heightAnchor.constraint(equalTo: bottomPanelView.heightAnchor)
+        ])
+        
+        resultLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            resultLabel.bottomAnchor.constraint(equalTo: bottomPanelView.bottomAnchor, constant: 0),
+            resultLabel.trailingAnchor.constraint(equalTo: bottomPanelView.trailingAnchor, constant: 0),
+            resultLabel.widthAnchor.constraint(equalTo: bottomPanelView.widthAnchor, multiplier: 0.5),
+            resultLabel.heightAnchor.constraint(equalTo: bottomPanelView.heightAnchor)
+        ])
+    }
+    
+    
+    private func drawCross() {
+        let center = cameraView.bounds.center
         let layer = CAShapeLayer()
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: 10))
@@ -53,39 +125,36 @@ class ViewController: UIViewController {
         layer.strokeColor = UIColor.red.cgColor
         
         layer.position = CGPoint(x: center.x - 10, y: center.y - 10)
-        imageView.layer.addSublayer(layer)
+        cameraView.layer.addSublayer(layer)
     }
     
     
     
     private func startLiveVideo() {
         session.sessionPreset = AVCaptureSession.Preset.photo
-        let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
+        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
+            return
+        }
         
-        let deviceInput = try! AVCaptureDeviceInput(device: captureDevice!)
+        let deviceInput = try! AVCaptureDeviceInput(device: captureDevice)
         let deviceOutput = AVCaptureVideoDataOutput()
         deviceOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
         deviceOutput.setSampleBufferDelegate(self, queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.default))
         session.addInput(deviceInput)
         session.addOutput(deviceOutput)
         
-        let imageLayer = AVCaptureVideoPreviewLayer(session: session)
-        imageLayer.frame = imageView.bounds
-        imageView.layer.addSublayer(imageLayer)
+        let cameraLayer = AVCaptureVideoPreviewLayer(session: session)
+        cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        cameraView.layer.addSublayer(cameraLayer)
         
         session.startRunning()
     }
     
     
     
-    override func viewDidLayoutSubviews() {
-        imageView.layer.sublayers?[0].frame = imageView.bounds
-        drawCross()
-    }
     
     
-    
-    func startTextDetection() {
+    private func startTextDetection() {
         let textRequest = VNDetectTextRectanglesRequest(completionHandler: self.detectTextHandler)
         textRequest.reportCharacterBoxes = true
         self.requests = [textRequest]
@@ -93,7 +162,7 @@ class ViewController: UIViewController {
     
     
     
-    func detectTextHandler(request: VNRequest, error: Error?) {
+    private func detectTextHandler(request: VNRequest, error: Error?) {
         if let error = error {
             print(error)
             return
@@ -107,7 +176,7 @@ class ViewController: UIViewController {
         let regions = observations.flatMap({$0 as? VNTextObservation})
 
         DispatchQueue.main.async() {
-            self.imageView.layer.sublayers?.removeSubrange(2...)
+            self.cameraView.layer.sublayers?.removeSubrange(2...)
             
             let rects = regions.flatMap {
                 return self.getWordRegion(box: $0)
@@ -115,7 +184,7 @@ class ViewController: UIViewController {
             guard rects.count > 0 else {
                 return
             }
-            let centerPoint = self.imageView.bounds.center
+            let centerPoint = self.cameraView.bounds.center
 //            rects.forEach{ self.drawWordBorder(rect: $0.wordRect, borderColor: UIColor.green) }
             
             
@@ -136,29 +205,29 @@ class ViewController: UIViewController {
     
     
     
-    func highlightLetters(box: VNRectangleObservation) {
-        let xCord = box.topLeft.x * imageView.frame.size.width
-        let yCord = (1 - box.topLeft.y) * imageView.frame.size.height
-        let width = (box.topRight.x - box.bottomLeft.x) * imageView.frame.size.width
-        let height = (box.topLeft.y - box.bottomLeft.y) * imageView.frame.size.height
+    private func highlightLetters(box: VNRectangleObservation) {
+        let xCord = box.topLeft.x * cameraView.frame.size.width
+        let yCord = (1 - box.topLeft.y) * cameraView.frame.size.height
+        let width = (box.topRight.x - box.bottomLeft.x) * cameraView.frame.size.width
+        let height = (box.topLeft.y - box.bottomLeft.y) * cameraView.frame.size.height
         
         let outline = CALayer()
         outline.frame = CGRect(x: xCord, y: yCord, width: width, height: height)
         outline.borderWidth = 1.0
         outline.borderColor = UIColor.blue.cgColor
         
-        imageView.layer.addSublayer(outline)
+        cameraView.layer.addSublayer(outline)
     }
     
     
     
-    func getWordRegion(box: VNTextObservation) -> RegionRects? {
+    private func getWordRegion(box: VNTextObservation) -> RegionRects? {
         guard let boxes = box.characterBoxes else {
             return nil
         }
         
-        let viewHeight = imageView.frame.size.height
-        let viewWidth = imageView.frame.size.width
+        let viewHeight = cameraView.frame.size.height
+        let viewWidth = cameraView.frame.size.width
         
         var maxX: CGFloat = 0.0
         var minX: CGFloat = 9999.0
@@ -166,7 +235,7 @@ class ViewController: UIViewController {
         var minY: CGFloat = 9999.0
         
         var charRects = [CGRect]()
-        var maxHeight: CGFloat = 0
+//        var maxHeight: CGFloat = 0
         
         for char in boxes {
             let bottomLeft = char.bottomLeft
@@ -214,30 +283,25 @@ class ViewController: UIViewController {
     
     
     
-    func drawWordBorder(rect: CGRect, borderColor: UIColor = UIColor.red) {
+    private func drawWordBorder(rect: CGRect, borderColor: UIColor = UIColor.red) {
         let outline = CALayer()
         outline.frame = rect
         outline.borderWidth = 2.0
         outline.borderColor = borderColor.cgColor
         
-        imageView.layer.addSublayer(outline)
+        cameraView.layer.addSublayer(outline)
     }
     
     
-    private var recognizeInProcess = false
-    static private let gabrageString = "$£p"
-    static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
     
-    
-    
-    func capturePrice(rect: CGRect) {
+    private func capturePrice(rect: CGRect) {
         let image = imageFromSampleBuffer(sampleBuffer: captureBuffer)
         
         guard let cgimg = image.cgImage?.cropping(to: rect) else {
             return
         }
         let img = UIImage(cgImage: cgimg)
-        captureImageView.image = img
+//        captureImageView.image = img
         
         if recognizeInProcess {
             return
@@ -249,7 +313,7 @@ class ViewController: UIViewController {
                 // тут нужно добавлять символы, которые обычно могут стоять рядом с ценой
                 // например валюта. Частый случай, что валюту он начинает распознавать как цифры, если
                 // символ этой валюты не добавлять в whitelist
-                tesseract.charWhitelist = "0123456789-." + ViewController.gabrageString
+                tesseract.charWhitelist = "0123456789-." + CameraViewController.gabrageString
 
                 tesseract.engineMode = .tesseractOnly
                 tesseract.pageSegmentationMode = .singleWord
@@ -259,7 +323,7 @@ class ViewController: UIViewController {
                 tesseract.recognize()
                 
                 DispatchQueue.main.async {
-                    self.textView.text = "Cannot recognize"
+//                    self.textView.text = "Cannot recognize"
 //                    print(tesseract.recognizedText)
                     if let resultText = tesseract.recognizedText,
                         !resultText.isEmpty {
@@ -267,7 +331,7 @@ class ViewController: UIViewController {
                         print("--TRIMED: \(trimed)")
                         
                         if let double = Double(trimed) {
-                            self.textView.text = trimed
+//                            self.textView.text = trimed
 //                            print(double)
                         }
                     }
@@ -280,19 +344,15 @@ class ViewController: UIViewController {
     
     
     private func handleStringCost(src: String) -> String {
-        var trimed = src.trimmingCharacters(in: ViewController.gabrageSet).trimmingCharacters(in: .whitespacesAndNewlines)
+        var trimed = src.trimmingCharacters(in: CameraViewController.gabrageSet).trimmingCharacters(in: .whitespacesAndNewlines)
         trimed = trimed.replacingOccurrences(of: " ", with: "")
         return trimed
     }
+
     
     
     
-    var captureBuffer: CMSampleBuffer!
-    var pixelBuffer: CVImageBuffer!
-    
-    
-    
-    func imageFromSampleBuffer(sampleBuffer : CMSampleBuffer) -> UIImage
+    private func imageFromSampleBuffer(sampleBuffer : CMSampleBuffer) -> UIImage
     {
         // Get a CMSampleBuffer's Core Video image buffer for the media data
         let  imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
@@ -330,7 +390,7 @@ class ViewController: UIViewController {
 //        let image = UIImage.init(cgImage: quartzImage!);
         let image = UIImage.init(cgImage: quartzImage!, scale: 1.0, orientation: UIImageOrientation.right)
         
-        let newSize = CGSize(width: imageView.frame.width, height: imageView.frame.height)
+        let newSize = CGSize(width: cameraView.frame.width, height: cameraView.frame.height)
         UIGraphicsBeginImageContext(newSize)
         image.draw(in: CGRect(origin: CGPoint(x: 0, y: 0), size: newSize))
         let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
@@ -341,7 +401,7 @@ class ViewController: UIViewController {
 
 
 
-extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CurrencyProvider {
+public class CurrencyProvider {
     static var shared = CurrencyProvider()
     static let ratesNotification = Notification.Name("rates")
     

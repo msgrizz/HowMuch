@@ -6,5 +6,9 @@ target 'HowMuch' do
   use_frameworks!
 
   # Pods for HowMuch
-  pod 'TesseractOCRiOS'
+  pod 'TesseractOCRiOS'  
+end
+
+target 'HowMuchTests' do
+  use_frameworks!
 end
