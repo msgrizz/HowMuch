@@ -22,11 +22,15 @@ enum CurrencyType: String, CustomStringConvertible {
 
 
 
-struct Currency {
+struct Currency: Equatable {
     let type: CurrencyType
     let name: String
     let sign: Character
     let flag: Character
+    
+    var shortName: String {
+        return type.rawValue
+    }
     
     
     static let usd = Currency(type: CurrencyType.usd, name: "Доллар США", sign: "$", flag: "🇺🇲" )
@@ -35,6 +39,10 @@ struct Currency {
     static let byn = Currency(type: CurrencyType.byn, name: "Белорусский рубль", sign: "B", flag: "🇧🇾" )
     
     static let all = [usd, rub, eur, byn]
+    
+    public static func ==(lhs: Currency, rhs: Currency) -> Bool {
+        return lhs.type == rhs.type
+    }
 }
 
 

@@ -23,7 +23,7 @@ class CameraPresenter {
     
     
     var currencies: (from: Currency, to: Currency) {
-        let currentCurrencies = SettingsService.shared.getCurrentCurrency
+        let currentCurrencies = SettingsService.shared.currentCurrency
         return currentCurrencies
     }
     

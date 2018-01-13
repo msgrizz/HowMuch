@@ -34,17 +34,16 @@ class CameraViewController: UIViewController {
         view.addSubview(bottomPanelView)
         setupConstraints()
         
-        bottomPanelView.layer.backgroundColor = UIColor.blue.cgColor
-        
-        
         startLiveVideo()
         startTextDetection()
     }
     
     
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let signs = presenter.signs
+        bottomPanelView.reset()
         bottomPanelView.setupCurrencies(fromCurrency: signs.from, toCurrency: signs.to)
     }
     
@@ -179,15 +178,11 @@ class CameraViewController: UIViewController {
             // обработка со слова в центре
             guard let centerRect = rects.first(where: { $0.wordRect.contains(centerPoint)} ) else {
                 return
-            }
-            
+            }            
             
             let wordRect = centerRect.wordRect
             self.drawWordBorder(rect: wordRect)
             self.capturePrice(rect: wordRect)
-            //                rect.charRects.forEach{
-            //                    self.drawWordBorder(rect: $0, borderColor: UIColor.blue)
-            //                }
         }
     }
     

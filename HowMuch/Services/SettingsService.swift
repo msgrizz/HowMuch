@@ -12,25 +12,47 @@ class SettingsService {
     static var shared = SettingsService()
     
     
-    func saveCurrency(from: Currency, to: Currency) {
+    func saveCurrency(from: Currency? = nil, to: Currency? = nil) {
         let userDefaults = UserDefaults.standard
-        userDefaults.set(from.type.rawValue, forKey: SettingsService.fromCurrencyKey)
-        userDefaults.set(to.type.rawValue, forKey: SettingsService.toCurrencyKey)
+        if let from = from {
+            currentFromCurrency = from
+            userDefaults.set(from.type.rawValue, forKey: SettingsService.fromCurrencyKey)
+        }
+        if let to = to {
+            currentToCurrency = to
+            userDefaults.set(to.type.rawValue, forKey: SettingsService.toCurrencyKey)
+        }
     }
     
     
-    func loadCurrency() -> (from: Currency, to: Currency) {
+    func loadCurrency() {
         let userDefaults = UserDefaults.standard
         let fromType = CurrencyType(rawValue: userDefaults.string(forKey: SettingsService.fromCurrencyKey) ?? "")
         let toType = CurrencyType(rawValue: userDefaults.string(forKey: SettingsService.toCurrencyKey) ?? "")
         currentFromCurrency = Currency.all.first { $0.type == fromType } ?? currentFromCurrency
         currentToCurrency = Currency.all.first { $0.type == toType } ?? currentToCurrency
+    }
+    
+    
+    var sourceCurrency: Currency {
+        return currentFromCurrency
+    }
+    
+    
+    var resultCurrency: Currency {
+        return currentToCurrency
+    }
+    
+    
+    var currentCurrency: (from: Currency, to: Currency) {
         return (currentFromCurrency, currentToCurrency)
     }
     
     
-    var getCurrentCurrency: (from: Currency, to: Currency) {
-        return (currentFromCurrency, currentToCurrency)
+    // MARK: -Private
+    
+    private init() {
+        loadCurrency()
     }
     
     

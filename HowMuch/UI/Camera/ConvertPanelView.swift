@@ -21,12 +21,12 @@ class ConvertPanelView: UIView {
         addSubview(sourceCurrencyLabel)
         addSubview(resultCurrencyLabel)
         
+        backgroundColor = UIColor.white
         setupValues(from: 0, to: 0)
-        
-        //        sourceCurrencyLabel.layer.backgroundColor = UIColor.black.cgColor
-        //        sourceValueLabel.layer.backgroundColor = UIColor.red.cgColor
-        //        resultCurrenctLabel.layer.backgroundColor = UIColor.brown.cgColor
-        //        resultValueLabel.layer.backgroundColor = UIColor.green.cgColor
+        sourceCurrencyLabel.textAlignment = .center
+        resultCurrencyLabel.textAlignment = .center
+        sourceValueLabel.textAlignment = .left
+        resultValueLabel.textAlignment = .left
         
         setupConstraints()
     }
@@ -40,6 +40,12 @@ class ConvertPanelView: UIView {
         sourceCurrencyLabel.text = String(fromCurrency)
         resultCurrencyLabel.text = String(toCurrency)
     }
+    
+    
+    func reset() {
+        setupValues(from: 0.0, to: 0.0)
+    }
+    
     
     
     func setupValues(from: Float, to: Float) {

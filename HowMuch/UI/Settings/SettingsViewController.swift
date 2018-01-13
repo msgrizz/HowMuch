@@ -13,8 +13,8 @@ class SettingViewController: UITableViewController {
     static let identifier = String(describing: SettingViewController.self)
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Настройки"
+        super.viewDidLoad()        
+        title = "Настройки"        
         tableView.register(SelectCurrencyCellView.self, forCellReuseIdentifier: SelectCurrencyCellView.identifier)
         tableView.register(CheckRecognizeFloatViewCell.self, forCellReuseIdentifier: CheckRecognizeFloatViewCell.identifier)
     }
@@ -45,6 +45,12 @@ class SettingViewController: UITableViewController {
     
 
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? SelectCurrencyCellView {
+            cell.select()
+        }
+    }
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
@@ -52,24 +58,29 @@ class SettingViewController: UITableViewController {
             switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать из", values: [])
+                cell.setup(title: "Конвертировать из", value: presenter.sourceCurrency, values: Currency.all) { currency in
+                    self.presenter.save(from: currency)
+                }
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать в", values: [])
+                cell.setup(title: "Конвертировать в", value: presenter.resultCurrency, values: Currency.all) { currency in
+                    self.presenter.save(to: currency)
+                }
                 return cell
             default:
                 fatalError()
             }
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: CheckRecognizeFloatViewCell.identifier) as! CheckRecognizeFloatViewCell
-//            cell.setup(title: "Конвертировать в", values: [])
             return cell
         default:
             fatalError()
         }
     }
-        
+    
+    
+    private let presenter = SettingsPresenter()
 }
 
 
