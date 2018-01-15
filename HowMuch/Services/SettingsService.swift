@@ -8,46 +8,62 @@
 
 import Foundation
 
+class Settings {
+    var sourceCurrency: Currency
+    var resultCurrency: Currency
+    var tryParseFloat: Bool
+    
+    init(sourceCurrency: Currency = .usd, resultCurrency: Currency = .rub, tryParseFloatCurrency: Bool = false) {
+        self.sourceCurrency = sourceCurrency
+        self.resultCurrency = resultCurrency
+        self.tryParseFloat = tryParseFloatCurrency
+    }
+}
+
+
 class SettingsService {
     static var shared = SettingsService()
+    
+    
+    func saveTryParseFloat(value: Bool) {
+        settings.tryParseFloat = value
+        UserDefaults.standard.set(value, forKey: SettingsService.tryParseFloatKey)
+    }
     
     
     func saveCurrency(from: Currency? = nil, to: Currency? = nil) {
         let userDefaults = UserDefaults.standard
         if let from = from {
-            currentFromCurrency = from
+            settings.sourceCurrency = from
             userDefaults.set(from.type.rawValue, forKey: SettingsService.fromCurrencyKey)
         }
         if let to = to {
-            currentToCurrency = to
+            settings.resultCurrency = to
             userDefaults.set(to.type.rawValue, forKey: SettingsService.toCurrencyKey)
         }
     }
     
     
-    func loadCurrency() {
-        let userDefaults = UserDefaults.standard
-        let fromType = CurrencyType(rawValue: userDefaults.string(forKey: SettingsService.fromCurrencyKey) ?? "")
-        let toType = CurrencyType(rawValue: userDefaults.string(forKey: SettingsService.toCurrencyKey) ?? "")
-        currentFromCurrency = Currency.all.first { $0.type == fromType } ?? currentFromCurrency
-        currentToCurrency = Currency.all.first { $0.type == toType } ?? currentToCurrency
-    }
-    
     
     var sourceCurrency: Currency {
-        return currentFromCurrency
+        return settings.sourceCurrency
     }
     
     
     var resultCurrency: Currency {
-        return currentToCurrency
+        return settings.resultCurrency
     }
     
     
     var currentCurrency: (from: Currency, to: Currency) {
-        return (currentFromCurrency, currentToCurrency)
+        return (settings.sourceCurrency, settings.resultCurrency)
     }
     
+    
+    
+    var tryParseFloat: Bool {
+        return settings.tryParseFloat
+    }
     
     // MARK: -Private
     
@@ -58,8 +74,20 @@ class SettingsService {
     
     private static let fromCurrencyKey = "fromCurrency"
     private static let toCurrencyKey = "toCurrency"
+    private static let tryParseFloatKey = "tryParseFloat"
     
-    private var currentFromCurrency = Currency.rub
-    private var currentToCurrency = Currency.usd
+    
+    private var settings = Settings()
+    
+    
+    private func loadCurrency() {
+        let userDefaults = UserDefaults.standard
+        let from = CurrencyType(rawValue: userDefaults.string(forKey: SettingsService.fromCurrencyKey) ?? "")
+        let to = CurrencyType(rawValue: userDefaults.string(forKey: SettingsService.toCurrencyKey) ?? "")
+        let tryParseFloat = userDefaults.bool(forKey: SettingsService.tryParseFloatKey)
+        settings = Settings(sourceCurrency: Currency.all.first{$0.type == from} ?? .usd,
+                            resultCurrency: Currency.all.first{$0.type == to} ?? .rub,
+                            tryParseFloatCurrency: tryParseFloat)
+    }
 }
 

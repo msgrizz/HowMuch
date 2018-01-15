@@ -6,7 +6,7 @@
 //  Copyright © 2018 AppCoda. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public class CurrencyService {
     static var shared = CurrencyService()
@@ -16,7 +16,13 @@ public class CurrencyService {
     func getRate(from: CurrencyType, to: CurrencyType) -> Float {
         let fromRate = rates[from]!
         let toRate = rates[to]!
-        return fromRate / toRate
+        return toRate / fromRate
+    }
+    
+    
+    func updateIfNeeded() {
+        guard isNeedUpdate() else { return }
+        syncRates()
     }
     
     
@@ -25,9 +31,9 @@ public class CurrencyService {
     // MARK: -Private
     static let defaultRetes: [CurrencyType : Float] = [
         .usd : 1,
-        .rub : 0.01755,
-        .eur: 1.19209,
-        .byn: 0.50
+        .rub : 56.66,
+        .eur: 0.82,
+        .byn: 2.0
     ]
     
     private var rates: [CurrencyType : Float] = CurrencyService.defaultRetes {
@@ -35,14 +41,17 @@ public class CurrencyService {
             NotificationCenter.default.post(name: CurrencyService.ratesNotification, object: nil)
         }
     }
+    
     private static let currencyRatesKey = "CurrencyRates"
+    private static let lastUpdateKey = "LastUpdate"
+    
+    private var updateInProcess = false
     
     
     private init() {
         if let rates = loadFromLocalStorage() {
             self.rates = rates
         }
-        syncRates()
     }
     
     
@@ -54,6 +63,7 @@ public class CurrencyService {
             return (key.rawValue, value)
         })
         userDefaults.set(plistRates, forKey: CurrencyService.currencyRatesKey)
+        userDefaults.set(CurrencyService.dateFormatter.string(from: Date()), forKey: CurrencyService.lastUpdateKey)
     }
     
     
@@ -69,6 +79,10 @@ public class CurrencyService {
     
     
     private func syncRates() {
+        guard !updateInProcess else {
+            return
+        }
+        updateInProcess = true
         let session = URLSession(configuration: .default)
         
         if var urlComponents = URLComponents(string: "https://api.fixer.io/latest") {
@@ -83,10 +97,13 @@ public class CurrencyService {
                     response.statusCode == 200 {
                     
                     DispatchQueue.main.async {
+                        self.updateInProcess = false
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
                         self.updateRates(from: data)
                     }
                 }
             }
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
             dataTask.resume()
         }
     }
@@ -120,7 +137,32 @@ public class CurrencyService {
                 else {
                     return nil
             }
-            return (currencyType, 1 / float)
+            return (currencyType, float)
         })
+    }
+    
+    
+    
+    private static let dateFormatter: DateFormatter = {
+       let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY-MM-dd"
+        return formatter
+    }()
+    
+    
+    
+    private func isNeedUpdate() -> Bool {
+        guard let lastUpdateString = UserDefaults.standard.string(forKey: CurrencyService.lastUpdateKey),
+            let lastUpdate = CurrencyService.dateFormatter.date(from: lastUpdateString) else {
+            return true
+        }
+
+        // обновляем если разница больше чем в 1 день
+        guard let dayDiff = Calendar.current.dateComponents([.day], from: lastUpdate, to: Date()).day,
+            dayDiff > 1
+        else {
+            return false
+        }
+        return true
     }
 }

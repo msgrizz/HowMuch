@@ -9,11 +9,7 @@
 import UIKit
 
 
-class CameraPresenter {    
-    
-    init() {
-        let _ = CurrencyService.shared
-    }
+class CameraPresenter {            
     
     var signs: (from: Character, to: Character) {
         let current = currencies

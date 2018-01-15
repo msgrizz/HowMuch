@@ -23,7 +23,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window!.rootViewController = initialViewController
         window!.makeKeyAndVisible()
         
+        CurrencyService.shared.updateIfNeeded()
         return true
+    }
+    
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        CurrencyService.shared.updateIfNeeded()
     }
 }
 

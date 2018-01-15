@@ -26,7 +26,7 @@ class CameraViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Распознавание ценника"
+        title = "How much"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settings"), style: .plain, target: self, action: #selector(openSettings))
         navigationController?.navigationBar.isTranslucent = false
         
@@ -121,11 +121,11 @@ class CameraViewController: UIViewController {
     
     private func startLiveVideo() {
         session.sessionPreset = AVCaptureSession.Preset.photo
-        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
+        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video),
+            let deviceInput = try? AVCaptureDeviceInput(device: captureDevice) else {
             return
         }
         
-        let deviceInput = try! AVCaptureDeviceInput(device: captureDevice)
         let deviceOutput = AVCaptureVideoDataOutput()
         deviceOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
         deviceOutput.setSampleBufferDelegate(self, queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.default))
@@ -178,7 +178,7 @@ class CameraViewController: UIViewController {
             // обработка со слова в центре
             guard let centerRect = rects.first(where: { $0.wordRect.contains(centerPoint)} ) else {
                 return
-            }            
+            }
             
             let wordRect = centerRect.wordRect
             self.drawWordBorder(rect: wordRect)

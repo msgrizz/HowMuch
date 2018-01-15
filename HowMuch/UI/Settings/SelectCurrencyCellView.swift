@@ -83,7 +83,7 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
     
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return values[row].name
+        return String(values[row].flag) + " " + values[row].name
     }
     
     
