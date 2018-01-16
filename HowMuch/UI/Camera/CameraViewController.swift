@@ -23,7 +23,7 @@ class CameraViewController: UIViewController {
         let delimiterRect: CGRect
     }
     
-    
+    let debugImageView = UIImageView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 50, height: 50)))
     
     
     override func viewDidLoad() {
@@ -35,6 +35,7 @@ class CameraViewController: UIViewController {
         
         view.addSubview(cameraView)
         view.addSubview(bottomPanelView)
+        view.addSubview(debugImageView)
         setupConstraints()
         
         startLiveVideo()
@@ -76,13 +77,14 @@ class CameraViewController: UIViewController {
     private var session = AVCaptureSession()
     private var requests = [VNRequest]()
     
-    static private let gabrageString = "$£p"
+    static private let gabrageString = "$£p."
     static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
     private var captureBuffer: CMSampleBuffer!
     private var pixelBuffer: CVImageBuffer!
     private var recognizeInProcess = false
     private var handlingTextInProcess = false
     private var tryParseFloat = false
+    private let tesseract = G8Tesseract(language: "eng")!
     
     
     private func setupConstraints() {
@@ -196,7 +198,7 @@ class CameraViewController: UIViewController {
             self.drawWordBorder(rect: centerRect.delimiterRect, borderColor: UIColor.blue)
             self.drawWordBorder(rect: centerRect.floorRect, borderColor: UIColor.green)
             
-//            self.capturePrice(rect: wordRect)
+            self.recognizePrice(rect: centerRect)
         }
     }
     
@@ -288,50 +290,82 @@ class CameraViewController: UIViewController {
     
     
     
-    private func capturePrice(rect: CGRect) {
+    private func recognizePrice(rect: RegionRects) {
         if recognizeInProcess {
             return
         }
+        recognizeInProcess = true
+        
         let image = imageFromSampleBuffer(sampleBuffer: captureBuffer)
-        guard let cgimg = image.cgImage?.cropping(to: rect) else {
+        // распознаем целую часть
+        guard let cgimg = image.cgImage, let ceilImage = cgimg.cropping(to: rect.ceilRect).map(UIImage.init)   else {
             return
         }
-        let img = UIImage(cgImage: cgimg)
-        recognizeInProcess = true
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let tesseract = G8Tesseract(language: "eng") {
-                
-                // тут нужно добавлять символы, которые обычно могут стоять рядом с ценой
-                // например валюта. Частый случай, что валюту он начинает распознавать как цифры, если
-                // символ этой валюты не добавлять в whitelist
-                tesseract.charWhitelist = "0123456789-." + CameraViewController.gabrageString
-                
-                tesseract.engineMode = .tesseractOnly
-                tesseract.pageSegmentationMode = .singleWord
-                //                tesseract.image = img.g8_blackAndWhite()
-                tesseract.image = img.g8_grayScale()
-                
-                tesseract.recognize()
-                
-                DispatchQueue.main.async {
-                    //                    self.textView.text = "Cannot recognize"
-                    //                    print(tesseract.recognizedText)
-                    if let resultText = tesseract.recognizedText,
-                        !resultText.isEmpty {
-                        let trimed = self.handleStringCost(src: resultText)
-                        print("--TRIMED: \(trimed)")
-                        
-                        if let sourceValue = Float(trimed) {
-                            let resultValue = self.presenter.calculate(from: sourceValue)
-                            self.bottomPanelView.setupValues(from: sourceValue, to: resultValue)
-                        }
-                    }
-                    
-                    self.recognizeInProcess = false
+        debugImageView.image = ceilImage
+        let recognizeGroup = DispatchGroup()
+        
+        var ceilPart = ""
+        var floorPart = ""
+        DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
+            self.recognizePrice(image: ceilImage) { result in
+                ceilPart = result
+                print("ceil: \(ceilPart)")
+            }
+        }
+        if tryParseFloat, let floorImage = cgimg.cropping(to: rect.floorRect).map(UIImage.init)  {
+            DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
+                self.recognizePrice(image: floorImage) { result in
+                    floorPart = result
                 }
             }
         }
+        
+        recognizeGroup.notify(queue: .main) {
+            defer {
+                self.recognizeInProcess = false
+            }
+//            print("ceil: \(ceilPart), floor: \(floorPart)")
+            if let sourceValue = self.floatFrom(ceilPart, floorPart) {
+                let resultValue = self.presenter.calculate(from: sourceValue)
+                self.bottomPanelView.setupValues(from: sourceValue, to: resultValue)
+            }
+        }
     }
+    
+    
+    private func floatFrom(_ ceilPart: String, _ floorPart: String) -> Float? {
+        guard !ceilPart.isEmpty else { return nil }
+        let ceilPartTrimmed = handleStringCost(src: ceilPart)
+        if tryParseFloat, !floorPart.isEmpty {
+            let floorPartTrimmed = handleStringCost(src: floorPart)
+            let floatString = "\(ceilPartTrimmed).\(floorPartTrimmed)"
+            return Float(ceilPartTrimmed) ?? Float(floatString)
+        }
+        return Float(ceilPartTrimmed)
+    }
+    
+    
+    
+    private func recognizePrice(image: UIImage, callback: @escaping (String) -> Void) {
+        // тут нужно добавлять символы, которые обычно могут стоять рядом с ценой
+        // например валюта. Частый случай, что валюту он начинает распознавать как цифры, если
+        // символ этой валюты не добавлять в whitelist
+//        let tesseract = G8Tesseract(language: "eng")!
+        tesseract.charWhitelist = "0123456789-" + CameraViewController.gabrageString
+        tesseract.engineMode = .tesseractOnly        
+        tesseract.pageSegmentationMode = .singleWord
+        tesseract.image = image.g8_grayScale()
+        tesseract.recognize()
+        let result = tesseract.recognizedText ?? ""
+        
+        DispatchQueue.main.async {
+            callback(result)
+        }
+    }
+    
+    
+    
+
     
     
     private func handleStringCost(src: String) -> String {
