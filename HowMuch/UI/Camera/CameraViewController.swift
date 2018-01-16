@@ -18,6 +18,9 @@ class CameraViewController: UIViewController {
     struct RegionRects {
         let wordRect: CGRect
         let charRects: [CGRect]
+        let ceilRect: CGRect
+        let floorRect: CGRect
+        let delimiterRect: CGRect
     }
     
     
@@ -42,9 +45,10 @@ class CameraViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let signs = presenter.signs
+        let signs = presenter.signs        
         bottomPanelView.reset()
         bottomPanelView.setupCurrencies(fromCurrency: signs.from, toCurrency: signs.to)
+        tryParseFloat = presenter.tryParseFloat
     }
     
     
@@ -77,6 +81,8 @@ class CameraViewController: UIViewController {
     private var captureBuffer: CMSampleBuffer!
     private var pixelBuffer: CVImageBuffer!
     private var recognizeInProcess = false
+    private var handlingTextInProcess = false
+    private var tryParseFloat = false
     
     
     private func setupConstraints() {
@@ -152,20 +158,29 @@ class CameraViewController: UIViewController {
     
     
     private func detectTextHandler(request: VNRequest, error: Error?) {
+        DispatchQueue.main.async {
+            self.cameraView.layer.sublayers?.removeSubrange(2...)
+        }
+        if handlingTextInProcess {
+            return
+        }
         if let error = error {
             print(error)
             return
         }
-        
         guard let observations = request.results else {
-            print("no result")
             return
         }
         
         let regions = observations.flatMap({$0 as? VNTextObservation})
-        
+        guard regions.count > 0 else {
+            return
+        }
+        handlingTextInProcess = true
         DispatchQueue.main.async() {
-            
+            defer {
+                self.handlingTextInProcess = false
+            }
             let rects = regions.flatMap {
                 return self.getWordRegion(box: $0)
             }
@@ -173,81 +188,94 @@ class CameraViewController: UIViewController {
                 return
             }
             let centerPoint = self.cameraView.bounds.center
-            
-            self.cameraView.layer.sublayers?.removeSubrange(2...)
-            // обработка со слова в центре
-            guard let centerRect = rects.first(where: { $0.wordRect.contains(centerPoint)} ) else {
+            guard let centerRect = rects.first(where: { $0.wordRect.contains(centerPoint) }) else {
                 return
             }
             
-            let wordRect = centerRect.wordRect
-            self.drawWordBorder(rect: wordRect)
-            self.capturePrice(rect: wordRect)
+            self.drawWordBorder(rect: centerRect.ceilRect)
+            self.drawWordBorder(rect: centerRect.delimiterRect, borderColor: UIColor.blue)
+            self.drawWordBorder(rect: centerRect.floorRect, borderColor: UIColor.green)
+            
+//            self.capturePrice(rect: wordRect)
         }
     }
     
     
     
+    /// Разбитие найденного фрагмента логические участки
+    /// Стратегия: целая часть - первые символы одинакового размера,
+    /// остальная часть полностью считается дробной
     private func getWordRegion(box: VNTextObservation) -> RegionRects? {
         guard let boxes = box.characterBoxes else {
             return nil
         }
-        
-        let viewHeight = cameraView.frame.size.height
-        let viewWidth = cameraView.frame.size.width
         
         var maxX: CGFloat = 0.0
         var minX: CGFloat = 9999.0
         var maxY: CGFloat = 0.0
         var minY: CGFloat = 9999.0
         
-        var charRects = [CGRect]()
-        //        var maxHeight: CGFloat = 0
+        let charRects = [CGRect]()
+        var ceilRect = CGRect.zero
+        var floorRect = CGRect.zero
+        var delimiterRect = CGRect.zero
+        var maxHeight: CGFloat = 0
+        
+        var foundCeil = false
+        
         
         for char in boxes {
             let bottomLeft = char.bottomLeft
             let bottomRight = char.bottomRight
             let topRight = char.topRight
             
-            // Если высота следующего символа вдруг резко падает - дальше не читаем
-            //            let height = topRight.y - bottomRight.y
-            //            if height > maxHeight {
-            //                maxHeight = height
-            //            } else if height < (maxHeight * 0.85) {
-            //                break
-            //            }
-            
-            charRects.append(CGRect(x: bottomLeft.x * viewWidth,
-                                    y: (1 - topRight.y) * viewHeight,
-                                    width: (bottomRight.x - bottomLeft.x) * viewWidth,
-                                    height: (topRight.y - bottomRight.y) * viewHeight))
-            
-            
-            if char.bottomRight.y < minY {
-                minY = bottomRight.y
+            if !foundCeil {
+                let height = topRight.y - bottomRight.y
+                if height > maxHeight {
+                    maxHeight = height
+                } else if height < (maxHeight * 0.8) {
+                    delimiterRect = getRect(maxX: bottomRight.x, maxY: topRight.y, minX: bottomLeft.x, minY: bottomRight.y)
+                    if foundCeil {
+                        break
+                    }
+                    
+                    foundCeil = true
+                    ceilRect = getRect(maxX: maxX, maxY: maxY, minX: minX, minY: minY)
+                    maxHeight = 0
+                    maxX = 0.0
+                    minX = 9999.0
+                    maxY = 0.0
+                    minY = 9999.0
+                }
             }
-            if char.topRight.y > maxY {
-                maxY = topRight.y
-            }
             
-            if char.bottomLeft.x < minX {
-                minX = bottomLeft.x
-            }
-            if char.bottomRight.x > maxX {
-                maxX = bottomRight.x
-            }
+            minY = min(bottomRight.y, minY)
+            maxY = max(topRight.y, maxY)
+            minX = min(bottomLeft.x, minX)
+            maxX = max(bottomRight.x, maxX)
         }
+        
+        if !foundCeil {
+            ceilRect = getRect(maxX: maxX, maxY: maxY, minX: minX, minY: minY)
+        } else {
+            floorRect = getRect(maxX: maxX, maxY: maxY, minX: minX, minY: minY)
+        }
+        let wordRect = floorRect != CGRect.zero ? ceilRect.union(floorRect) : ceilRect
+        return RegionRects(wordRect: wordRect, charRects: charRects, ceilRect: ceilRect, floorRect: floorRect, delimiterRect: delimiterRect)
+    }
+    
+    
+    
+    func getRect(maxX: CGFloat, maxY: CGFloat, minX: CGFloat, minY: CGFloat) -> CGRect {
+        let viewHeight = cameraView.frame.size.height
+        let viewWidth = cameraView.frame.size.width
+        
         let xCord = minX * viewWidth
         let yCord = (1 - maxY) * viewHeight
         let width = (maxX - minX) * viewWidth
         let height = (maxY - minY) * viewHeight
-        
-        
-        let rect = CGRect(x: xCord, y: yCord, width: width, height: height)
-        return RegionRects(wordRect: rect, charRects: charRects)
+        return CGRect(x: xCord, y: yCord, width: width, height: height)
     }
-    
-    
     
     
     private func drawWordBorder(rect: CGRect, borderColor: UIColor = UIColor.red) {
@@ -255,24 +283,20 @@ class CameraViewController: UIViewController {
         outline.frame = rect
         outline.borderWidth = 2.0
         outline.borderColor = borderColor.cgColor
-        
         cameraView.layer.addSublayer(outline)
     }
     
     
     
     private func capturePrice(rect: CGRect) {
+        if recognizeInProcess {
+            return
+        }
         let image = imageFromSampleBuffer(sampleBuffer: captureBuffer)
-        
         guard let cgimg = image.cgImage?.cropping(to: rect) else {
             return
         }
         let img = UIImage(cgImage: cgimg)
-        //        captureImageView.image = img
-        
-        if recognizeInProcess {
-            return
-        }
         recognizeInProcess = true
         DispatchQueue.global(qos: .userInitiated).async {
             if let tesseract = G8Tesseract(language: "eng") {

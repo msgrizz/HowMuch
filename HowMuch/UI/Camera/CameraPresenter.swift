@@ -17,6 +17,11 @@ class CameraPresenter {
     }
     
     
+    var tryParseFloat: Bool {
+        return SettingsService.shared.tryParseFloat
+    }
+    
+    
     
     var currencies: (from: Currency, to: Currency) {
         let currentCurrencies = SettingsService.shared.currentCurrency
