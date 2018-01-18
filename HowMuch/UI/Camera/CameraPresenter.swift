@@ -9,7 +9,20 @@
 import UIKit
 
 
-class CameraPresenter {            
+class CameraPresenter: SettingsObserver {
+    
+    
+    // MARK: -SettingsObserver
+    func onChange(settings: Settings) {
+        self.settings = settings
+    }
+    
+    
+    init() {
+        settings = Services.settings.settings
+        Services.settings.add(observer: self)
+    }
+    
     
     var signs: (from: Character, to: Character) {
         let current = currencies
@@ -18,14 +31,13 @@ class CameraPresenter {
     
     
     var tryParseFloat: Bool {
-        return SettingsService.shared.tryParseFloat
+        return settings.tryParseFloat
     }
     
     
     
     var currencies: (from: Currency, to: Currency) {
-        let currentCurrencies = SettingsService.shared.currentCurrency
-        return currentCurrencies
+        return (settings.sourceCurrency, settings.resultCurrency)
     }
     
     
@@ -35,4 +47,7 @@ class CameraPresenter {
         let ratio = CurrencyService.shared.getRate(from: current.from.type, to: current.to.type)
         return ratio * value
     }
+    
+    
+    private var settings: Settings
 }

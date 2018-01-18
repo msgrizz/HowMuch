@@ -352,7 +352,7 @@ class CameraViewController: UIViewController {
         // символ этой валюты не добавлять в whitelist
 //        let tesseract = G8Tesseract(language: "eng")!
         tesseract.charWhitelist = "0123456789-" + CameraViewController.gabrageString
-        tesseract.engineMode = .tesseractOnly        
+        tesseract.engineMode = .tesseractOnly
         tesseract.pageSegmentationMode = .singleWord
         tesseract.image = image.g8_grayScale()
         tesseract.recognize()

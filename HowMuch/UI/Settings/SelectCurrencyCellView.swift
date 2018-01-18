@@ -17,7 +17,7 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
     let valueField = UITextField()
     let pickerView = UIPickerView()
     
-    var onChanged: ((Currency) -> Void)!
+    var onChanged: ((Currency) -> Void)?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,7 +53,7 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
         valueField.resignFirstResponder()
     }
     
-    func setup(title: String, value: Currency, values: [Currency], onChanged: @escaping (Currency) -> Void) {
+    func setup(title: String, value: Currency, values: [Currency], onChanged: ((Currency) -> Void)? = nil) {
         self.values = values
         self.onChanged = onChanged
         let selectedIdx = values.index {$0 == value} ?? -1
@@ -90,7 +90,7 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let value = values[row]
         valueField.text = value.shortName
-        onChanged(value)
+        onChanged?(value)
     }
     
     

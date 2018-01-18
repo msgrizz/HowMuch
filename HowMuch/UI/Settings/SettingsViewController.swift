@@ -10,6 +10,7 @@ import UIKit
 
 
 class SettingViewController: UITableViewController {
+    
     static let identifier = String(describing: SettingViewController.self)
     
     override func viewDidLoad() {
@@ -17,12 +18,20 @@ class SettingViewController: UITableViewController {
         title = "Настройки"        
         tableView.register(SelectCurrencyCellView.self, forCellReuseIdentifier: SelectCurrencyCellView.identifier)
         tableView.register(CheckRecognizeFloatViewCell.self, forCellReuseIdentifier: CheckRecognizeFloatViewCell.identifier)
+        
+        settings = presenter.settings
     }
     
     private let sections = ["Выбор валюты", "Настройки распознавания"]
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        save()
     }
     
     
@@ -58,14 +67,14 @@ class SettingViewController: UITableViewController {
             switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать из", value: presenter.sourceCurrency, values: Currency.all) { currency in
-                    self.presenter.save(from: currency)
+                cell.setup(title: "Конвертировать из", value: settings.sourceCurrency, values: Currency.all) { currency in
+                    self.settings.sourceCurrency = currency
                 }
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать в", value: presenter.resultCurrency, values: Currency.all) { currency in
-                    self.presenter.save(to: currency)
+                cell.setup(title: "Конвертировать в", value: settings.resultCurrency, values: Currency.all) { currency in
+                    self.settings.resultCurrency = currency
                 }
                 return cell
             default:
@@ -80,7 +89,15 @@ class SettingViewController: UITableViewController {
     }
     
     
+    
+    // MARK: Private
+    
     private let presenter = SettingsPresenter()
+    private var settings: Settings!
+    
+    private func save() {
+        presenter.save(settings: settings)
+    }
 }
 
 

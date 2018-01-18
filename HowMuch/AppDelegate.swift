@@ -8,6 +8,8 @@
 
 import UIKit
 
+let Services = AppServices()
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

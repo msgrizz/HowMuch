@@ -28,6 +28,9 @@
 		9B6FEAFB200A10AE00CEF94F /* CameraPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAFA200A10AE00CEF94F /* CameraPresenter.swift */; };
 		9B6FEAFE200A1C5E00CEF94F /* ConvertPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */; };
 		9B6FEB00200A39CA00CEF94F /* SettingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAFF200A39CA00CEF94F /* SettingPresenter.swift */; };
+		9B9E2244200FC2220026122B /* ObserverList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E2243200FC2220026122B /* ObserverList.swift */; };
+		9B9E2246200FC24C0026122B /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E2245200FC24C0026122B /* Settings.swift */; };
+		9B9E2248200FC7A00026122B /* AppServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E2247200FC7A00026122B /* AppServices.swift */; };
 		9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61620016406001AC1E8 /* libstdc++.tbd */; };
 		9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61820016410001AC1E8 /* CoreImage.framework */; };
 		9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */; };
@@ -73,6 +76,9 @@
 		9B6FEAFA200A10AE00CEF94F /* CameraPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPresenter.swift; sourceTree = "<group>"; };
 		9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertPanelView.swift; sourceTree = "<group>"; };
 		9B6FEAFF200A39CA00CEF94F /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
+		9B9E2243200FC2220026122B /* ObserverList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverList.swift; sourceTree = "<group>"; };
+		9B9E2245200FC24C0026122B /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		9B9E2247200FC7A00026122B /* AppServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppServices.swift; sourceTree = "<group>"; };
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +158,7 @@
 		9B6FEA9F2002A3AA00CEF94F /* HowMuch */ = {
 			isa = PBXGroup;
 			children = (
+				9B9E2242200FC2050026122B /* Utils */,
 				9B6FEADC2009329E00CEF94F /* Extensions */,
 				9B6FEAD5200547FF00CEF94F /* Services */,
 				9B6FEAD4200547FA00CEF94F /* UI */,
@@ -169,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				9B6FEADA2005483100CEF94F /* CurrencyModel.swift */,
+				9B9E2245200FC24C0026122B /* Settings.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -187,6 +195,7 @@
 			children = (
 				9B6FEAD62005482300CEF94F /* CurrencyService.swift */,
 				9B6FEAF8200A0EE500CEF94F /* SettingsService.swift */,
+				9B9E2247200FC7A00026122B /* AppServices.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -229,6 +238,14 @@
 				9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */,
 			);
 			path = Camera;
+			sourceTree = "<group>";
+		};
+		9B9E2242200FC2050026122B /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9B9E2243200FC2220026122B /* ObserverList.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -444,13 +461,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B6FEAF9200A0EE500CEF94F /* SettingsService.swift in Sources */,
+				9B9E2248200FC7A00026122B /* AppServices.swift in Sources */,
 				9B6FEAE720094A1000CEF94F /* CheckRecognizeFloatViewCell.swift in Sources */,
 				9B6FEAFB200A10AE00CEF94F /* CameraPresenter.swift in Sources */,
 				9B6FEAD92005482A00CEF94F /* CameraViewController.swift in Sources */,
 				9B6FEADE200932B500CEF94F /* CGPoint+Extention.swift in Sources */,
+				9B9E2244200FC2220026122B /* ObserverList.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
 				9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */,
 				9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */,
+				9B9E2246200FC24C0026122B /* Settings.swift in Sources */,
 				9B6FEB00200A39CA00CEF94F /* SettingPresenter.swift in Sources */,
 				9B6FEAE52009419200CEF94F /* SelectCurrencyCellView.swift in Sources */,
 				9B6FEAFE200A1C5E00CEF94F /* ConvertPanelView.swift in Sources */,
