@@ -82,6 +82,9 @@ class SettingViewController: UITableViewController {
             }
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: CheckRecognizeFloatViewCell.identifier) as! CheckRecognizeFloatViewCell
+            cell.setup(flag: settings.tryParseFloat) { isOn in
+                self.settings.tryParseFloat = isOn
+            }
             return cell
         default:
             fatalError()

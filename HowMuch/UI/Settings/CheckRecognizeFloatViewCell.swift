@@ -25,6 +25,7 @@ class CheckRecognizeFloatViewCell: UITableViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(switchView)
         
+        switchView.addTarget(self, action: #selector(toggleAction), for: .valueChanged)
         setupConstraints()
     }
     
@@ -32,6 +33,10 @@ class CheckRecognizeFloatViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    @objc func toggleAction() {
+        onChange(switchView.isOn)
+    }
     
     func setupConstraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -44,9 +49,11 @@ class CheckRecognizeFloatViewCell: UITableViewCell {
     }
     
     
-    func setup() {
-//        titleLabel.text = title
-//        valueField.text = "hello"
+    func setup(flag: Bool, onChange: @escaping (Bool) -> Void) {
+        self.switchView.isOn = flag
+        self.onChange = onChange
     }
+    
+    private var onChange: ((Bool) -> Void)!
 }
 

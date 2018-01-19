@@ -16,14 +16,24 @@ import TesseractOCR
 
 class CameraViewController: UIViewController {
     struct RegionRects {
+        /// Прямоугольник всего слова
         let wordRect: CGRect
+        /// Прямоугольники посимвольно
         let charRects: [CGRect]
+        /// Прямоугольник с целой частью
         let ceilRect: CGRect
+        /// Прямоугольник с дробной частью
         let floorRect: CGRect
+        /// Прямоугольник с разделителем
         let delimiterRect: CGRect
+        /// Количество знаков в целой части
+        let ceilCount: Int
+        /// Количество знаков в дробной части
+        let floorCount: Int
     }
     
-    let debugImageView = UIImageView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 50, height: 50)))
+    let debugCeilImageView = UIImageView(frame: CGRect.zero)
+    let debugFloorImageView = UIImageView(frame: CGRect.zero)
     
     
     override func viewDidLoad() {
@@ -35,8 +45,10 @@ class CameraViewController: UIViewController {
         
         view.addSubview(cameraView)
         view.addSubview(bottomPanelView)
-        view.addSubview(debugImageView)
+        view.addSubview(debugCeilImageView)
+        view.addSubview(debugFloorImageView)
         setupConstraints()
+
         
         startLiveVideo()
         startTextDetection()
@@ -77,14 +89,15 @@ class CameraViewController: UIViewController {
     private var session = AVCaptureSession()
     private var requests = [VNRequest]()
     
-    static private let gabrageString = "$£p."
+    static private let gabrageString = "$£p.-,"
     static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
     private var captureBuffer: CMSampleBuffer!
     private var pixelBuffer: CVImageBuffer!
     private var recognizeInProcess = false
     private var handlingTextInProcess = false
     private var tryParseFloat = false
-    private let tesseract = G8Tesseract(language: "eng")!
+    private let tesseractCeil = G8Tesseract(language: "eng")!
+    private let tesseractFloor = G8Tesseract(language: "eng")!
     
     
     private func setupConstraints() {
@@ -104,6 +117,22 @@ class CameraViewController: UIViewController {
             bottomPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
             bottomPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
             bottomPanelView.heightAnchor.constraint(equalToConstant: 80)
+            ])
+        
+        debugCeilImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            debugCeilImageView.widthAnchor.constraint(equalToConstant: 50),
+            debugCeilImageView.heightAnchor.constraint(equalToConstant: 50),
+            debugCeilImageView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
+            debugCeilImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
+            ])
+        
+        debugFloorImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            debugFloorImageView.widthAnchor.constraint(equalToConstant: 50),
+            debugFloorImageView.heightAnchor.constraint(equalToConstant: 50),
+            debugFloorImageView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
+            debugFloorImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
             ])
     }
     
@@ -211,7 +240,8 @@ class CameraViewController: UIViewController {
         guard let boxes = box.characterBoxes else {
             return nil
         }
-        
+        var ceilCount = 0
+        var floorCount = 0
         var maxX: CGFloat = 0.0
         var minX: CGFloat = 9999.0
         var maxY: CGFloat = 0.0
@@ -255,6 +285,7 @@ class CameraViewController: UIViewController {
             maxY = max(topRight.y, maxY)
             minX = min(bottomLeft.x, minX)
             maxX = max(bottomRight.x, maxX)
+            foundCeil ? (floorCount += 1) : (ceilCount += 1)
         }
         
         if !foundCeil {
@@ -263,7 +294,8 @@ class CameraViewController: UIViewController {
             floorRect = getRect(maxX: maxX, maxY: maxY, minX: minX, minY: minY)
         }
         let wordRect = floorRect != CGRect.zero ? ceilRect.union(floorRect) : ceilRect
-        return RegionRects(wordRect: wordRect, charRects: charRects, ceilRect: ceilRect, floorRect: floorRect, delimiterRect: delimiterRect)
+        return RegionRects(wordRect: wordRect, charRects: charRects, ceilRect: ceilRect,
+                           floorRect: floorRect, delimiterRect: delimiterRect, ceilCount: ceilCount, floorCount: floorCount)
     }
     
     
@@ -301,20 +333,20 @@ class CameraViewController: UIViewController {
         guard let cgimg = image.cgImage, let ceilImage = cgimg.cropping(to: rect.ceilRect).map(UIImage.init)   else {
             return
         }
-        debugImageView.image = ceilImage
+        debugCeilImageView.image = ceilImage
         let recognizeGroup = DispatchGroup()
         
         var ceilPart = ""
         var floorPart = ""
         DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
-            self.recognizePrice(image: ceilImage) { result in
+            self.recognizePrice(tesseract: self.tesseractCeil, image: ceilImage) { result in
                 ceilPart = result
-                print("ceil: \(ceilPart)")
             }
         }
         if tryParseFloat, let floorImage = cgimg.cropping(to: rect.floorRect).map(UIImage.init)  {
+            debugFloorImageView.image = floorImage
             DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
-                self.recognizePrice(image: floorImage) { result in
+                self.recognizePrice(tesseract: self.tesseractFloor, image: floorImage) { result in
                     floorPart = result
                 }
             }
@@ -324,7 +356,17 @@ class CameraViewController: UIViewController {
             defer {
                 self.recognizeInProcess = false
             }
-//            print("ceil: \(ceilPart), floor: \(floorPart)")
+            // Пытаемся отбросить мусор
+            ceilPart = ceilPart.trimmingCharacters(in: .whitespacesAndNewlines)
+            floorPart = floorPart.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard (ceilPart.count == rect.ceilCount) else {
+                return
+            }
+//            if self.tryParseFloat && floorPart.count == rect.floorCount {
+//                floorPart = ""
+//            }
+            print("ceil: \(ceilPart), floor: \(floorPart)")
+            // Парсим
             if let sourceValue = self.floatFrom(ceilPart, floorPart) {
                 let resultValue = self.presenter.calculate(from: sourceValue)
                 self.bottomPanelView.setupValues(from: sourceValue, to: resultValue)
@@ -339,14 +381,14 @@ class CameraViewController: UIViewController {
         if tryParseFloat, !floorPart.isEmpty {
             let floorPartTrimmed = handleStringCost(src: floorPart)
             let floatString = "\(ceilPartTrimmed).\(floorPartTrimmed)"
-            return Float(ceilPartTrimmed) ?? Float(floatString)
+            return Float(floatString) ?? Float(ceilPartTrimmed)
         }
         return Float(ceilPartTrimmed)
     }
     
     
     
-    private func recognizePrice(image: UIImage, callback: @escaping (String) -> Void) {
+    private func recognizePrice(tesseract: G8Tesseract, image: UIImage, callback: @escaping (String) -> Void) {
         // тут нужно добавлять символы, которые обычно могут стоять рядом с ценой
         // например валюта. Частый случай, что валюту он начинает распознавать как цифры, если
         // символ этой валюты не добавлять в whitelist
@@ -364,12 +406,8 @@ class CameraViewController: UIViewController {
     }
     
     
-    
-
-    
-    
     private func handleStringCost(src: String) -> String {
-        var trimed = src.trimmingCharacters(in: CameraViewController.gabrageSet).trimmingCharacters(in: .whitespacesAndNewlines)
+        var trimed = src.trimmingCharacters(in: CameraViewController.gabrageSet) //.trimmingCharacters(in: .whitespacesAndNewlines)
         trimed = trimed.replacingOccurrences(of: " ", with: "")
         return trimed
     }
