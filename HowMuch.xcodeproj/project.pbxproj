@@ -34,6 +34,8 @@
 		9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61620016406001AC1E8 /* libstdc++.tbd */; };
 		9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61820016410001AC1E8 /* CoreImage.framework */; };
 		9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */; };
+		9BF2D574201322F600787030 /* RegionRects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF2D573201322F600787030 /* RegionRects.swift */; };
+		9BF2D577201326F800787030 /* RecognizerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF2D576201326F800787030 /* RecognizerEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +84,8 @@
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BF2D573201322F600787030 /* RegionRects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionRects.swift; sourceTree = "<group>"; };
+		9BF2D576201326F800787030 /* RecognizerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizerEngine.swift; sourceTree = "<group>"; };
 		CBA2641F5EF8CD4C3FE5CF6C /* Pods-Text Detection Starter Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text Detection Starter Project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Text Detection Starter Project/Pods-Text Detection Starter Project.debug.xcconfig"; sourceTree = "<group>"; };
 		D0B478BE9529A10BB90CE361 /* Pods_HowMuch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HowMuch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -158,6 +162,7 @@
 		9B6FEA9F2002A3AA00CEF94F /* HowMuch */ = {
 			isa = PBXGroup;
 			children = (
+				9BF2D5752013236A00787030 /* Core */,
 				9B9E2242200FC2050026122B /* Utils */,
 				9B6FEADC2009329E00CEF94F /* Extensions */,
 				9B6FEAD5200547FF00CEF94F /* Services */,
@@ -246,6 +251,15 @@
 				9B9E2243200FC2220026122B /* ObserverList.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		9BF2D5752013236A00787030 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				9BF2D573201322F600787030 /* RegionRects.swift */,
+				9BF2D576201326F800787030 /* RecognizerEngine.swift */,
+			);
+			path = Core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -466,6 +480,8 @@
 				9B6FEAFB200A10AE00CEF94F /* CameraPresenter.swift in Sources */,
 				9B6FEAD92005482A00CEF94F /* CameraViewController.swift in Sources */,
 				9B6FEADE200932B500CEF94F /* CGPoint+Extention.swift in Sources */,
+				9BF2D574201322F600787030 /* RegionRects.swift in Sources */,
+				9BF2D577201326F800787030 /* RecognizerEngine.swift in Sources */,
 				9B9E2244200FC2220026122B /* ObserverList.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
 				9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */,

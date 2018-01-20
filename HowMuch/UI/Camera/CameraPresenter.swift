@@ -24,6 +24,7 @@ class CameraPresenter: SettingsObserver {
     }
     
     
+    
     var signs: (from: Character, to: Character) {
         let current = currencies
         return (current.from.sign, current.to.sign)

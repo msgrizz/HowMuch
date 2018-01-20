@@ -9,29 +9,10 @@
 import UIKit
 import AVFoundation
 import Vision
-import TesseractOCR
 
 
+class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, RecognizerEngineDelegate {
 
-
-class CameraViewController: UIViewController {
-    struct RegionRects {
-        /// Прямоугольник всего слова
-        let wordRect: CGRect
-        /// Прямоугольники посимвольно
-        let charRects: [CGRect]
-        /// Прямоугольник с целой частью
-        let ceilRect: CGRect
-        /// Прямоугольник с дробной частью
-        let floorRect: CGRect
-        /// Прямоугольник с разделителем
-        let delimiterRect: CGRect
-        /// Количество знаков в целой части
-        let ceilCount: Int
-        /// Количество знаков в дробной части
-        let floorCount: Int
-    }
-    
     let debugCeilImageView = UIImageView(frame: CGRect.zero)
     let debugFloorImageView = UIImageView(frame: CGRect.zero)
     
@@ -48,10 +29,9 @@ class CameraViewController: UIViewController {
         view.addSubview(debugCeilImageView)
         view.addSubview(debugFloorImageView)
         setupConstraints()
-
         
+        engine.delegate = self
         startLiveVideo()
-        startTextDetection()
     }
     
     
@@ -61,7 +41,7 @@ class CameraViewController: UIViewController {
         let signs = presenter.signs        
         bottomPanelView.reset()
         bottomPanelView.setupCurrencies(fromCurrency: signs.from, toCurrency: signs.to)
-        tryParseFloat = presenter.tryParseFloat
+        engine.setup(cameraRect: cameraView.bounds, tryParseFloat: presenter.tryParseFloat)
     }
     
     
@@ -72,8 +52,10 @@ class CameraViewController: UIViewController {
     }
     
     
+    
     override func viewDidLayoutSubviews() {
         cameraView.layer.sublayers?[0].frame = cameraView.bounds
+        engine.setup(cameraRect: cameraView.bounds, tryParseFloat: presenter.tryParseFloat)
         drawCross()
     }
     
@@ -81,24 +63,11 @@ class CameraViewController: UIViewController {
     // MARK: -Private
     private var cameraView = UIImageView()
     private var cameraLayer: AVCaptureVideoPreviewLayer!
-    
     private let bottomPanelView = ConvertPanelView()
+    
     private let presenter = CameraPresenter()
-    
-    
+    private var engine = RecognizerEngine()
     private var session = AVCaptureSession()
-    private var requests = [VNRequest]()
-    
-    static private let gabrageString = "$£p.-,"
-    static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
-    private var captureBuffer: CMSampleBuffer!
-    private var pixelBuffer: CVImageBuffer!
-    private var recognizeInProcess = false
-    private var handlingTextInProcess = false
-    private var tryParseFloat = false
-    private let tesseractCeil = G8Tesseract(language: "eng")!
-    private let tesseractFloor = G8Tesseract(language: "eng")!
-    
     
     private func setupConstraints() {
         let guide = view.safeAreaLayoutGuide
@@ -155,6 +124,13 @@ class CameraViewController: UIViewController {
     }
     
     
+    private func drawWord(rect: RegionRects) {
+        drawWordBorder(rect: rect.ceilRect)
+        drawWordBorder(rect: rect.delimiterRect, borderColor: UIColor.blue)
+        drawWordBorder(rect: rect.floorRect, borderColor: UIColor.green)
+    }
+    
+    
     
     private func startLiveVideo() {
         session.sessionPreset = AVCaptureSession.Preset.photo
@@ -178,140 +154,6 @@ class CameraViewController: UIViewController {
     
     
     
-    
-    
-    private func startTextDetection() {
-        let textRequest = VNDetectTextRectanglesRequest(completionHandler: self.detectTextHandler)
-        textRequest.reportCharacterBoxes = true
-        self.requests = [textRequest]
-    }
-    
-    
-    
-    private func detectTextHandler(request: VNRequest, error: Error?) {
-        DispatchQueue.main.async {
-            self.cameraView.layer.sublayers?.removeSubrange(2...)
-        }
-        if handlingTextInProcess {
-            return
-        }
-        if let error = error {
-            print(error)
-            return
-        }
-        guard let observations = request.results else {
-            return
-        }
-        
-        let regions = observations.flatMap({$0 as? VNTextObservation})
-        guard regions.count > 0 else {
-            return
-        }
-        handlingTextInProcess = true
-        DispatchQueue.main.async() {
-            defer {
-                self.handlingTextInProcess = false
-            }
-            let rects = regions.flatMap {
-                return self.getWordRegion(box: $0)
-            }
-            guard rects.count > 0 else {
-                return
-            }
-            let centerPoint = self.cameraView.bounds.center
-            guard let centerRect = rects.first(where: { $0.wordRect.contains(centerPoint) }) else {
-                return
-            }
-            
-            self.drawWordBorder(rect: centerRect.ceilRect)
-            self.drawWordBorder(rect: centerRect.delimiterRect, borderColor: UIColor.blue)
-            self.drawWordBorder(rect: centerRect.floorRect, borderColor: UIColor.green)
-            
-            self.recognizePrice(rect: centerRect)
-        }
-    }
-    
-    
-    
-    /// Разбитие найденного фрагмента логические участки
-    /// Стратегия: целая часть - первые символы одинакового размера,
-    /// остальная часть полностью считается дробной
-    private func getWordRegion(box: VNTextObservation) -> RegionRects? {
-        guard let boxes = box.characterBoxes else {
-            return nil
-        }
-        var ceilCount = 0
-        var floorCount = 0
-        var maxX: CGFloat = 0.0
-        var minX: CGFloat = 9999.0
-        var maxY: CGFloat = 0.0
-        var minY: CGFloat = 9999.0
-        
-        let charRects = [CGRect]()
-        var ceilRect = CGRect.zero
-        var floorRect = CGRect.zero
-        var delimiterRect = CGRect.zero
-        var maxHeight: CGFloat = 0
-        
-        var foundCeil = false
-        
-        
-        for char in boxes {
-            let bottomLeft = char.bottomLeft
-            let bottomRight = char.bottomRight
-            let topRight = char.topRight
-            
-            if !foundCeil {
-                let height = topRight.y - bottomRight.y
-                if height > maxHeight {
-                    maxHeight = height
-                } else if height < (maxHeight * 0.8) {
-                    delimiterRect = getRect(maxX: bottomRight.x, maxY: topRight.y, minX: bottomLeft.x, minY: bottomRight.y)
-                    if foundCeil {
-                        break
-                    }
-                    
-                    foundCeil = true
-                    ceilRect = getRect(maxX: maxX, maxY: maxY, minX: minX, minY: minY)
-                    maxHeight = 0
-                    maxX = 0.0
-                    minX = 9999.0
-                    maxY = 0.0
-                    minY = 9999.0
-                }
-            }
-            
-            minY = min(bottomRight.y, minY)
-            maxY = max(topRight.y, maxY)
-            minX = min(bottomLeft.x, minX)
-            maxX = max(bottomRight.x, maxX)
-            foundCeil ? (floorCount += 1) : (ceilCount += 1)
-        }
-        
-        if !foundCeil {
-            ceilRect = getRect(maxX: maxX, maxY: maxY, minX: minX, minY: minY)
-        } else {
-            floorRect = getRect(maxX: maxX, maxY: maxY, minX: minX, minY: minY)
-        }
-        let wordRect = floorRect != CGRect.zero ? ceilRect.union(floorRect) : ceilRect
-        return RegionRects(wordRect: wordRect, charRects: charRects, ceilRect: ceilRect,
-                           floorRect: floorRect, delimiterRect: delimiterRect, ceilCount: ceilCount, floorCount: floorCount)
-    }
-    
-    
-    
-    func getRect(maxX: CGFloat, maxY: CGFloat, minX: CGFloat, minY: CGFloat) -> CGRect {
-        let viewHeight = cameraView.frame.size.height
-        let viewWidth = cameraView.frame.size.width
-        
-        let xCord = minX * viewWidth
-        let yCord = (1 - maxY) * viewHeight
-        let width = (maxX - minX) * viewWidth
-        let height = (maxY - minY) * viewHeight
-        return CGRect(x: xCord, y: yCord, width: width, height: height)
-    }
-    
-    
     private func drawWordBorder(rect: CGRect, borderColor: UIColor = UIColor.red) {
         let outline = CALayer()
         outline.frame = rect
@@ -322,168 +164,34 @@ class CameraViewController: UIViewController {
     
     
     
-    private func recognizePrice(rect: RegionRects) {
-        if recognizeInProcess {
-            return
-        }
-        recognizeInProcess = true
-        
-        let image = imageFromSampleBuffer(sampleBuffer: captureBuffer)
-        // распознаем целую часть
-        guard let cgimg = image.cgImage, let ceilImage = cgimg.cropping(to: rect.ceilRect).map(UIImage.init)   else {
-            return
-        }
-        debugCeilImageView.image = ceilImage
-        let recognizeGroup = DispatchGroup()
-        
-        var ceilPart = ""
-        var floorPart = ""
-        DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
-            self.recognizePrice(tesseract: self.tesseractCeil, image: ceilImage) { result in
-                ceilPart = result
-            }
-        }
-        if tryParseFloat, let floorImage = cgimg.cropping(to: rect.floorRect).map(UIImage.init)  {
-            debugFloorImageView.image = floorImage
-            DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
-                self.recognizePrice(tesseract: self.tesseractFloor, image: floorImage) { result in
-                    floorPart = result
-                }
-            }
-        }
-        
-        recognizeGroup.notify(queue: .main) {
-            defer {
-                self.recognizeInProcess = false
-            }
-            // Пытаемся отбросить мусор
-            ceilPart = ceilPart.trimmingCharacters(in: .whitespacesAndNewlines)
-            floorPart = floorPart.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard (ceilPart.count == rect.ceilCount) else {
-                return
-            }
-//            if self.tryParseFloat && floorPart.count == rect.floorCount {
-//                floorPart = ""
-//            }
-            print("ceil: \(ceilPart), floor: \(floorPart)")
-            // Парсим
-            if let sourceValue = self.floatFrom(ceilPart, floorPart) {
-                let resultValue = self.presenter.calculate(from: sourceValue)
-                self.bottomPanelView.setupValues(from: sourceValue, to: resultValue)
-            }
-        }
-    }
-    
-    
-    private func floatFrom(_ ceilPart: String, _ floorPart: String) -> Float? {
-        guard !ceilPart.isEmpty else { return nil }
-        let ceilPartTrimmed = handleStringCost(src: ceilPart)
-        if tryParseFloat, !floorPart.isEmpty {
-            let floorPartTrimmed = handleStringCost(src: floorPart)
-            let floatString = "\(ceilPartTrimmed).\(floorPartTrimmed)"
-            return Float(floatString) ?? Float(ceilPartTrimmed)
-        }
-        return Float(ceilPartTrimmed)
-    }
-    
-    
-    
-    private func recognizePrice(tesseract: G8Tesseract, image: UIImage, callback: @escaping (String) -> Void) {
-        // тут нужно добавлять символы, которые обычно могут стоять рядом с ценой
-        // например валюта. Частый случай, что валюту он начинает распознавать как цифры, если
-        // символ этой валюты не добавлять в whitelist
-//        let tesseract = G8Tesseract(language: "eng")!
-        tesseract.charWhitelist = "0123456789-" + CameraViewController.gabrageString
-        tesseract.engineMode = .tesseractOnly
-        tesseract.pageSegmentationMode = .singleWord
-        tesseract.image = image.g8_grayScale()
-        tesseract.recognize()
-        let result = tesseract.recognizedText ?? ""
-        
-        DispatchQueue.main.async {
-            callback(result)
-        }
-    }
-    
-    
-    private func handleStringCost(src: String) -> String {
-        var trimed = src.trimmingCharacters(in: CameraViewController.gabrageSet) //.trimmingCharacters(in: .whitespacesAndNewlines)
-        trimed = trimed.replacingOccurrences(of: " ", with: "")
-        return trimed
-    }
-    
-    
-    
-    
-    private func imageFromSampleBuffer(sampleBuffer : CMSampleBuffer) -> UIImage
-    {
-        // Get a CMSampleBuffer's Core Video image buffer for the media data
-        let  imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        // Lock the base address of the pixel buffer
-        CVPixelBufferLockBaseAddress(imageBuffer!, CVPixelBufferLockFlags.readOnly);
-        
-        
-        // Get the number of bytes per row for the pixel buffer
-        let baseAddress = CVPixelBufferGetBaseAddress(imageBuffer!);
-        
-        // Get the number of bytes per row for the pixel buffer
-        let bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer!);
-        
-        // Get the pixel buffer width and height
-        let width = CVPixelBufferGetWidth(imageBuffer!);
-        let height = CVPixelBufferGetHeight(imageBuffer!);
-        
-        // Create a device-dependent RGB color space
-        let colorSpace = CGColorSpaceCreateDeviceRGB();
-        
-        // Create a bitmap graphics context with the sample buffer data
-        var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
-        bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
-        //let bitmapInfo: UInt32 = CGBitmapInfo.alphaInfoMask.rawValue
-        let context = CGContext.init(data: baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: bitmapInfo)
-        // Create a Quartz image from the pixel data in the bitmap graphics context
-        let quartzImage = context?.makeImage();
-        // Unlock the pixel buffer
-        CVPixelBufferUnlockBaseAddress(imageBuffer!, CVPixelBufferLockFlags.readOnly);
-        
-        
-        // Create an image object from the Quartz image
-        //        let image = UIImage.init(cgImage: quartzImage!);
-        let image = UIImage.init(cgImage: quartzImage!, scale: 1.0, orientation: UIImageOrientation.right)
-        
-        let newSize = CGSize(width: cameraView.frame.width, height: cameraView.frame.height)
-        UIGraphicsBeginImageContext(newSize)
-        image.draw(in: CGRect(origin: CGPoint(x: 0, y: 0), size: newSize))
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return newImage
-    }
-}
-
-
-
-extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+    // MARK: -AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
-        self.pixelBuffer = pixelBuffer
-        self.captureBuffer = sampleBuffer
-        
-        var requestOptions:[VNImageOption : Any] = [:]
+        var requestOptions: [VNImageOption : Any] = [:]
         
         if let camData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
-            requestOptions = [.cameraIntrinsics:camData]
+            requestOptions = [.cameraIntrinsics : camData]
         }
-        
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: requestOptions)
-        
-        do {
-            try imageRequestHandler.perform(self.requests)
-        } catch {
-            print(error)
-        }
+        engine.perform(imageRequestHandler, sampleBuffer)
+    }
+    
+    
+    
+    // MARK: -RecognizerEngineDelegate
+    func onCleanRects() {
+        cameraView.layer.sublayers?.removeSubrange(2...)
+    }
+    
+    func onDrawRect(wordRect: RegionRects) {
+        drawWord(rect: wordRect)
+    }
+    
+    func onComplete(sourceValue: Float) {
+        let resultValue = presenter.calculate(from: sourceValue)
+        bottomPanelView.setupValues(from: sourceValue, to: resultValue)
     }
 }
-
 
