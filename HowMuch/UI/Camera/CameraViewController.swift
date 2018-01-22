@@ -22,7 +22,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         super.viewDidLoad()
         
         title = "How much"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settings"), style: .plain, target: self, action: #selector(openSettings))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settingsIcon"), style: .plain, target: self, action: #selector(openSettings))
         navigationController?.navigationBar.isTranslucent = false
         
         view.addSubview(cameraView)
@@ -64,7 +64,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         self.settings = settings
         
         bottomPanelView.reset()
-        bottomPanelView.setupCurrencies(fromCurrency: settings.sourceCurrency.sign, toCurrency: settings.resultCurrency.sign)
+        bottomPanelView.setupCurrencies(fromCurrency: settings.sourceCurrency, toCurrency: settings.resultCurrency)
         engine.tryParseFloat = settings.tryParseFloat
     }
     

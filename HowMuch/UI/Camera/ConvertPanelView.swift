@@ -8,25 +8,77 @@
 
 import UIKit
 
-class ConvertPanelView: UIView {
-    private let sourceValueLabel = UILabel()
-    private let resultValueLabel = UILabel()
-    private let sourceCurrencyLabel = UILabel()
-    private let resultCurrencyLabel = UILabel()
+class CurrencyView: UIView {
+    private let titleLabel = UILabel()
+    private let valueLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(sourceValueLabel)
-        addSubview(resultValueLabel)
-        addSubview(sourceCurrencyLabel)
-        addSubview(resultCurrencyLabel)
+        backgroundColor = UIColor.white
+        
+        titleLabel.textAlignment = .center
+        valueLabel.textAlignment = .center
+        
+        addSubview(titleLabel)
+        addSubview(valueLabel)
+        
+        setupConstraints()
+        titleLabel.font = UIFont.systemFont(ofSize: 22)
+    }
+    
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func set(title: String) {
+        titleLabel.text = String(title)
+    }
+    
+    
+    func set(value: String) {
+        valueLabel.text = value
+    }
+    
+    private func setupConstraints() {
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
+            titleLabel.widthAnchor.constraint(equalTo: widthAnchor)
+            ])
+        
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            valueLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            valueLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            valueLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
+            valueLabel.widthAnchor.constraint(equalTo: widthAnchor)
+        ])
+    }
+}
+
+
+class ConvertPanelView: UIView {
+    private let sourceView = CurrencyView()
+    private let resultView = CurrencyView()
+    private let changeButton = UIButton(type: .system)
+    
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        changeButton.setImage(#imageLiteral(resourceName: "changeIcon"), for: .normal)
+        changeButton.backgroundColor = UIColor.white
+        
+        addSubview(sourceView)
+        addSubview(resultView)
+        addSubview(changeButton)
         
         backgroundColor = UIColor.white
         setupValues(from: 0, to: 0)
-        sourceCurrencyLabel.textAlignment = .center
-        resultCurrencyLabel.textAlignment = .center
-        sourceValueLabel.textAlignment = .left
-        resultValueLabel.textAlignment = .left
         
         setupConstraints()
     }
@@ -36,9 +88,9 @@ class ConvertPanelView: UIView {
     }
     
     
-    func setupCurrencies(fromCurrency: Character, toCurrency: Character) {
-        sourceCurrencyLabel.text = String(fromCurrency)
-        resultCurrencyLabel.text = String(toCurrency)
+    func setupCurrencies(fromCurrency: Currency, toCurrency: Currency) {
+        sourceView.set(title: "\(fromCurrency.flag) \(fromCurrency.shortName)")
+        resultView.set(title: "\(toCurrency.flag) \(toCurrency.shortName)")
     }
     
     
@@ -49,45 +101,36 @@ class ConvertPanelView: UIView {
     
     
     func setupValues(from: Float, to: Float) {
-        sourceValueLabel.text = String(format: "%.2f", from)
-        resultValueLabel.text = String(format: "%.2f", to)
+        sourceView.set(value: String(format: "%.2f", from))
+        resultView.set(value: String(format: "%.2f", to))
     }
     
     
     // MARK: -Private
     
     private func setupConstraints() {
-        sourceCurrencyLabel.translatesAutoresizingMaskIntoConstraints = false
+        sourceView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            sourceCurrencyLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            sourceCurrencyLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            sourceCurrencyLabel.heightAnchor.constraint(equalTo: heightAnchor),
-            sourceCurrencyLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.1)
+            sourceView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            sourceView.topAnchor.constraint(equalTo: topAnchor),
+            sourceView.heightAnchor.constraint(equalTo: heightAnchor),
+            sourceView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.4)
             ])
         
-        sourceValueLabel.translatesAutoresizingMaskIntoConstraints = false
+        changeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            sourceValueLabel.leadingAnchor.constraint(equalTo: sourceCurrencyLabel.trailingAnchor),
-            sourceValueLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            sourceValueLabel.heightAnchor.constraint(equalTo: heightAnchor),
-            sourceValueLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.4)
-            ])
+            changeButton.topAnchor.constraint(equalTo: topAnchor),
+            changeButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            changeButton.heightAnchor.constraint(equalTo: heightAnchor),
+            changeButton.widthAnchor.constraint(equalToConstant: 35)
+        ])
         
-        resultCurrencyLabel.translatesAutoresizingMaskIntoConstraints = false
+        resultView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            resultCurrencyLabel.leadingAnchor.constraint(equalTo: sourceValueLabel.trailingAnchor),
-            resultCurrencyLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            resultCurrencyLabel.heightAnchor.constraint(equalTo: heightAnchor),
-            resultCurrencyLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.1)
-            ])
-        
-        
-        resultValueLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            resultValueLabel.leadingAnchor.constraint(equalTo: resultCurrencyLabel.trailingAnchor),
-            resultValueLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            resultValueLabel.heightAnchor.constraint(equalTo: heightAnchor),
-            resultValueLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.4)
+            resultView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            resultView.topAnchor.constraint(equalTo: topAnchor),
+            resultView.heightAnchor.constraint(equalTo: heightAnchor),
+            resultView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.4)
             ])
     }
 }
