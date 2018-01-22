@@ -8,13 +8,31 @@
 
 import Foundation
 
-class SettingsPresenter {
+protocol SettingsView: class {
+    func set(settings: Settings)
+}
 
-    func save(settings: Settings) {
-        Services.settings.save(settings: settings)
+
+class SettingsPresenter {
+    weak var view: SettingsView?
+    
+    
+    init(view: SettingsView) {
+        self.view = view
     }
     
-    var settings: Settings {
-        return Services.settings.settings
+    func fetch() {
+        Services.settings.loadSettings { [weak self] settings in
+            guard let strong = self else {
+                return
+            }
+            strong.view?.set(settings: settings)
+        }
+    }
+    
+    
+    
+    func save(settings: Settings) {
+        return Services.settings.save(settings: settings)
     }
 }

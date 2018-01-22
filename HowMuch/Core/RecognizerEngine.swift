@@ -20,15 +20,10 @@ protocol RecognizerEngineDelegate: class {
 
 
 class RecognizerEngine {
+    weak var delegate: RecognizerEngineDelegate?
+    var cameraRect = CGRect.zero
+    var tryParseFloat = false
 
-    var delegate: RecognizerEngineDelegate?
-    
-    func setup(cameraRect: CGRect, tryParseFloat: Bool) {
-        self.cameraRect = cameraRect
-        self.tryParseFloat = tryParseFloat
-    }
-    
-    
     
     func perform(_ imageRequestHandler: VNImageRequestHandler, _ sampleBuffer: CMSampleBuffer) {
         guard cameraRect != .zero else {
@@ -51,8 +46,6 @@ class RecognizerEngine {
     private let tesseractCeil = G8Tesseract(language: "eng")!
     private let tesseractFloor = G8Tesseract(language: "eng")!
     
-    private var cameraRect: CGRect!
-    private var tryParseFloat = false
     private var sampleBuffer: CMSampleBuffer!
     
     private lazy var request: VNRequest = {
@@ -88,7 +81,9 @@ class RecognizerEngine {
         guard let centerRect = rects.first(where: { $0.wordRect.contains(cameraRect.center) }) else {
             return
         }
-        delegate?.onDrawRect(wordRect: centerRect)
+        DispatchQueue.main.async {
+            self.delegate?.onDrawRect(wordRect: centerRect)
+        }
         recognizePrice(rect: centerRect)
     }
     
@@ -139,7 +134,9 @@ class RecognizerEngine {
             print("ceil: \(ceilPart), floor: \(floorPart)")
             // Парсим
             if let sourceValue = self.floatFrom(ceilPart, floorPart) {
-                self.delegate?.onComplete(sourceValue: sourceValue)
+                DispatchQueue.main.async {
+                    self.delegate?.onComplete(sourceValue: sourceValue)
+                }
             }
         }
     }

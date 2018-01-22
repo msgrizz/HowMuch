@@ -9,46 +9,31 @@
 import UIKit
 
 
-class CameraPresenter: SettingsObserver {
+protocol CameraView: class {
+    func set(settings: Settings)
+}
+
+
+class CameraPresenter {
+    weak var view: CameraView?
     
-    
-    // MARK: -SettingsObserver
-    func onChange(settings: Settings) {
-        self.settings = settings
+    init(view: CameraView) {
+        self.view = view
     }
     
     
-    init() {
-        settings = Services.settings.settings
-        Services.settings.add(observer: self)
+    func fetch() {
+        Services.settings.loadSettings { [weak self] settings in
+            guard let strong = self else {
+                return
+            }
+            strong.view?.set(settings: settings)
+        }
     }
     
     
-    
-    var signs: (from: Character, to: Character) {
-        let current = currencies
-        return (current.from.sign, current.to.sign)
-    }
-    
-    
-    var tryParseFloat: Bool {
-        return settings.tryParseFloat
-    }
-    
-    
-    
-    var currencies: (from: Currency, to: Currency) {
-        return (settings.sourceCurrency, settings.resultCurrency)
-    }
-    
-    
-    
-    func calculate(from value: Float) -> Float {
-        let current = currencies
-        let ratio = CurrencyService.shared.getRate(from: current.from.type, to: current.to.type)
+    func calculate(sourceCurrency: CurrencyType, resultCurrency: CurrencyType, from value: Float) -> Float {
+        let ratio = CurrencyService.shared.getRate(from: sourceCurrency, to: resultCurrency)
         return ratio * value
     }
-    
-    
-    private var settings: Settings
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 
-class SettingViewController: UITableViewController {
+class SettingViewController: UITableViewController, SettingsView {
     
     static let identifier = String(describing: SettingViewController.self)
     
@@ -19,19 +19,30 @@ class SettingViewController: UITableViewController {
         tableView.register(SelectCurrencyCellView.self, forCellReuseIdentifier: SelectCurrencyCellView.identifier)
         tableView.register(CheckRecognizeFloatViewCell.self, forCellReuseIdentifier: CheckRecognizeFloatViewCell.identifier)
         
-        settings = presenter.settings
+        presenter = SettingsPresenter(view: self)
+        presenter.fetch()
     }
     
     private let sections = ["Выбор валюты", "Настройки распознавания"]
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-    
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        save()
+        presenter.save(settings: settings)
+    }
+    
+    
+    
+    //MARK: -SettingsView
+    func set(settings: Settings) {
+        self.settings = settings
+        tableView.reloadData()
+    }
+    
+    
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
     
     
@@ -59,6 +70,7 @@ class SettingViewController: UITableViewController {
             cell.select()
         }
     }
+    
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -95,12 +107,8 @@ class SettingViewController: UITableViewController {
     
     // MARK: Private
     
-    private let presenter = SettingsPresenter()
-    private var settings: Settings!
-    
-    private func save() {
-        presenter.save(settings: settings)
-    }
+    private var presenter: SettingsPresenter!
+    private var settings = Settings()
 }
 
 

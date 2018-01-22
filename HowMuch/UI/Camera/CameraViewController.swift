@@ -11,11 +11,12 @@ import AVFoundation
 import Vision
 
 
-class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, RecognizerEngineDelegate {
+class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, RecognizerEngineDelegate, CameraView {
 
     let debugCeilImageView = UIImageView(frame: CGRect.zero)
     let debugFloorImageView = UIImageView(frame: CGRect.zero)
     
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         view.addSubview(debugFloorImageView)
         setupConstraints()
         
+        presenter = CameraPresenter(view: self)
         engine.delegate = self
         startLiveVideo()
     }
@@ -38,10 +40,15 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let signs = presenter.signs        
-        bottomPanelView.reset()
-        bottomPanelView.setupCurrencies(fromCurrency: signs.from, toCurrency: signs.to)
-        engine.setup(cameraRect: cameraView.bounds, tryParseFloat: presenter.tryParseFloat)
+        presenter.fetch()
+    }
+    
+    
+    
+    override func viewDidLayoutSubviews() {
+        cameraView.layer.sublayers?[0].frame = cameraView.bounds
+        engine.cameraRect = cameraView.bounds
+        drawCross()
     }
     
     
@@ -52,11 +59,13 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
     
     
-    
-    override func viewDidLayoutSubviews() {
-        cameraView.layer.sublayers?[0].frame = cameraView.bounds
-        engine.setup(cameraRect: cameraView.bounds, tryParseFloat: presenter.tryParseFloat)
-        drawCross()
+    // MARK: -CameraView
+    func set(settings: Settings) {
+        self.settings = settings
+        
+        bottomPanelView.reset()
+        bottomPanelView.setupCurrencies(fromCurrency: settings.sourceCurrency.sign, toCurrency: settings.resultCurrency.sign)
+        engine.tryParseFloat = settings.tryParseFloat
     }
     
     
@@ -64,8 +73,9 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var cameraView = UIImageView()
     private var cameraLayer: AVCaptureVideoPreviewLayer!
     private let bottomPanelView = ConvertPanelView()
+    private var settings = Settings()
     
-    private let presenter = CameraPresenter()
+    private var presenter: CameraPresenter!
     private var engine = RecognizerEngine()
     private var session = AVCaptureSession()
     
@@ -190,7 +200,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
     
     func onComplete(sourceValue: Float) {
-        let resultValue = presenter.calculate(from: sourceValue)
+        let resultValue = presenter.calculate(sourceCurrency: settings.sourceCurrency.type, resultCurrency: settings.resultCurrency.type, from: sourceValue)
         bottomPanelView.setupValues(from: sourceValue, to: resultValue)
     }
 }
