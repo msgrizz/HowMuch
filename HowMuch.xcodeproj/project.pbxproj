@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		417A74DE4FD59F8731730D44 /* Pods_HowMuch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B478BE9529A10BB90CE361 /* Pods_HowMuch.framework */; };
 		5E1A7C10B732481A2D9659CC /* Pods_HowMuchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937431F07A095D3F0BDD5923 /* Pods_HowMuchTests.framework */; };
+		9B5A1CC52018DBB80056D6DB /* SourceCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CC42018DBB80056D6DB /* SourceCurrencyView.swift */; };
+		9B5A1CC72018DBC40056D6DB /* ResultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CC62018DBC40056D6DB /* ResultCurrencyView.swift */; };
+		9B5A1CC92018DC7C0056D6DB /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CC82018DC7C0056D6DB /* UIColor+Extension.swift */; };
+		9B5A1CCB2018E0670056D6DB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCA2018E0670056D6DB /* String+Extension.swift */; };
+		9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */; };
+		9B5A1CCF2018F3F40056D6DB /* CrossView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCE2018F3F40056D6DB /* CrossView.swift */; };
 		9B6FEAA62002A53100CEF94F /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA02002A53100CEF94F /* tessdata */; };
 		9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA22002A53100CEF94F /* AppDelegate.swift */; };
 		9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA32002A53100CEF94F /* Assets.xcassets */; };
@@ -57,6 +63,12 @@
 		88A2DF89A76323E178E8991E /* Pods-Text Detection Starter Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text Detection Starter Project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Text Detection Starter Project/Pods-Text Detection Starter Project.release.xcconfig"; sourceTree = "<group>"; };
 		8B0D6AFB1EFA582B00544F3D /* HowMuch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HowMuch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		937431F07A095D3F0BDD5923 /* Pods_HowMuchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HowMuchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B5A1CC42018DBB80056D6DB /* SourceCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCurrencyView.swift; sourceTree = "<group>"; };
+		9B5A1CC62018DBC40056D6DB /* ResultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCurrencyView.swift; sourceTree = "<group>"; };
+		9B5A1CC82018DC7C0056D6DB /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		9B5A1CCA2018E0670056D6DB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisabledCameraView.swift; sourceTree = "<group>"; };
+		9B5A1CCE2018F3F40056D6DB /* CrossView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossView.swift; sourceTree = "<group>"; };
 		9B6FEAA02002A53100CEF94F /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = HowMuch/tessdata; sourceTree = SOURCE_ROOT; };
 		9B6FEAA22002A53100CEF94F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = HowMuch/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
 		9B6FEAA32002A53100CEF94F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = HowMuch/Assets.xcassets; sourceTree = SOURCE_ROOT; };
@@ -210,6 +222,8 @@
 			children = (
 				9B6FEADD200932B500CEF94F /* CGPoint+Extention.swift */,
 				9B6FEADF200932CD00CEF94F /* CGRect+Extention.swift */,
+				9B5A1CC82018DC7C0056D6DB /* UIColor+Extension.swift */,
+				9B5A1CCA2018E0670056D6DB /* String+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -241,6 +255,10 @@
 				9B6FEAFA200A10AE00CEF94F /* CameraPresenter.swift */,
 				9B6FEAD82005482A00CEF94F /* CameraViewController.swift */,
 				9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */,
+				9B5A1CC42018DBB80056D6DB /* SourceCurrencyView.swift */,
+				9B5A1CC62018DBC40056D6DB /* ResultCurrencyView.swift */,
+				9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */,
+				9B5A1CCE2018F3F40056D6DB /* CrossView.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -474,6 +492,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B5A1CC92018DC7C0056D6DB /* UIColor+Extension.swift in Sources */,
 				9B6FEAF9200A0EE500CEF94F /* SettingsService.swift in Sources */,
 				9B9E2248200FC7A00026122B /* AppServices.swift in Sources */,
 				9B6FEAE720094A1000CEF94F /* CheckRecognizeFloatViewCell.swift in Sources */,
@@ -484,8 +503,13 @@
 				9BF2D577201326F800787030 /* RecognizerEngine.swift in Sources */,
 				9B9E2244200FC2220026122B /* ObserverList.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
+				9B5A1CC52018DBB80056D6DB /* SourceCurrencyView.swift in Sources */,
+				9B5A1CCB2018E0670056D6DB /* String+Extension.swift in Sources */,
 				9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */,
+				9B5A1CC72018DBC40056D6DB /* ResultCurrencyView.swift in Sources */,
+				9B5A1CCF2018F3F40056D6DB /* CrossView.swift in Sources */,
 				9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */,
+				9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */,
 				9B9E2246200FC24C0026122B /* Settings.swift in Sources */,
 				9B6FEB00200A39CA00CEF94F /* SettingPresenter.swift in Sources */,
 				9B6FEAE52009419200CEF94F /* SelectCurrencyCellView.swift in Sources */,

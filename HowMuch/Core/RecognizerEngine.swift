@@ -22,7 +22,7 @@ protocol RecognizerEngineDelegate: class {
 class RecognizerEngine {
     weak var delegate: RecognizerEngineDelegate?
     var cameraRect = CGRect.zero
-    var tryParseFloat = false
+    var tryParseFloat = false    
 
     
     func perform(_ imageRequestHandler: VNImageRequestHandler, _ sampleBuffer: CMSampleBuffer) {
@@ -131,7 +131,9 @@ class RecognizerEngine {
             //            if self.tryParseFloat && floorPart.count == rect.floorCount {
             //                floorPart = ""
             //            }
-            print("ceil: \(ceilPart), floor: \(floorPart)")
+            #if DEBUG
+//            print("ceil: \(ceilPart), floor: \(floorPart)")
+            #endif
             // Парсим
             if let sourceValue = self.floatFrom(ceilPart, floorPart) {
                 DispatchQueue.main.async {

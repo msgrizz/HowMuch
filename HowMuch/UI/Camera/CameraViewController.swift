@@ -24,16 +24,27 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         title = "How much"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settingsIcon"), style: .plain, target: self, action: #selector(openSettings))
         navigationController?.navigationBar.isTranslucent = false
+        view.backgroundColor = UIColor.white
         
         view.addSubview(cameraView)
-        view.addSubview(bottomPanelView)
+        view.addSubview(dummyView)
+        dummyView.addSubview(disabledView)
+        dummyView.addSubview(crossView)
+        disabledView.isHidden = true
+        crossView.isHidden = false
+        
+        view.addSubview(convertPanelView)
         view.addSubview(debugCeilImageView)
         view.addSubview(debugFloorImageView)
         setupConstraints()
         
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
+        dummyView.addGestureRecognizer(tapRecognizer)
+        
         presenter = CameraPresenter(view: self)
         engine.delegate = self
-        startLiveVideo()
+        convertPanelView.delegate = self
+        setupLiveVideoSession()
     }
     
     
@@ -41,14 +52,21 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         presenter.fetch()
+        start()
+    }
+    
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stop()
     }
     
     
     
     override func viewDidLayoutSubviews() {
         cameraView.layer.sublayers?[0].frame = cameraView.bounds
-        engine.cameraRect = cameraView.bounds
-        drawCross()
+        engine.cameraRect = cameraView.bounds        
     }
     
     
@@ -63,17 +81,22 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     func set(settings: Settings) {
         self.settings = settings
         
-        bottomPanelView.reset()
-        bottomPanelView.setupCurrencies(fromCurrency: settings.sourceCurrency, toCurrency: settings.resultCurrency)
+        convertPanelView.reset()
+        convertPanelView.setupCurrencies(fromCurrency: settings.sourceCurrency, toCurrency: settings.resultCurrency)
         engine.tryParseFloat = settings.tryParseFloat
     }
     
     
     // MARK: -Private
+    private var tapRecognizer: UITapGestureRecognizer!
+    private var isSuspended = false
+    private var crossView = CrossView()
+    private var dummyView = UIView()
     private var cameraView = UIImageView()
     private var cameraLayer: AVCaptureVideoPreviewLayer!
-    private let bottomPanelView = ConvertPanelView()
+    private let convertPanelView = ConvertPanelView()
     private var settings = Settings()
+    private let disabledView = DisabledCameraView()
     
     private var presenter: CameraPresenter!
     private var engine = RecognizerEngine()
@@ -87,15 +110,15 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             cameraView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
             cameraView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
             cameraView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
-            cameraView.bottomAnchor.constraint(equalTo: bottomPanelView.topAnchor, constant: 0),
+            cameraView.bottomAnchor.constraint(equalTo: convertPanelView.topAnchor, constant: 0),
             ])
         
-        bottomPanelView.translatesAutoresizingMaskIntoConstraints = false
+        convertPanelView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            bottomPanelView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: 0),
-            bottomPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
-            bottomPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
-            bottomPanelView.heightAnchor.constraint(equalToConstant: 80)
+            convertPanelView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -8),
+            convertPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 8),
+            convertPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -8),
+            convertPanelView.heightAnchor.constraint(equalToConstant: 80)
             ])
         
         debugCeilImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,25 +136,19 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             debugFloorImageView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
             debugFloorImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
             ])
+        
+        dummyView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dummyView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor),
+            dummyView.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor),
+            dummyView.widthAnchor.constraint(equalTo: cameraView.widthAnchor),
+            dummyView.heightAnchor.constraint(equalTo: cameraView.heightAnchor),
+        ])
+        
+        disabledView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        crossView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
     }
     
-    
-    private func drawCross() {
-        let center = cameraView.bounds.center
-        let layer = CAShapeLayer()
-        let path = UIBezierPath()
-        path.move(to: CGPoint(x: 0, y: 10))
-        path.addLine(to: CGPoint(x: 20, y: 10))
-        path.move(to: CGPoint(x: 10, y: 0))
-        path.addLine(to: CGPoint(x: 10, y: 20))
-        path.close()
-        
-        layer.path = path.cgPath
-        layer.strokeColor = UIColor.red.cgColor
-        
-        layer.position = CGPoint(x: center.x - 10, y: center.y - 10)
-        cameraView.layer.addSublayer(layer)
-    }
     
     
     private func drawWord(rect: RegionRects) {
@@ -142,7 +159,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     
     
-    private func startLiveVideo() {
+    private func setupLiveVideoSession() {
         session.sessionPreset = AVCaptureSession.Preset.photo
         guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video),
             let deviceInput = try? AVCaptureDeviceInput(device: captureDevice) else {
@@ -158,8 +175,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let cameraLayer = AVCaptureVideoPreviewLayer(session: session)
         cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraView.layer.addSublayer(cameraLayer)
-        
-        session.startRunning()
     }
     
     
@@ -173,10 +188,40 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
     
     
+    private func start() {
+        session.startRunning()
+    }
+    
+    
+    private func stop() {
+        session.stopRunning()
+    }
+    
+    
+    private func suspend() {
+        onCleanRects()
+        isSuspended = true
+        disabledView.isHidden = false
+        crossView.isHidden = true
+    }
+    
+    
+    private func resume() {
+        isSuspended = false
+        disabledView.isHidden = true
+        crossView.isHidden = false
+    }
+    
+    
+    @objc func onTapCamera(recognizer: UIGestureRecognizer) {
+        isSuspended ? resume() : suspend()
+    }
+    
+    
     
     // MARK: -AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+        guard !isSuspended, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
         var requestOptions: [VNImageOption : Any] = [:]
@@ -184,6 +229,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         if let camData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
             requestOptions = [.cameraIntrinsics : camData]
         }
+        
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: requestOptions)
         engine.perform(imageRequestHandler, sampleBuffer)
     }
@@ -192,16 +238,38 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     // MARK: -RecognizerEngineDelegate
     func onCleanRects() {
-        cameraView.layer.sublayers?.removeSubrange(2...)
+        if isSuspended  { return }
+        let count = cameraView.layer.sublayers?.count ?? 0
+        guard count > 1 else {
+            return
+        }
+        cameraView.layer.sublayers?.removeSubrange(1...)
     }
     
+    
+    
     func onDrawRect(wordRect: RegionRects) {
+        if isSuspended { return }
         drawWord(rect: wordRect)
     }
     
+    
+    
     func onComplete(sourceValue: Float) {
+        if isSuspended { return }
         let resultValue = presenter.calculate(sourceCurrency: settings.sourceCurrency.type, resultCurrency: settings.resultCurrency.type, from: sourceValue)
-        bottomPanelView.setupValues(from: sourceValue, to: resultValue)
+        convertPanelView.setupValues(from: sourceValue, to: resultValue)
+    }
+}
+
+
+extension CameraViewController: ConvertPanelViewDelegate {
+    func onSwap() {
+        let source = settings.sourceCurrency
+        settings.sourceCurrency = settings.resultCurrency
+        settings.resultCurrency = source
+        set(settings: settings)
+        presenter.save(settings: settings)
     }
 }
 

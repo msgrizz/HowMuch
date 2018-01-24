@@ -32,8 +32,15 @@ class CameraPresenter {
     }
     
     
+    
     func calculate(sourceCurrency: CurrencyType, resultCurrency: CurrencyType, from value: Float) -> Float {
         let ratio = CurrencyService.shared.getRate(from: sourceCurrency, to: resultCurrency)
         return ratio * value
+    }
+    
+    
+    
+    func save(settings: Settings) {
+        return Services.settings.save(settings: settings)
     }
 }
