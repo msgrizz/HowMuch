@@ -15,6 +15,7 @@
 		9B5A1CCB2018E0670056D6DB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCA2018E0670056D6DB /* String+Extension.swift */; };
 		9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */; };
 		9B5A1CCF2018F3F40056D6DB /* CrossView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCE2018F3F40056D6DB /* CrossView.swift */; };
+		9B5A1CD1201A3DB70056D6DB /* ToolbarReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */; };
 		9B6FEAA62002A53100CEF94F /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA02002A53100CEF94F /* tessdata */; };
 		9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA22002A53100CEF94F /* AppDelegate.swift */; };
 		9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA32002A53100CEF94F /* Assets.xcassets */; };
@@ -69,6 +70,7 @@
 		9B5A1CCA2018E0670056D6DB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisabledCameraView.swift; sourceTree = "<group>"; };
 		9B5A1CCE2018F3F40056D6DB /* CrossView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossView.swift; sourceTree = "<group>"; };
+		9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarReturn.swift; sourceTree = "<group>"; };
 		9B6FEAA02002A53100CEF94F /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = HowMuch/tessdata; sourceTree = SOURCE_ROOT; };
 		9B6FEAA22002A53100CEF94F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = HowMuch/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
 		9B6FEAA32002A53100CEF94F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = HowMuch/Assets.xcassets; sourceTree = SOURCE_ROOT; };
@@ -267,6 +269,7 @@
 			isa = PBXGroup;
 			children = (
 				9B9E2243200FC2220026122B /* ObserverList.swift */,
+				9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				9B9E2248200FC7A00026122B /* AppServices.swift in Sources */,
 				9B6FEAE720094A1000CEF94F /* CheckRecognizeFloatViewCell.swift in Sources */,
 				9B6FEAFB200A10AE00CEF94F /* CameraPresenter.swift in Sources */,
+				9B5A1CD1201A3DB70056D6DB /* ToolbarReturn.swift in Sources */,
 				9B6FEAD92005482A00CEF94F /* CameraViewController.swift in Sources */,
 				9B6FEADE200932B500CEF94F /* CGPoint+Extention.swift in Sources */,
 				9BF2D574201322F600787030 /* RegionRects.swift in Sources */,

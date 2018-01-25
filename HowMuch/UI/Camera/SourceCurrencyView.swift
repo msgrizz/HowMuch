@@ -8,10 +8,16 @@
 
 import UIKit
 
+protocol SourceCurrencyViewDelegate: class {
+    func onChanged(value: String)
+}
 
-class SourceCurrencyView: UIView {
+
+class SourceCurrencyView: UIView, UITextFieldDelegate {
     private let titleLabel = UILabel()
     private let valueTextField = UITextField()
+    
+    weak var delegate: SourceCurrencyViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,6 +37,13 @@ class SourceCurrencyView: UIView {
         valueTextField.clipsToBounds = true
         valueTextField.adjustsFontSizeToFitWidth = true
         valueTextField.minimumFontSize = 0.5
+        valueTextField.delegate = self
+        valueTextField.keyboardType = .decimalPad
+        valueTextField.inputAccessoryView = ToolbarReturn(tintColor: tintColor) { [weak self] in
+            guard let strong = self else { return }
+            strong.valueTextField.resignFirstResponder()
+        }
+        reset()
     }
     
     
@@ -49,6 +62,14 @@ class SourceCurrencyView: UIView {
         valueTextField.text = value
     }
     
+    
+    func reset() {
+        valueTextField.text = ""
+        valueTextField.placeholder = "0.00"
+    }
+    
+    
+    
     private func setupConstraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -65,5 +86,16 @@ class SourceCurrencyView: UIView {
             valueTextField.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
             valueTextField.widthAnchor.constraint(equalTo: widthAnchor)
             ])
+    }
+    
+    
+    // MARK: -UITextFieldDelegate
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let text = textField.text as NSString? {
+            let textAfterUpdate = text.replacingCharacters(in: range, with: string)
+            delegate?.onChanged(value: textAfterUpdate)
+        }
+        return true
     }
 }

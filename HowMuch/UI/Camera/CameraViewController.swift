@@ -26,16 +26,19 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         navigationController?.navigationBar.isTranslucent = false
         view.backgroundColor = UIColor.white
         
-        view.addSubview(cameraView)
-        view.addSubview(dummyView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(cameraView)
+        contentView.addSubview(dummyView)
         dummyView.addSubview(disabledView)
         dummyView.addSubview(crossView)
         disabledView.isHidden = true
         crossView.isHidden = false
         
-        view.addSubview(convertPanelView)
-        view.addSubview(debugCeilImageView)
-        view.addSubview(debugFloorImageView)
+        contentView.addSubview(convertPanelView)
+        contentView.addSubview(debugCeilImageView)
+        contentView.addSubview(debugFloorImageView)
         setupConstraints()
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
@@ -45,8 +48,35 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         engine.delegate = self
         convertPanelView.delegate = self
         setupLiveVideoSession()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillHide), name: .UIKeyboardWillHide, object: nil)
     }
     
+    
+    @objc func onKeyBoardWillShow(notification: Notification) {
+        guard let info = notification.userInfo else { return }
+        let height = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
+        let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
+        let opts = UIViewAnimationOptions(rawValue: curve << 16)
+        
+        UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
+            self.scrollView.contentOffset = CGPoint(x: 0, y: height)
+        })
+    }
+    
+    
+    @objc func onKeyBoardWillHide(notification: Notification) {
+        guard let info = notification.userInfo else { return }
+        let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
+        let opts = UIViewAnimationOptions(rawValue: curve << 16)
+        
+        UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
+            self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
+        })
+    }
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -88,11 +118,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     
     // MARK: -Private
+    private var scrollView = UIScrollView()
+    private var contentView = UIView()
+    
     private var tapRecognizer: UITapGestureRecognizer!
     private var isSuspended = false
     private var crossView = CrossView()
     private var dummyView = UIView()
-    private var cameraView = UIImageView()
+    private var cameraView = UIView()
     private var cameraLayer: AVCaptureVideoPreviewLayer!
     private let convertPanelView = ConvertPanelView()
     private var settings = Settings()
@@ -103,8 +136,27 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var session = AVCaptureSession()
     
     private func setupConstraints() {
-        let guide = view.safeAreaLayoutGuide
+        var guide = view.safeAreaLayoutGuide
         
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
+            scrollView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
+            scrollView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
+            scrollView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: 0),
+            ])
+        
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
+            contentView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0),
+            contentView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 0),
+            ])
+        
+        guide = contentView.safeAreaLayoutGuide
         cameraView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             cameraView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
@@ -121,21 +173,21 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             convertPanelView.heightAnchor.constraint(equalToConstant: 80)
             ])
         
-        debugCeilImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            debugCeilImageView.widthAnchor.constraint(equalToConstant: 50),
-            debugCeilImageView.heightAnchor.constraint(equalToConstant: 50),
-            debugCeilImageView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
-            debugCeilImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
-            ])
-        
-        debugFloorImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            debugFloorImageView.widthAnchor.constraint(equalToConstant: 50),
-            debugFloorImageView.heightAnchor.constraint(equalToConstant: 50),
-            debugFloorImageView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
-            debugFloorImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
-            ])
+//        debugCeilImageView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            debugCeilImageView.widthAnchor.constraint(equalToConstant: 50),
+//            debugCeilImageView.heightAnchor.constraint(equalToConstant: 50),
+//            debugCeilImageView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
+//            debugCeilImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
+//            ])
+//
+//        debugFloorImageView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            debugFloorImageView.widthAnchor.constraint(equalToConstant: 50),
+//            debugFloorImageView.heightAnchor.constraint(equalToConstant: 50),
+//            debugFloorImageView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
+//            debugFloorImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
+//            ])
         
         dummyView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -257,8 +309,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     func onComplete(sourceValue: Float) {
         if isSuspended { return }
-        let resultValue = presenter.calculate(sourceCurrency: settings.sourceCurrency.type, resultCurrency: settings.resultCurrency.type, from: sourceValue)
+        let resultValue = calculate(from: sourceValue)
         convertPanelView.setupValues(from: sourceValue, to: resultValue)
+    }
+    
+    
+    
+    func calculate(from source: Float) -> Float {
+        return presenter.calculate(sourceCurrency: settings.sourceCurrency.type, resultCurrency: settings.resultCurrency.type, from: source)
     }
 }
 
@@ -270,6 +328,12 @@ extension CameraViewController: ConvertPanelViewDelegate {
         settings.resultCurrency = source
         set(settings: settings)
         presenter.save(settings: settings)
+    }
+    
+    
+    func onChanged(value: String) {
+        let result = calculate(from: value.float)
+        convertPanelView.set(result: result)
     }
 }
 

@@ -29,15 +29,10 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
         pickerView.dataSource = self
         pickerView.delegate = self
         
-        let toolBar = UIToolbar()
-        toolBar.barStyle = UIBarStyle.default
-        toolBar.isTranslucent = true
-        toolBar.tintColor = tintColor
-        toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(title: "Готово", style: UIBarButtonItemStyle.plain, target: self, action: #selector(donePickerAction))
-        let flexible = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil)
-        toolBar.setItems([flexible, doneButton], animated: false)
-        toolBar.isUserInteractionEnabled = true
+        let toolBar = ToolbarReturn(tintColor: tintColor) { [weak self] in
+            guard let strong = self else { return }
+            strong.valueField.resignFirstResponder()
+        }
         
         valueField.inputView = pickerView
         valueField.inputAccessoryView = toolBar
@@ -49,9 +44,6 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
     }
     
     
-    @objc func donePickerAction() {
-        valueField.resignFirstResponder()
-    }
     
     func setup(title: String, value: Currency, values: [Currency], onChanged: ((Currency) -> Void)? = nil) {
         self.values = values

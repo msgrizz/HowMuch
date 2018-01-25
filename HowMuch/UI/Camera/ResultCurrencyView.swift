@@ -46,6 +46,11 @@ class ResultCurrencyView: UIView {
         valueLabel.text = value
     }
     
+    
+    func reset() {
+        valueLabel.text = "0.00"
+    }
+    
     private func setupConstraints() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

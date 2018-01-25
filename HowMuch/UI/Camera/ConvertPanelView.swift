@@ -10,10 +10,17 @@ import UIKit
 
 protocol ConvertPanelViewDelegate: class {
     func onSwap()
+    func onChanged(value: String)
 }
 
 
-class ConvertPanelView: UIView {
+class ConvertPanelView: UIView, SourceCurrencyViewDelegate {
+    
+    //MARK: -SourceCurrencyViewDelegate
+    func onChanged(value: String) {
+        delegate?.onChanged(value: value)
+    }
+    
     weak var delegate: ConvertPanelViewDelegate?
     
     func setupCurrencies(fromCurrency: Currency, toCurrency: Currency) {
@@ -24,7 +31,8 @@ class ConvertPanelView: UIView {
     
     
     func reset() {
-        setupValues(from: 0.0, to: 0.0)
+        sourceView.reset()
+        resultView.reset()
     }
     
     
@@ -34,6 +42,10 @@ class ConvertPanelView: UIView {
         resultView.set(value: String(format: "%.2f", to))
     }
     
+    
+    func set(result: Float) {
+        resultView.set(value: String(format: "%.2f", result))
+    }
     
     
     override init(frame: CGRect) {
@@ -47,9 +59,10 @@ class ConvertPanelView: UIView {
         addSubview(changeButton)
         
         backgroundColor = UIColor.white
-        setupValues(from: 0, to: 0)
+        reset()
         
         setupConstraints()
+        sourceView.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
