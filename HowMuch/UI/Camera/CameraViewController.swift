@@ -60,7 +60,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-        
+        suspend()
+        tapRecognizer.isEnabled = false
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: height)
         })
@@ -72,7 +73,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-        
+        resume()
+        tapRecognizer.isEnabled = true
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
         })
