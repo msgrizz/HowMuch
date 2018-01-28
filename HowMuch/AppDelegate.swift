@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let pictureListVc = CameraViewController()
+        let pictureListVc = RecognizerViewController()
         let initialViewController = UINavigationController(rootViewController: pictureListVc)
         
         window!.rootViewController = initialViewController
