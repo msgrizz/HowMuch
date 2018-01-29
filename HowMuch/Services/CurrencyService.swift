@@ -13,75 +13,18 @@ public class CurrencyService {
     static let ratesNotification = Notification.Name("rates")
     
 
-    func getRate(from: CurrencyType, to: CurrencyType) -> Float {
-        let fromRate = rates[from]!
-        let toRate = rates[to]!
-        return toRate / fromRate
-    }
-    
-    
-    func updateIfNeeded() {
-        guard isNeedUpdate() else { return }
-        syncRates()
-    }
-    
-    
-    
-
-    // MARK: -Private
-    static let defaultRetes: [CurrencyType : Float] = [
-        .usd : 1,
-        .rub : 56.66,
-        .eur: 0.82,
-        .byn: 2.0
-    ]
-    
-    private var rates: [CurrencyType : Float] = CurrencyService.defaultRetes {
-        didSet {
-            NotificationCenter.default.post(name: CurrencyService.ratesNotification, object: nil)
-        }
-    }
-    
-    private static let currencyRatesKey = "CurrencyRates"
-    private static let lastUpdateKey = "LastUpdate"
-    
-    private var updateInProcess = false
-    
-    
-    private init() {
-        if let rates = loadFromLocalStorage() {
-            self.rates = rates
-        }
-    }
-    
-    
-    
-    
-    private func saveToLocalStorage(rates: [CurrencyType : Float]) {
-        let userDefaults = UserDefaults.standard
-        let plistRates: [String: Float] = Dictionary(uniqueKeysWithValues: rates.flatMap { key, value in
-            return (key.rawValue, value)
-        })
-        userDefaults.set(plistRates, forKey: CurrencyService.currencyRatesKey)
-        userDefaults.set(CurrencyService.dateFormatter.string(from: Date()), forKey: CurrencyService.lastUpdateKey)
-    }
-    
-    
-    
-    private func loadFromLocalStorage() -> [CurrencyType : Float]? {
+    func loadFromLocalStorage() -> [Currency : Float]? {
         let userDefaults = UserDefaults.standard
         guard let rates = userDefaults.dictionary(forKey: CurrencyService.currencyRatesKey) else {
             return nil
         }
         return parseRates(from: rates)
     }
+
     
-    
-    
-    private func syncRates() {
-        guard !updateInProcess else {
-            return
-        }
+    func updateIfNeeded(onUpdated: @escaping ([Currency : Float]) -> Void) {
+        guard isNeedUpdate() else { return }
+        guard !updateInProcess else { return }
         updateInProcess = true
         let session = URLSession(configuration: .default)
         
@@ -94,12 +37,12 @@ public class CurrencyService {
                     print("Sync rates network error: \(error)")
                 } else if let data = data,
                     let response = response as? HTTPURLResponse,
-                    response.statusCode == 200 {
-                    
+                    response.statusCode == 200 {                    
                     DispatchQueue.main.async {
                         self.updateInProcess = false
                         UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                        self.updateRates(from: data)
+                        let newRates = self.parseRates(from: data)
+                        onUpdated(newRates)
                     }
                 }
             }
@@ -110,15 +53,28 @@ public class CurrencyService {
     
     
     
-    private func updateRates(from data: Data) {
-        let newRates = parseRates(from: data)
-        rates = rates.merging(newRates, uniquingKeysWith: { $1 })
-        saveToLocalStorage(rates: rates)
+    func saveToLocalStorage(rates: [Currency : Float]) {
+        let userDefaults = UserDefaults.standard
+        let plistRates: [String: Float] = Dictionary(uniqueKeysWithValues: rates.flatMap { key, value in
+            return (key.rawValue, value)
+        })
+        userDefaults.set(plistRates, forKey: CurrencyService.currencyRatesKey)
+        userDefaults.set(CurrencyService.dateFormatter.string(from: Date()), forKey: CurrencyService.lastUpdateKey)
     }
     
+
+    // MARK: -Private
+
+    
+    private static let currencyRatesKey = "CurrencyRates"
+    private static let lastUpdateKey = "LastUpdate"
+    
+    private var updateInProcess = false
     
     
-    private func parseRates(from data: Data) -> [CurrencyType : Float] {
+    
+    
+    private func parseRates(from data: Data) -> [Currency : Float] {
         guard let obj = try? JSONSerialization.jsonObject(with: data, options: []),
             let dict = obj as? [String: Any],
             let ratesDict = dict["rates"] as? [String: Any]
@@ -130,9 +86,9 @@ public class CurrencyService {
     
     
     
-    private func parseRates(from dict: [String: Any]) -> [CurrencyType : Float] {
+    private func parseRates(from dict: [String: Any]) -> [Currency : Float] {
         return Dictionary(uniqueKeysWithValues: dict.flatMap { key, value in
-            guard let currencyType = CurrencyType(rawValue: key),
+            guard let currencyType = Currency(rawValue: key),
                 let float = value as? Float
                 else {
                     return nil

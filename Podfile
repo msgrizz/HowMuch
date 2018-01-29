@@ -7,6 +7,7 @@ target 'HowMuch' do
 
   # Pods for HowMuch
   pod 'TesseractOCRiOS'  
+  pod 'ReSwift'
 end
 
 target 'HowMuchTests' do

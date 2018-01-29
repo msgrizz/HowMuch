@@ -9,40 +9,51 @@
 import Foundation
 
 
-enum CurrencyType: String, CustomStringConvertible {
-    case usd = "USD"
-    case rub = "RUB"
-    case eur = "EUR"
-    case byn = "BYN"
+struct Currency: Hashable, RawRepresentable {
     
-    public var description: String {
-        return self.rawValue
-    }
-}
-
-
-
-struct Currency: Equatable {
-    let type: CurrencyType
+    let shortName: String
     let name: String
     let sign: Character
     let flag: Character
     
-    var shortName: String {
-        return type.rawValue
+    init(shortName: String, name: String, sign: Character, flag: Character ) {
+        self.shortName = shortName
+        self.name = name
+        self.sign = sign
+        self.flag = flag
     }
-    
-    
-    static let usd = Currency(type: CurrencyType.usd, name: "Доллар США", sign: "$", flag: "🇺🇲" )
-    static let rub = Currency(type: CurrencyType.rub, name: "Российский рубль", sign: "₽", flag: "🇷🇺" )
-    static let eur = Currency(type: CurrencyType.eur, name: "Евро", sign: "€", flag: "🇪🇺"  )
-    static let byn = Currency(type: CurrencyType.byn, name: "Белорусский рубль", sign: "B", flag: "🇧🇾" )
+    static let usd = Currency(shortName: "USD", name: "Доллар США", sign: "$", flag: "🇺🇲" )
+    static let rub = Currency(shortName: "RUB", name: "Российский рубль", sign: "₽", flag: "🇷🇺" )
+    static let eur = Currency(shortName: "EUR", name: "Евро", sign: "€", flag: "🇪🇺"  )
+    static let byn = Currency(shortName: "BYN", name: "Белорусский рубль", sign: "B", flag: "🇧🇾" )
     
     static let all = [usd, rub, eur, byn]
     
     public static func ==(lhs: Currency, rhs: Currency) -> Bool {
-        return lhs.type == rhs.type
+        return lhs.shortName == rhs.shortName
     }
+    
+    var hashValue: Int {
+        return shortName.hashValue
+    }
+    
+    init?(rawValue: String) {
+        guard let currency = Currency.mapNameToCurrency[rawValue] else {
+            return nil
+        }
+        self = currency
+    }
+    
+    var rawValue: String {
+        return shortName
+    }
+    
+    static private let mapNameToCurrency: [String : Currency] = [
+        "USD" : .usd,
+        "RUB" : .rub,
+        "EUR" : .eur,
+        "BYN" : .byn
+    ]
 }
 
 

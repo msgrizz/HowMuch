@@ -9,24 +9,20 @@
 import Foundation
 
 
-protocol SettingsService {
-    func loadSettings(onComplete: @escaping (Settings) -> Void)
-    func save(settings: Settings)
-}
-
-
-class SettingsServiceImpl: SettingsService {
+class SettingsService {
     
     // MARK: - SettingsService
+    
+    static let shared = SettingsService()
     
     func loadSettings(onComplete: @escaping (Settings) -> Void) {
         let defaults = UserDefaults.standard
         settingQueue.async {
-            let from = CurrencyType(rawValue: defaults.string(forKey: Keys.fromCurrencyKey) ?? "")
-            let to = CurrencyType(rawValue: defaults.string(forKey: Keys.toCurrencyKey) ?? "")
+            let source = Currency(rawValue: defaults.string(forKey: Keys.fromCurrencyKey) ?? "")
+            let result = Currency(rawValue: defaults.string(forKey: Keys.toCurrencyKey) ?? "")
             let tryParseFloat = defaults.bool(forKey: Keys.tryParseFloatKey)
-            let settings = Settings(sourceCurrency: Currency.all.first{$0.type == from} ?? .usd,
-                                resultCurrency: Currency.all.first{$0.type == to} ?? .rub,
+            let settings = Settings(sourceCurrency: source ?? .usd,
+                                resultCurrency: result ?? .rub,
                                 tryParseFloatCurrency: tryParseFloat)
             DispatchQueue.main.async {
                 onComplete(settings)
@@ -38,12 +34,13 @@ class SettingsServiceImpl: SettingsService {
     func save(settings: Settings) {
         settingQueue.async {
             let defaults = UserDefaults.standard
-            defaults.set(settings.sourceCurrency.type.rawValue, forKey: Keys.fromCurrencyKey)
-            defaults.set(settings.resultCurrency.type.rawValue, forKey: Keys.toCurrencyKey)
+            defaults.set(settings.sourceCurrency.rawValue, forKey: Keys.fromCurrencyKey)
+            defaults.set(settings.resultCurrency.rawValue, forKey: Keys.toCurrencyKey)
             defaults.set(settings.tryParseFloat, forKey: Keys.tryParseFloatKey)
         }
     }
 
+    
     
     // MARK: -Private
     private let settingQueue = DispatchQueue(label: "settings")
@@ -52,5 +49,8 @@ class SettingsServiceImpl: SettingsService {
         static let toCurrencyKey = "toCurrency"
         static let tryParseFloatKey = "tryParseFloat"
     }
+    
+    
+    private init() {}
 }
 

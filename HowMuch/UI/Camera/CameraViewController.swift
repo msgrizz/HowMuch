@@ -9,12 +9,30 @@
 import UIKit
 import AVFoundation
 import Vision
+import ReSwift
 
-class CameraViewController: UIViewController, CameraView, RecognizerEngineDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
+class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
-    let debugCeilImageView = UIImageView(frame: CGRect.zero)
-    let debugFloorImageView = UIImageView(frame: CGRect.zero)
+    struct Props {
+        let recognizingStatus: RecongnizingStatus
+        let onTap: (() -> Void)?
+        let onRecognized: ((Float) -> Void)?
+        
+        static let zero = Props(recognizingStatus: .running, onTap: nil, onRecognized: nil)
+    }
     
+    var props = Props.zero {
+        didSet {
+            switch props.recognizingStatus {
+            case .running:
+                start()
+            case .stopped:
+                stop()
+            case .suspended:
+                suspend()
+            }
+        }
+    }
     
     
     override func viewDidLoad() {
@@ -34,7 +52,6 @@ class CameraViewController: UIViewController, CameraView, RecognizerEngineDelega
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
         dummyView.addGestureRecognizer(tapRecognizer)
         
-        presenter = CameraPresenter(view: self)
         engine.delegate = self
         setupLiveVideoSession()                
     }
@@ -44,7 +61,6 @@ class CameraViewController: UIViewController, CameraView, RecognizerEngineDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        presenter.fetch()
         start()
     }
     
@@ -63,29 +79,19 @@ class CameraViewController: UIViewController, CameraView, RecognizerEngineDelega
     }
     
     
-    
-    // MARK: -CameraView
-    func set(settings: Settings) {
-        self.settings = settings                
-        engine.tryParseFloat = settings.tryParseFloat
-    }
-    
-    
     // MARK: -Private
-   
+    private let debugCeilImageView = UIImageView(frame: CGRect.zero)
+    private let debugFloorImageView = UIImageView(frame: CGRect.zero)
+    
     private var tapRecognizer: UITapGestureRecognizer!
-    private var isSuspended = false
     private var crossView = CrossView()
     private var dummyView = UIView()
     private var cameraView = UIView()
     private var cameraLayer: AVCaptureVideoPreviewLayer!
-    
-    private var settings = Settings()
     private let disabledView = DisabledCameraView()
     
-    private var presenter: CameraPresenter!
-    private var engine = RecognizerEngine()
     private var session = AVCaptureSession()
+    private let engine = RecognizerEngine()
     
     private func setupConstraints() {
         let guide = view.safeAreaLayoutGuide
@@ -177,45 +183,43 @@ class CameraViewController: UIViewController, CameraView, RecognizerEngineDelega
     
     private func suspend() {
         onCleanRects()
-        isSuspended = true
         disabledView.isHidden = false
         crossView.isHidden = true
     }
     
     
     private func resume() {
-        isSuspended = false
         disabledView.isHidden = true
         crossView.isHidden = false
     }
     
     
-    @objc func onTapCamera(recognizer: UIGestureRecognizer) {
-        isSuspended ? resume() : suspend()
+    @objc private func onTapCamera(recognizer: UIGestureRecognizer) {
+        props.onTap?()
     }
     
     
     
     // MARK: -AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard !isSuspended, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+        guard props.recognizingStatus == .running, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
         var requestOptions: [VNImageOption : Any] = [:]
-        
+
         if let camData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
             requestOptions = [.cameraIntrinsics : camData]
         }
-        
+
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: requestOptions)
         engine.perform(imageRequestHandler, sampleBuffer)
     }
-    
-    
-    
-    // MARK: -RecognizerEngineDelegate
+}
+
+
+extension CameraViewController: RecognizerEngineDelegate {
     func onCleanRects() {
-        if isSuspended  { return }
+        guard props.recognizingStatus == .running else { return }
         let count = cameraView.layer.sublayers?.count ?? 0
         guard count > 1 else {
             return
@@ -226,40 +230,33 @@ class CameraViewController: UIViewController, CameraView, RecognizerEngineDelega
     
     
     func onDrawRect(wordRect: RegionRects) {
-        if isSuspended { return }
+        guard props.recognizingStatus == .running else { return }
         drawWord(rect: wordRect)
     }
     
     
     
     func onComplete(sourceValue: Float) {
-        if isSuspended { return }
-//        let resultValue = calculate(from: sourceValue)
-//        convertPanelView.setupValues(from: sourceValue, to: resultValue)
-    }
-    
-    
-    
-    func calculate(from source: Float) -> Float {
-        return presenter.calculate(sourceCurrency: settings.sourceCurrency.type, resultCurrency: settings.resultCurrency.type, from: source)
+        guard props.recognizingStatus == .running else { return }
+        props.onRecognized?(sourceValue)
     }
 }
 
 
-
-extension CameraViewController: ConvertPanelViewDelegate {
-    func onSwap() {
-        let source = settings.sourceCurrency
-        settings.sourceCurrency = settings.resultCurrency
-        settings.resultCurrency = source
-        set(settings: settings)
-        presenter.save(settings: settings)
+extension CameraViewController:  StoreSubscriber {
+    func connect(to store: Store<AppState>) {
+        store.subscribe(self)
     }
     
     
-    func onChanged(value: String) {
-//        let result = calculate(from: value.float)
-//        convertPanelView.set(result: result)
+    func newState(state: AppState) {
+        props = Props(recognizingStatus: state.recognizing.recongnizingStatus,
+                      onTap: {
+                        store.dispatch(ToggleRecognizingStatus())
+        },
+                      onRecognized: { (value: Float) in
+                        store.dispatch(SetSourceValueAction(value: value))
+        })
     }
 }
 

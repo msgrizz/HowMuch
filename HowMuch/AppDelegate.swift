@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import ReSwift
 
-let Services = AppServices()
+var store = Store<AppState>(
+    reducer: AppReducer,
+    state: nil,
+    middleware: [LoadCurrencyRatesMiddleware, UpdateCurrencyRatesMiddleware, LoadSettingsMiddleware, SaveSettingsMiddleware])
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,13 +29,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window!.rootViewController = initialViewController
         window!.makeKeyAndVisible()
         
-        CurrencyService.shared.updateIfNeeded()
+//        CurrencyService.shared.updateIfNeeded()
         return true
     }
     
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        CurrencyService.shared.updateIfNeeded()
+//        CurrencyService.shared.updateIfNeeded()
     }
 }
 

@@ -7,23 +7,50 @@
 //
 
 import UIKit
+import ReSwift
 
-class ConvertPanelViewController: UIViewController {
+class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
+    
+    struct Props {
+        let sourceCurrency: Currency
+        let resultCurrency: Currency
+        let sourceValue: Float
+        let resultValue: Float
+        let onSwap: (() -> Void)?
+        let onChange: ((String) -> Void)?
+        
+        static let zero = Props(sourceCurrency: Currency.usd, resultCurrency: Currency.usd,
+                                sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil)
+    }
+    
+    
+    var props: Props = .zero {
+        didSet {
+            convertPanelView.setupCurrencies(fromCurrency: props.sourceCurrency, toCurrency: props.resultCurrency)
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.addSubview(convertPanelView)
         setupConstraints()
     }
     
     
-    weak var delegate: ConvertPanelViewDelegate? {
-        didSet {
-            convertPanelView.delegate = delegate
-        }
+    
+    // MARK: -ConvertPanelViewDelegate
+    func onSwap() {
+        props.onSwap?()
     }
     
+    
+    func onChanged(value: String) {
+        props.onChange?(value)
+    }
 
+    
+    
     // MARK: -Private
     private let convertPanelView = ConvertPanelView()
     
@@ -38,10 +65,27 @@ class ConvertPanelViewController: UIViewController {
             convertPanelView.centerYAnchor.constraint(equalTo: guide.centerYAnchor, constant: 0),
             ])
     }
+}
+
+
+
+extension ConvertPanelViewController: StoreSubscriber {
+    func connect(to store: Store<AppState>) {
+        store.subscribe(self)
+    }
     
-    
-    func set(settings: Settings) {
-        convertPanelView.reset()
-        convertPanelView.setupCurrencies(fromCurrency: settings.sourceCurrency, toCurrency: settings.resultCurrency)
+    func newState(state: AppState) {
+        let settings = state.settings.settings
+        props = Props(sourceCurrency: settings.sourceCurrency,
+                      resultCurrency: settings.sourceCurrency,
+                      sourceValue: state.recognizing.sourceValue,
+                      resultValue: state.recognizing.resultValue,
+                      onSwap: {
+                        store.dispatch(SetSourceCurrencyAction(currency: self.props.resultCurrency))
+                        store.dispatch(SetResultCurrencyAction(currency: self.props.sourceCurrency))
+        },
+                      onChange: { value in
+                        store.dispatch(SetSourceValueAction(value: value.float))
+        })
     }
 }
