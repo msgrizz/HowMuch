@@ -15,15 +15,15 @@ class SettingsService {
     
     static let shared = SettingsService()
     
-    func loadSettings(onComplete: @escaping (Settings) -> Void) {
+    func loadSettings(onComplete: @escaping (SettingsState) -> Void) {
         let defaults = UserDefaults.standard
         settingQueue.async {
             let source = Currency(rawValue: defaults.string(forKey: Keys.fromCurrencyKey) ?? "")
             let result = Currency(rawValue: defaults.string(forKey: Keys.toCurrencyKey) ?? "")
             let tryParseFloat = defaults.bool(forKey: Keys.tryParseFloatKey)
-            let settings = Settings(sourceCurrency: source ?? .usd,
+            let settings = SettingsState(sourceCurrency: source ?? .usd,
                                 resultCurrency: result ?? .rub,
-                                tryParseFloatCurrency: tryParseFloat)
+                                tryParseFloat: tryParseFloat)
             DispatchQueue.main.async {
                 onComplete(settings)
             }
@@ -31,7 +31,7 @@ class SettingsService {
     }
     
     
-    func save(settings: Settings) {
+    func save(settings: SettingsState) {
         settingQueue.async {
             let defaults = UserDefaults.standard
             defaults.set(settings.sourceCurrency.rawValue, forKey: Keys.fromCurrencyKey)
@@ -39,7 +39,30 @@ class SettingsService {
             defaults.set(settings.tryParseFloat, forKey: Keys.tryParseFloatKey)
         }
     }
+    
+    
+    func save(sourceCurrency: Currency) {
+        settingQueue.async {
+            let defaults = UserDefaults.standard
+            defaults.set(sourceCurrency.rawValue, forKey: Keys.fromCurrencyKey)
+        }
+    }
+    
+    
+    func save(resultCurrency: Currency) {
+        settingQueue.async {
+            let defaults = UserDefaults.standard
+            defaults.set(resultCurrency.rawValue, forKey: Keys.toCurrencyKey)
+        }
+    }
 
+    
+    func save(tryParseFloat: Bool) {
+        settingQueue.async {
+            let defaults = UserDefaults.standard
+            defaults.set(tryParseFloat, forKey: Keys.tryParseFloatKey)
+        }
+    }
     
     
     // MARK: -Private

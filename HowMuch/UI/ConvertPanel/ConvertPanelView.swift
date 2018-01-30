@@ -38,7 +38,7 @@ class ConvertPanelView: UIView, SourceCurrencyViewDelegate {
     
     
     func setupValues(from: Float, to: Float) {
-        sourceView.set(value: String(format: "%.2f", from))
+        sourceView.set(value: from > 0.0 ? String(format: "%.2f", from) : "")
         resultView.set(value: String(format: "%.2f", to))
     }
     

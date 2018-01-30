@@ -130,16 +130,15 @@ extension SettingViewController: StoreSubscriber {
     }
     
     func newState(state: SettingsState) {
-        let settings = state.settings
-        props = Props(sourceCurrency: Props.CurrencyItem(currency: settings.sourceCurrency,
+        props = Props(sourceCurrency: Props.CurrencyItem(currency: state.sourceCurrency,
                                                          onSelect: { currency in
                                                             store.dispatch(SetSourceCurrencyAction(currency: currency))
         }),
-                      resultCurrency: Props.CurrencyItem(currency: settings.resultCurrency,
+                      resultCurrency: Props.CurrencyItem(currency: state.resultCurrency,
                                                          onSelect: { currency in
                                                             store.dispatch(SetResultCurrencyAction(currency: currency))
                       }),
-                      tryParseToFloat: Props.TryParseToFloatItem(value: settings.tryParseFloat,
+                      tryParseToFloat: Props.TryParseToFloatItem(value: state.tryParseFloat,
                                                                  onChange: { value in
                                                                     store.dispatch(SetParseToFloatAction(value: value))
                       })

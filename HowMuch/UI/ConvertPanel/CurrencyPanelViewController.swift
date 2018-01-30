@@ -27,6 +27,8 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
     var props: Props = .zero {
         didSet {
             convertPanelView.setupCurrencies(fromCurrency: props.sourceCurrency, toCurrency: props.resultCurrency)
+            convertPanelView.set(result: props.resultValue)
+//            convertPanelView.setupValues(from: props.sourceValue, to: props.resultValue)
         }
     }
     
@@ -76,14 +78,16 @@ extension ConvertPanelViewController: StoreSubscriber {
     }
     
     func newState(state: AppState) {
-        let settings = state.settings.settings
+        let settings = state.settings
         props = Props(sourceCurrency: settings.sourceCurrency,
                       resultCurrency: settings.resultCurrency,
                       sourceValue: state.recognizing.sourceValue,
                       resultValue: state.recognizing.resultValue,
                       onSwap: {
-                        store.dispatch(SetSourceCurrencyAction(currency: self.props.resultCurrency))
-                        store.dispatch(SetResultCurrencyAction(currency: self.props.sourceCurrency))
+                        let src = self.props.resultCurrency
+                        let res = self.props.sourceCurrency
+                        store.dispatch(SetSourceCurrencyAction(currency: src))
+                        store.dispatch(SetResultCurrencyAction(currency: res))
         },
                       onChange: { value in
                         store.dispatch(CreateSetValuesAction(state: state, source: value))

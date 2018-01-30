@@ -10,20 +10,20 @@ import ReSwift
 
 func SettingsReducer(action: Action, state: SettingsState?) -> SettingsState {
     let state = state ?? initState()
-    let oldSettings = state.settings
     
     switch action {
-    case let setSettings as SetSettingsAction:
-         return SettingsState(settings: setSettings.settings)
+    case let setSettings as LoadedSettingsAction:
+         return setSettings.settings
+        
     case let setSourceCurrency as SetSourceCurrencyAction:
-        let settings = Settings(sourceCurrency: setSourceCurrency.currency, resultCurrency: oldSettings.resultCurrency, tryParseFloatCurrency: oldSettings.tryParseFloat)
-        return SettingsState(settings: settings)
+        return SettingsState(sourceCurrency: setSourceCurrency.currency, resultCurrency: state.resultCurrency, tryParseFloat: state.tryParseFloat)
+        
     case let setResultCurrency as SetResultCurrencyAction:
-        let settings = Settings(sourceCurrency: oldSettings.sourceCurrency, resultCurrency: setResultCurrency.currency, tryParseFloatCurrency: oldSettings.tryParseFloat)
-        return SettingsState(settings: settings)
+        return SettingsState(sourceCurrency: state.sourceCurrency, resultCurrency: setResultCurrency.currency, tryParseFloat: state.tryParseFloat)
+        
     case let setParseToFloat as SetParseToFloatAction:
-        let settings = Settings(sourceCurrency: oldSettings.sourceCurrency, resultCurrency: oldSettings.resultCurrency, tryParseFloatCurrency: setParseToFloat.value)
-        return SettingsState(settings: settings)
+        return SettingsState(sourceCurrency: state.sourceCurrency, resultCurrency: state.resultCurrency, tryParseFloat: setParseToFloat.value)
+        
     default:
         return state
     }

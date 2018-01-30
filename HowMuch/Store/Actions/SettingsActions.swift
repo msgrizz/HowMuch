@@ -10,11 +10,9 @@ import ReSwift
 
 
 /// Установить настройки
-struct SetSettingsAction: Action {
+struct LoadedSettingsAction: Action {
     /// настройки
-    let settings: Settings
-    /// необходимо сохранить локально
-    let needSave: Bool
+    let settings: SettingsState
 }
 
 

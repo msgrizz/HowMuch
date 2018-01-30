@@ -9,7 +9,9 @@
 import ReSwift
 
 struct SettingsState: StateType {
-    let settings: Settings
+    let sourceCurrency: Currency
+    let resultCurrency: Currency
+    let tryParseFloat: Bool
     
-    static let `default` = SettingsState(settings: Settings())
+    static let `default` =  SettingsState(sourceCurrency: .usd, resultCurrency: .rub, tryParseFloat: true)
 }
