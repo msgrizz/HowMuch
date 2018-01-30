@@ -17,7 +17,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
         let sourceValue: Float
         let resultValue: Float
         let onSwap: (() -> Void)?
-        let onChange: ((String) -> Void)?
+        let onChange: ((Float) -> Void)?
         
         static let zero = Props(sourceCurrency: Currency.usd, resultCurrency: Currency.usd,
                                 sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil)
@@ -34,6 +34,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(convertPanelView)
+        convertPanelView.delegate = self
         setupConstraints()
     }
     
@@ -46,7 +47,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
     
     
     func onChanged(value: String) {
-        props.onChange?(value)
+        props.onChange?(value.float)
     }
 
     
@@ -85,7 +86,7 @@ extension ConvertPanelViewController: StoreSubscriber {
                         store.dispatch(SetResultCurrencyAction(currency: self.props.sourceCurrency))
         },
                       onChange: { value in
-                        store.dispatch(SetSourceValueAction(value: value.float))
+                        store.dispatch(CreateSetValuesAction(state: state, source: value))
         })
     }
 }

@@ -30,10 +30,11 @@ let LoadCurrencyRatesMiddleware: Middleware<AppState> = { dispatch, getState in
 let UpdateCurrencyRatesMiddleware: Middleware<AppState> = { dispatch, getState in
     return { next in
         return { action in
-            guard let initAction = action as? UpdateCurrencyRateAction else {
+            guard let initAction = action as? UpdateCurrencyRateAction,
+                let state = getState() else {
                 return
             }
-            let oldRates = getState()!.currencyRates.rates
+            let oldRates = state.currencyRates.rates
             CurrencyService.shared.updateIfNeeded { newRates in                
                 let rates = oldRates.merging(newRates, uniquingKeysWith: { $1 })
                 CurrencyService.shared.saveToLocalStorage(rates: newRates)

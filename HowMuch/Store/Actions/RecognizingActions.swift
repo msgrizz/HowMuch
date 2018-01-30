@@ -9,9 +9,10 @@
 import ReSwift
 
 
-/// Установить исходное значение
-struct SetSourceValueAction: Action {
-    let value: Float
+/// Установить значения
+struct SetValuesAction: Action {
+    let source: Float
+    let result: Float
 }
 
 

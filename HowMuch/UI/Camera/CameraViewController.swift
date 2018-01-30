@@ -15,7 +15,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     struct Props {
         let recognizingStatus: RecongnizingStatus
-        let onTap: (() -> Void)?
+        let onTap: ((RecongnizingStatus) -> Void)?
         let onRecognized: ((Float) -> Void)?
         
         static let zero = Props(recognizingStatus: .running, onTap: nil, onRecognized: nil)
@@ -195,7 +195,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     
     @objc private func onTapCamera(recognizer: UIGestureRecognizer) {
-        props.onTap?()
+        let newStatus: RecongnizingStatus = props.recognizingStatus == RecongnizingStatus.running ? .suspended : .running
+        props.onTap?(newStatus)
     }
     
     
@@ -251,11 +252,11 @@ extension CameraViewController:  StoreSubscriber {
     
     func newState(state: AppState) {
         props = Props(recognizingStatus: state.recognizing.recongnizingStatus,
-                      onTap: {
-                        store.dispatch(ToggleRecognizingStatus())
+                      onTap: { status in
+                        store.dispatch(SetRecognizingStatusAction(status: status))
         },
                       onRecognized: { (value: Float) in
-                        store.dispatch(SetSourceValueAction(value: value))
+                        store.dispatch(CreateSetValuesAction(state: state, source: value))
         })
     }
 }

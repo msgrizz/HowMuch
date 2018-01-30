@@ -18,7 +18,7 @@ let LoadSettingsMiddleware: Middleware<AppState> = { dispatch, getState in
             SettingsService.shared.loadSettings() { settings in
                 dispatch(SetSettingsAction(settings: settings, needSave: false))
             }
-            next(action)
+            return next(action)
         }
     }
 }
@@ -28,28 +28,25 @@ let LoadSettingsMiddleware: Middleware<AppState> = { dispatch, getState in
 let SaveSettingsMiddleware: Middleware<AppState> = { dispatch, getState in
     return { next in
         return { action in
-            defer {
-                next(action)
-            }
-            var newSettings: Settings
-            let settingState = getState()!.settings            
+            var newSettings = Settings()
+            let settingState = getState()!.settings
+            
             switch action {
             case let settingAction as SetSettingsAction:
                 guard settingAction.needSave else {
-                    return
+                    return next(action)
                 }
-                newSettings = settingAction.settings
             case let settingAction as SetSourceCurrencyAction:
-                newSettings = Settings()
+                newSettings.sourceCurrency = settingAction.currency
             case let settingAction as SetResultCurrencyAction:
-                newSettings = Settings()
+                newSettings.resultCurrency = settingAction.currency
             case let settingAction as SetParseToFloatAction:
-                newSettings = Settings()
+                newSettings.tryParseFloat = settingAction.value
             default:
-                return
+                break
             }
-            SettingsService.shared.save(settings: newSettings)
-            dispatch(SetSettingsAction(settings: newSettings, needSave: false))
+            SettingsService.shared.save(settings: newSettings)            
+            return next(action)
         }
     }
 }

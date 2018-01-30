@@ -10,7 +10,13 @@ import ReSwift
 
 func CurrencyRatesReducer(action: Action, state: CurrencyRatesState?) -> CurrencyRatesState {
     let state = state ?? initState()
-    return state
+    
+    switch action {
+    case let setCurrencyRates as SetCurrencyRatesAction:
+        return CurrencyRatesState(rates: setCurrencyRates.rates)
+    default:
+        return state
+    }
 }
 
 

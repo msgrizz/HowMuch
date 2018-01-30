@@ -41,12 +41,14 @@
 		9B7FB25E201DC7550031EFDC /* SettingsReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB25D201DC7550031EFDC /* SettingsReducer.swift */; };
 		9B7FB260201DC7650031EFDC /* CurrencyRatesReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB25F201DC7650031EFDC /* CurrencyRatesReducer.swift */; };
 		9B7FB262201DC79B0031EFDC /* RecognizingReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB261201DC79B0031EFDC /* RecognizingReducer.swift */; };
-		9B7FB264201DCE550031EFDC /* AppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB263201DCE550031EFDC /* AppActions.swift */; };
+		9B7FB264201DCE550031EFDC /* RecognizingActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB263201DCE550031EFDC /* RecognizingActions.swift */; };
 		9B7FB266201DD2160031EFDC /* CurrencyRatesMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB265201DD2160031EFDC /* CurrencyRatesMiddleware.swift */; };
 		9B7FB268201DD2680031EFDC /* SettingsMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB267201DD2680031EFDC /* SettingsMiddleware.swift */; };
 		9B7FB26A201DDB020031EFDC /* SettingsActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB269201DDB020031EFDC /* SettingsActions.swift */; };
 		9B7FB26D201DF3AB0031EFDC /* CurrencyRatesActoins.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */; };
 		9B7FB26F201DFDF90031EFDC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB26E201DFDF90031EFDC /* Settings.swift */; };
+		9B7FB2712020E2C60031EFDC /* LoggingMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */; };
+		9B7FB2742020E74B0031EFDC /* CreateSetValuesAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB2732020E74B0031EFDC /* CreateSetValuesAction.swift */; };
 		9B9E2244200FC2220026122B /* ObserverList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E2243200FC2220026122B /* ObserverList.swift */; };
 		9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61620016406001AC1E8 /* libstdc++.tbd */; };
 		9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61820016410001AC1E8 /* CoreImage.framework */; };
@@ -109,12 +111,14 @@
 		9B7FB25D201DC7550031EFDC /* SettingsReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsReducer.swift; sourceTree = "<group>"; };
 		9B7FB25F201DC7650031EFDC /* CurrencyRatesReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRatesReducer.swift; sourceTree = "<group>"; };
 		9B7FB261201DC79B0031EFDC /* RecognizingReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizingReducer.swift; sourceTree = "<group>"; };
-		9B7FB263201DCE550031EFDC /* AppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActions.swift; sourceTree = "<group>"; };
+		9B7FB263201DCE550031EFDC /* RecognizingActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizingActions.swift; sourceTree = "<group>"; };
 		9B7FB265201DD2160031EFDC /* CurrencyRatesMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRatesMiddleware.swift; sourceTree = "<group>"; };
 		9B7FB267201DD2680031EFDC /* SettingsMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMiddleware.swift; sourceTree = "<group>"; };
 		9B7FB269201DDB020031EFDC /* SettingsActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsActions.swift; sourceTree = "<group>"; };
 		9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRatesActoins.swift; sourceTree = "<group>"; };
 		9B7FB26E201DFDF90031EFDC /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingMiddleware.swift; sourceTree = "<group>"; };
+		9B7FB2732020E74B0031EFDC /* CreateSetValuesAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSetValuesAction.swift; sourceTree = "<group>"; };
 		9B9E2243200FC2220026122B /* ObserverList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverList.swift; sourceTree = "<group>"; };
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
@@ -303,6 +307,14 @@
 			path = Camera;
 			sourceTree = "<group>";
 		};
+		9B7FB2722020E71C0031EFDC /* ActionCreators */ = {
+			isa = PBXGroup;
+			children = (
+				9B7FB2732020E74B0031EFDC /* CreateSetValuesAction.swift */,
+			);
+			path = ActionCreators;
+			sourceTree = "<group>";
+		};
 		9B9E2242200FC2050026122B /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +330,7 @@
 				9BB20890201DC25B00803237 /* State */,
 				9BB20891201DC26000803237 /* Reducers */,
 				9BB20892201DC26900803237 /* Actions */,
+				9B7FB2722020E71C0031EFDC /* ActionCreators */,
 				9BB20893201DC26E00803237 /* Middlewares */,
 			);
 			path = Store;
@@ -348,9 +361,9 @@
 		9BB20892201DC26900803237 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
-				9B7FB263201DCE550031EFDC /* AppActions.swift */,
 				9B7FB269201DDB020031EFDC /* SettingsActions.swift */,
 				9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */,
+				9B7FB263201DCE550031EFDC /* RecognizingActions.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -360,6 +373,7 @@
 			children = (
 				9B7FB265201DD2160031EFDC /* CurrencyRatesMiddleware.swift */,
 				9B7FB267201DD2680031EFDC /* SettingsMiddleware.swift */,
+				9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -589,6 +603,7 @@
 				9B7FB255201DC4C90031EFDC /* SettingsState.swift in Sources */,
 				9B6FEAD92005482A00CEF94F /* RecognizerViewController.swift in Sources */,
 				9B6FEADE200932B500CEF94F /* CGPoint+Extention.swift in Sources */,
+				9B7FB2742020E74B0031EFDC /* CreateSetValuesAction.swift in Sources */,
 				9BF2D577201326F800787030 /* RecognizerEngine.swift in Sources */,
 				9B9E2244200FC2220026122B /* ObserverList.swift in Sources */,
 				9B7FB268201DD2680031EFDC /* SettingsMiddleware.swift in Sources */,
@@ -600,12 +615,13 @@
 				9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */,
 				9B5A1CC72018DBC40056D6DB /* ResultCurrencyView.swift in Sources */,
 				9B5A1CCF2018F3F40056D6DB /* CrossView.swift in Sources */,
+				9B7FB2712020E2C60031EFDC /* LoggingMiddleware.swift in Sources */,
 				9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */,
 				9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */,
 				9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */,
 				9B7FB25C201DC5E80031EFDC /* AppReducer.swift in Sources */,
 				9B7FB25A201DC5540031EFDC /* RecognizingState.swift in Sources */,
-				9B7FB264201DCE550031EFDC /* AppActions.swift in Sources */,
+				9B7FB264201DCE550031EFDC /* RecognizingActions.swift in Sources */,
 				9B7FB253201DC4750031EFDC /* AppState.swift in Sources */,
 				9B6FEAE52009419200CEF94F /* SelectCurrencyCellView.swift in Sources */,
 				9B7FB26A201DDB020031EFDC /* SettingsActions.swift in Sources */,

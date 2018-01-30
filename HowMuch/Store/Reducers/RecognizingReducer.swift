@@ -10,11 +10,18 @@ import ReSwift
 
 func RecognizingReducer(action: Action, state: RecognizingState?) -> RecognizingState {
     let state = state ?? initState()
-    return state
+    
+    switch action {
+    case let setValues as SetValuesAction:
+        return RecognizingState(sourceValue: setValues.source, resultValue: setValues.result, recongnizingStatus: state.recongnizingStatus)
+    case let setRecognizingStatus as SetRecognizingStatusAction:
+        return RecognizingState(sourceValue: state.sourceValue, resultValue: state.resultValue, recongnizingStatus: setRecognizingStatus.status)    
+    default:
+        return state
+    }    
 }
 
 
-
-func initState() -> RecognizingState {
+private func initState() -> RecognizingState {
     return RecognizingState.default
 }

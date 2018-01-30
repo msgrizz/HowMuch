@@ -34,14 +34,28 @@ class RecognizerViewController: UIViewController {
     }
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        store.dispatch(SetRecognizingStatusAction(status: .running))
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        store.dispatch(SetRecognizingStatusAction(status: .stopped))
+    }
+    
+    
+    
     // MARK: -Private
     private var scrollView = UIScrollView()
     private var contentView = UIView()
     
     
     @objc private func openSettings() {
-        let vc = SettingViewController(style: .grouped)
-        navigationController?.pushViewController(vc, animated: true)
+        let settingsVc = SettingViewController(style: .grouped)
+        settingsVc.connect(to: store)
+        navigationController?.pushViewController(settingsVc, animated: true)
     }
     
     
@@ -73,12 +87,13 @@ class RecognizerViewController: UIViewController {
         addChildViewController(cameraViewController)
         let cameraView = cameraViewController.view!
         contentView.addSubview(cameraView)
+        cameraViewController.connect(to: store)
         
         let convertPanelViewController = ConvertPanelViewController()
         addChildViewController(convertPanelViewController)
         let convertPanelView = convertPanelViewController.view!
         contentView.addSubview(convertPanelView)
-        
+        convertPanelViewController.connect(to: store)
         
         let guide = contentView.safeAreaLayoutGuide
         cameraView.translatesAutoresizingMaskIntoConstraints = false
@@ -109,8 +124,8 @@ class RecognizerViewController: UIViewController {
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-//        suspend()
-//        tapRecognizer.isEnabled = false
+        store.dispatch(SetRecognizingStatusAction(status: .suspended))
+        
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: height)
         })
@@ -123,8 +138,8 @@ class RecognizerViewController: UIViewController {
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-//        resume()
-//        tapRecognizer.isEnabled = true
+        store.dispatch(SetRecognizingStatusAction(status: .running))
+        
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
         })

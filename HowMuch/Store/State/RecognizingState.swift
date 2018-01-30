@@ -8,7 +8,7 @@
 
 import ReSwift
 
-enum RecongnizingStatus {
+enum RecongnizingStatus: Equatable {
     /// не обрабатываются кадры
     case stopped
     /// не обрабатываются кадры, экран заглушки

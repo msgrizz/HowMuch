@@ -121,8 +121,12 @@ class SettingViewController: UITableViewController {
 
 
 extension SettingViewController: StoreSubscriber {
-    func connect(to store: Store<SettingsState>) {
-        store.subscribe(self)
+    func connect(to store: Store<AppState>) {
+        store.subscribe(self) { subscription in
+            subscription.select { state in
+                state.settings
+            }
+        }
     }
     
     func newState(state: SettingsState) {
