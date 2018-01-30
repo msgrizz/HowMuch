@@ -31,7 +31,7 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
         
         let toolBar = ToolbarReturn(tintColor: tintColor) { [weak self] in
             guard let strong = self else { return }
-            strong.valueField.resignFirstResponder()
+            strong.onEndEditing()
         }
         
         valueField.inputView = pickerView
@@ -82,7 +82,6 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let value = values[row]
         valueField.text = value.shortName
-        onChanged?(value)
     }
     
     
@@ -101,6 +100,13 @@ class SelectCurrencyCellView: UITableViewCell, UIPickerViewDelegate, UIPickerVie
         valueField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         
         pickerView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    
+    private func onEndEditing() {
+        let value = values[pickerView.selectedRow(inComponent: 0)]
+        onChanged?(value)
+        valueField.resignFirstResponder()
     }
 }
 

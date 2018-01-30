@@ -28,8 +28,7 @@ let LoadSettingsMiddleware: Middleware<AppState> = { dispatch, getState in
 let SaveSettingsMiddleware: Middleware<AppState> = { dispatch, getState in
     return { next in
         return { action in
-            var newSettings = Settings()
-            let settingState = getState()!.settings
+            var newSettings = getState()?.settings.settings ?? Settings()
             
             switch action {
             case let settingAction as SetSettingsAction:
@@ -43,7 +42,7 @@ let SaveSettingsMiddleware: Middleware<AppState> = { dispatch, getState in
             case let settingAction as SetParseToFloatAction:
                 newSettings.tryParseFloat = settingAction.value
             default:
-                break
+                return next(action)
             }
             SettingsService.shared.save(settings: newSettings)            
             return next(action)

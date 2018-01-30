@@ -20,7 +20,7 @@ let LoadCurrencyRatesMiddleware: Middleware<AppState> = { dispatch, getState in
                     dispatch(SetCurrencyRatesAction(rates: rates))
                 }
             }
-            next(action)
+            return next(action)
         }
     }
 }
@@ -32,7 +32,7 @@ let UpdateCurrencyRatesMiddleware: Middleware<AppState> = { dispatch, getState i
         return { action in
             guard let initAction = action as? UpdateCurrencyRateAction,
                 let state = getState() else {
-                return
+                return next(action)
             }
             let oldRates = state.currencyRates.rates
             CurrencyService.shared.updateIfNeeded { newRates in                

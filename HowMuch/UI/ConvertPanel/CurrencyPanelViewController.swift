@@ -78,7 +78,7 @@ extension ConvertPanelViewController: StoreSubscriber {
     func newState(state: AppState) {
         let settings = state.settings.settings
         props = Props(sourceCurrency: settings.sourceCurrency,
-                      resultCurrency: settings.sourceCurrency,
+                      resultCurrency: settings.resultCurrency,
                       sourceValue: state.recognizing.sourceValue,
                       resultValue: state.recognizing.resultValue,
                       onSwap: {
