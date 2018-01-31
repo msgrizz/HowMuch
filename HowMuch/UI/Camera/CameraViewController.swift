@@ -15,10 +15,12 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     struct Props {
         let recognizingStatus: RecongnizingStatus
+        let isManualEditing: Bool
         let onTap: ((RecongnizingStatus) -> Void)?
         let onRecognized: ((Float) -> Void)?
+        let tryParseFloat: Bool
         
-        static let zero = Props(recognizingStatus: .running, onTap: nil, onRecognized: nil)
+        static let zero = Props(recognizingStatus: .running, isManualEditing: false, onTap: nil, onRecognized: nil, tryParseFloat: false)
     }
     
     var props = Props.zero {
@@ -31,6 +33,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             case .suspended:
                 suspend()
             }
+            engine.tryParseFloat = props.tryParseFloat
         }
     }
     
@@ -173,10 +176,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     private func start() {
         session.startRunning()
+        disabledView.isHidden = true
+        crossView.isHidden = false
     }
     
     
     private func stop() {
+        disabledView.isHidden = false
+        crossView.isHidden = false
         session.stopRunning()
     }
     
@@ -188,15 +195,16 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
     
     
-    private func resume() {
-        disabledView.isHidden = true
-        crossView.isHidden = false
-    }
-    
-    
-    @objc private func onTapCamera(recognizer: UIGestureRecognizer) {
-        let newStatus: RecongnizingStatus = props.recognizingStatus == RecongnizingStatus.running ? .suspended : .running
-        props.onTap?(newStatus)
+    @objc private func onTapCamera(recognizer: UIGestureRecognizer) {        
+        switch props.recognizingStatus {
+        case .running:
+            props.onTap?(.suspended)
+        case .suspended:
+            if props.isManualEditing { return }
+            props.onTap?(.running)
+        case .stopped:
+            return
+        }
     }
     
     
@@ -251,13 +259,14 @@ extension CameraViewController:  StoreSubscriber {
     
     
     func newState(state: AppState) {
-        props = Props(recognizingStatus: state.recognizing.recongnizingStatus,
+        props = Props(recognizingStatus: state.recognizing.recongnizingStatus, isManualEditing: state.recognizing.isManuallyEditing,
                       onTap: { status in
                         store.dispatch(SetRecognizingStatusAction(status: status))
         },
                       onRecognized: { (value: Float) in
                         store.dispatch(CreateSetValuesAction(state: state, source: value))
-        })
+        },
+                      tryParseFloat: state.settings.tryParseFloat)
     }
 }
 

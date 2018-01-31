@@ -9,19 +9,18 @@
 import UIKit
 
 protocol ConvertPanelViewDelegate: class {
-    func onSwap()
-    func onChanged(value: String)
+    func onSwap()    
 }
 
 
-class ConvertPanelView: UIView, SourceCurrencyViewDelegate {
-    
-    //MARK: -SourceCurrencyViewDelegate
-    func onChanged(value: String) {
-        delegate?.onChanged(value: value)
-    }
+class ConvertPanelView: UIView {
     
     weak var delegate: ConvertPanelViewDelegate?
+    weak var sourceViewDelegate: SourceCurrencyViewDelegate? {
+        didSet {
+            sourceView.delegate = sourceViewDelegate
+        }
+    }
     
     func setupCurrencies(fromCurrency: Currency, toCurrency: Currency) {
         sourceView.set(title: "\(fromCurrency.flag) \(fromCurrency.shortName)")
@@ -62,7 +61,6 @@ class ConvertPanelView: UIView, SourceCurrencyViewDelegate {
         reset()
         
         setupConstraints()
-        sourceView.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {

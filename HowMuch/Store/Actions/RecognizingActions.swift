@@ -26,5 +26,9 @@ struct SetRecognizingStatusAction: Action {
 struct ToggleRecognizingStatus: Action {}
 
 
+struct SetIsManualEditing: Action {
+    let value: Bool
+}
+
 
 

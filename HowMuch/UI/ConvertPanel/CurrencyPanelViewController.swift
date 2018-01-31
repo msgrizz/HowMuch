@@ -9,26 +9,29 @@
 import UIKit
 import ReSwift
 
-class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
+class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, SourceCurrencyViewDelegate {
     
     struct Props {
+        let manualEditingMode: Bool
         let sourceCurrency: Currency
         let resultCurrency: Currency
         let sourceValue: Float
         let resultValue: Float
+        
         let onSwap: (() -> Void)?
         let onChange: ((Float) -> Void)?
+        let onBeginEditing: (() -> Void)?
+        let onStopEditing: (() -> Void)?
         
-        static let zero = Props(sourceCurrency: Currency.usd, resultCurrency: Currency.usd,
-                                sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil)
+        static let zero = Props(manualEditingMode: false, sourceCurrency: Currency.usd, resultCurrency: Currency.usd,
+                                sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil, onBeginEditing: nil, onStopEditing: nil)
     }
     
     
     var props: Props = .zero {
         didSet {
             convertPanelView.setupCurrencies(fromCurrency: props.sourceCurrency, toCurrency: props.resultCurrency)
-            convertPanelView.set(result: props.resultValue)
-//            convertPanelView.setupValues(from: props.sourceValue, to: props.resultValue)
+            props.manualEditingMode ? convertPanelView.set(result: props.resultValue) : convertPanelView.setupValues(from: props.sourceValue, to: props.resultValue)
         }
     }
     
@@ -37,6 +40,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
         super.viewDidLoad()
         view.addSubview(convertPanelView)
         convertPanelView.delegate = self
+        convertPanelView.sourceViewDelegate = self
         setupConstraints()
     }
     
@@ -48,10 +52,22 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate {
     }
     
     
+    // MARK: -SourceCurrencyViewDelegate
     func onChanged(value: String) {
         props.onChange?(value.float)
     }
-
+    
+    
+    func onBeginEditing() {
+        props.onBeginEditing?()
+    }
+    
+    
+    
+    func onStopEditing() {
+        props.onStopEditing?()
+    }
+    
     
     
     // MARK: -Private
@@ -79,7 +95,7 @@ extension ConvertPanelViewController: StoreSubscriber {
     
     func newState(state: AppState) {
         let settings = state.settings
-        props = Props(sourceCurrency: settings.sourceCurrency,
+        props = Props(manualEditingMode: state.recognizing.isManuallyEditing, sourceCurrency: settings.sourceCurrency,
                       resultCurrency: settings.resultCurrency,
                       sourceValue: state.recognizing.sourceValue,
                       resultValue: state.recognizing.resultValue,
@@ -91,6 +107,13 @@ extension ConvertPanelViewController: StoreSubscriber {
         },
                       onChange: { value in
                         store.dispatch(CreateSetValuesAction(state: state, source: value))
-        })
+        },
+                      onBeginEditing: {
+                    store.dispatch(SetIsManualEditing(value: true))
+        },
+                      onStopEditing: {
+                    store.dispatch(SetIsManualEditing(value: false))
+        }
+        )
     }
 }

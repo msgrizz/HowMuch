@@ -21,6 +21,7 @@ struct RecognizingState: StateType {
     let sourceValue: Float
     let resultValue: Float
     let recongnizingStatus: RecongnizingStatus
+    let isManuallyEditing: Bool
     
-    static let `default` = RecognizingState(sourceValue: 0.0, resultValue: 0.0, recongnizingStatus: .running)
+    static let `default` = RecognizingState(sourceValue: 0.0, resultValue: 0.0, recongnizingStatus: .running, isManuallyEditing: false)
 }

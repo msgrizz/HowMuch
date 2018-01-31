@@ -13,9 +13,12 @@ func RecognizingReducer(action: Action, state: RecognizingState?) -> Recognizing
     
     switch action {
     case let setValues as SetValuesAction:
-        return RecognizingState(sourceValue: setValues.source, resultValue: setValues.result, recongnizingStatus: state.recongnizingStatus)
+        return RecognizingState(sourceValue: setValues.source, resultValue: setValues.result, recongnizingStatus: state.recongnizingStatus, isManuallyEditing: state.isManuallyEditing)
     case let setRecognizingStatus as SetRecognizingStatusAction:
-        return RecognizingState(sourceValue: state.sourceValue, resultValue: state.resultValue, recongnizingStatus: setRecognizingStatus.status)    
+        return RecognizingState(sourceValue: state.sourceValue, resultValue: state.resultValue, recongnizingStatus: setRecognizingStatus.status, isManuallyEditing: state.isManuallyEditing)
+    case let setIsManualEditing as SetIsManualEditing:
+        let isManualEditing = setIsManualEditing.value
+        return RecognizingState(sourceValue: state.sourceValue, resultValue: state.resultValue, recongnizingStatus: state.recongnizingStatus, isManuallyEditing: isManualEditing)
     default:
         return state
     }    

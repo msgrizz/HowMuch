@@ -11,5 +11,5 @@ import ReSwift
 struct AppState: StateType {
     let settings: SettingsState
     let currencyRates: CurrencyRatesState
-    let recognizing: RecognizingState
+    let recognizing: RecognizingState    
 }

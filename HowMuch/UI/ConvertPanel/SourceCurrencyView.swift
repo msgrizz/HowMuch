@@ -9,7 +9,9 @@
 import UIKit
 
 protocol SourceCurrencyViewDelegate: class {
-    func onChanged(value: String)
+    func onChanged(value: String)    
+    func onBeginEditing()
+    func onStopEditing()
 }
 
 
@@ -90,6 +92,17 @@ class SourceCurrencyView: UIView, UITextFieldDelegate {
     
     
     // MARK: -UITextFieldDelegate
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        delegate?.onBeginEditing()
+        return true
+    }
+    
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        delegate?.onStopEditing()
+        return true
+    }
+    
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text as NSString? {
