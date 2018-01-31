@@ -25,13 +25,17 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     var props = Props.zero {
         didSet {
-            switch props.recognizingStatus {
-            case .running:
-                start()
-            case .stopped:
+            switch (oldValue.recognizingStatus, props.recognizingStatus) {
+            case (.running, .stopped), (.suspended, .stopped):
                 stop()
-            case .suspended:
+            case (.running, .suspended):
                 suspend()
+            case (.suspended, .running):
+                resume()
+            case (.stopped, .running):
+                start()
+            default:
+                break
             }
             engine.tryParseFloat = props.tryParseFloat
         }
@@ -176,15 +180,17 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     private func start() {
         session.startRunning()
-        disabledView.isHidden = true
-        crossView.isHidden = false
     }
     
     
     private func stop() {
-        disabledView.isHidden = false
-        crossView.isHidden = false
         session.stopRunning()
+    }
+    
+    
+    private func resume() {
+        disabledView.isHidden = true
+        crossView.isHidden = false
     }
     
     
