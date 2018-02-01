@@ -19,8 +19,12 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let onTap: ((RecongnizingStatus) -> Void)?
         let onRecognized: ((Float) -> Void)?
         let tryParseFloat: Bool
+        let accessToCamera: Bool
+        let onTryAccessCamera: ((Bool) -> Void)?
         
-        static let zero = Props(recognizingStatus: .running, isManualEditing: false, onTap: nil, onRecognized: nil, tryParseFloat: false)
+        static let zero = Props(recognizingStatus: .running, isManualEditing: false,
+                                onTap: nil, onRecognized: nil, tryParseFloat: false,
+                                accessToCamera: false, onTryAccessCamera: nil)
     }
     
     var props = Props.zero {
@@ -38,6 +42,10 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
                 break
             }
             engine.tryParseFloat = props.tryParseFloat
+            let accessToCamera = props.accessToCamera
+            if accessToCamera, accessToCamera != oldValue.accessToCamera  {
+                setupLiveVideoSession()
+            }
         }
     }
     
@@ -58,9 +66,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
         dummyView.addGestureRecognizer(tapRecognizer)
-        
         engine.delegate = self
-        setupLiveVideoSession()                
     }
     
     
@@ -68,6 +74,11 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if checkHaveCameraAccess() {
+            props.onTryAccessCamera?(true)
+        } else {
+            requireCameraAccess()
+        }
         start()
     }
     
@@ -165,6 +176,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let cameraLayer = AVCaptureVideoPreviewLayer(session: session)
         cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraView.layer.addSublayer(cameraLayer)
+        start()
     }
     
     
@@ -179,6 +191,9 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     
     private func start() {
+        guard !session.isRunning else {
+            return
+        }
         session.startRunning()
     }
     
@@ -229,6 +244,22 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: requestOptions)
         engine.perform(imageRequestHandler, sampleBuffer)
     }
+    
+    
+    
+    private func checkHaveCameraAccess() -> Bool {
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        return cameraAuthorizationStatus == .authorized
+    }
+    
+    
+    private func requireCameraAccess() {
+        AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+            DispatchQueue.main.async {
+                self.props.onTryAccessCamera?(granted)
+            }            
+        }
+    }
 }
 
 
@@ -271,7 +302,11 @@ extension CameraViewController:  StoreSubscriber {
                       onRecognized: { (value: Float) in
                         store.dispatch(CreateSetValuesAction(state: state, source: value))
         },
-                      tryParseFloat: state.settings.tryParseFloat)
+                      tryParseFloat: state.settings.tryParseFloat,
+                      accessToCamera: state.recognizing.accessToCamera,
+                      onTryAccessCamera: { result in
+                        store.dispatch(SetCameraAccessAction(value: result))
+        })
     }
 }
 

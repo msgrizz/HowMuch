@@ -30,5 +30,9 @@ struct SetIsManualEditing: Action {
     let value: Bool
 }
 
+struct SetCameraAccessAction: Action {
+    let value: Bool
+}
+
 
 

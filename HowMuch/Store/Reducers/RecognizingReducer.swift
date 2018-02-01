@@ -9,16 +9,21 @@
 import ReSwift
 
 func RecognizingReducer(action: Action, state: RecognizingState?) -> RecognizingState {
-    let state = state ?? initState()
-    
+    var state = state ?? initState()
     switch action {
     case let setValues as SetValuesAction:
-        return RecognizingState(sourceValue: setValues.source, resultValue: setValues.result, recongnizingStatus: state.recongnizingStatus, isManuallyEditing: state.isManuallyEditing)
+        state.sourceValue = setValues.source
+        state.resultValue = setValues.result
+        return state
     case let setRecognizingStatus as SetRecognizingStatusAction:
-        return RecognizingState(sourceValue: state.sourceValue, resultValue: state.resultValue, recongnizingStatus: setRecognizingStatus.status, isManuallyEditing: state.isManuallyEditing)
+        state.recongnizingStatus = setRecognizingStatus.status
+        return state
     case let setIsManualEditing as SetIsManualEditing:
-        let isManualEditing = setIsManualEditing.value
-        return RecognizingState(sourceValue: state.sourceValue, resultValue: state.resultValue, recongnizingStatus: state.recongnizingStatus, isManuallyEditing: isManualEditing)
+        state.isManuallyEditing = setIsManualEditing.value
+        return state
+    case let setCameraAccess as SetCameraAccessAction:
+        state.accessToCamera = setCameraAccess.value
+        return state
     default:
         return state
     }    

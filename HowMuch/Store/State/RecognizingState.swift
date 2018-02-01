@@ -18,11 +18,12 @@ enum RecongnizingStatus: Equatable {
 }
 
 struct RecognizingState: StateType {
-    let sourceValue: Float
-    let resultValue: Float
-    let recongnizingStatus: RecongnizingStatus
-    let isManuallyEditing: Bool
-//    let accessToCamera: Bool
+    var sourceValue: Float
+    var resultValue: Float
+    var recongnizingStatus: RecongnizingStatus
+    var isManuallyEditing: Bool
+    var accessToCamera: Bool
     
-    static let `default` = RecognizingState(sourceValue: 0.0, resultValue: 0.0, recongnizingStatus: .running, isManuallyEditing: false)
+    static let `default` = RecognizingState(sourceValue: 0.0, resultValue: 0.0, recongnizingStatus: .running,
+                                            isManuallyEditing: false, accessToCamera: false)
 }
