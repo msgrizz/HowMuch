@@ -37,7 +37,7 @@ let UpdateCurrencyRatesMiddleware: Middleware<AppState> = { dispatch, getState i
             let oldRates = state.currencyRates.rates
             CurrencyService.shared.updateIfNeeded { newRates in                
                 let rates = oldRates.merging(newRates, uniquingKeysWith: { $1 })
-                CurrencyService.shared.saveToLocalStorage(rates: newRates)
+                CurrencyService.shared.saveToLocalStorage(rates: rates)
                 dispatch(SetCurrencyRatesAction(rates: rates))
             }
         }

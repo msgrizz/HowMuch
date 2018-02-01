@@ -55,14 +55,24 @@ class RecognizerEngine {
         }
     }
     
-    
+    init() {
+        ceilSerialQueue.async {
+            self.tesseractCeil = G8Tesseract(language: "eng")
+        }
+        floorSerialQueue.async {
+            self.tesseractFloor = G8Tesseract(language: "eng")
+        }
+    }
     
     // MARK: -Private
     private var recognizeInProcess = false
     static private let gabrageString = "$£p.-,"
     static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
-    private let tesseractCeil = G8Tesseract(language: "eng")!
-    private let tesseractFloor = G8Tesseract(language: "eng")!
+    private var tesseractCeil: G8Tesseract! // = G8Tesseract(language: "eng")
+    private var tesseractFloor: G8Tesseract!
+    private let ceilSerialQueue = DispatchQueue(label: "ceilSerialQueue", qos: .userInitiated)
+    private let floorSerialQueue = DispatchQueue(label: "floorSerialQueue", qos: .userInitiated)
+    
     
     private var sampleBuffer: CMSampleBuffer!
     
@@ -122,14 +132,14 @@ class RecognizerEngine {
         
         var ceilPart = ""
         var floorPart = ""
-        DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
+        ceilSerialQueue.async(group: recognizeGroup) {
             self.recognizePrice(tesseract: self.tesseractCeil, image: ceilImage) { result in
                 ceilPart = result
             }
         }
         if tryParseFloat, let floorImage = cgimg.cropping(to: rect.floorRect).map(UIImage.init)  {
 //            debugFloorImageView.image = floorImage
-            DispatchQueue.global(qos: .userInitiated).async(group: recognizeGroup) {
+            floorSerialQueue.async(group: recognizeGroup) {
                 self.recognizePrice(tesseract: self.tesseractFloor, image: floorImage) { result in
                     floorPart = result
                 }

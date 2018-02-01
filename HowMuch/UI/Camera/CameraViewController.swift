@@ -234,7 +234,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
 extension CameraViewController: RecognizerEngineDelegate {
     func onCleanRects() {
-        guard props.recognizingStatus == .running else { return }
         let count = cameraView.layer.sublayers?.count ?? 0
         guard count > 1 else {
             return
