@@ -54,6 +54,7 @@
 		9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */; };
 		9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB20889201CDEF600803237 /* CameraViewController.swift */; };
 		9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */; };
+		9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */; };
 		9BF2D577201326F800787030 /* RecognizerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF2D576201326F800787030 /* RecognizerEngine.swift */; };
 /* End PBXBuildFile section */
 
@@ -123,6 +124,7 @@
 		9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BB20889201CDEF600803237 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPanelViewController.swift; sourceTree = "<group>"; };
+		9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedView.swift; sourceTree = "<group>"; };
 		9BF2D576201326F800787030 /* RecognizerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizerEngine.swift; sourceTree = "<group>"; };
 		CBA2641F5EF8CD4C3FE5CF6C /* Pods-Text Detection Starter Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text Detection Starter Project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Text Detection Starter Project/Pods-Text Detection Starter Project.debug.xcconfig"; sourceTree = "<group>"; };
 		D0B478BE9529A10BB90CE361 /* Pods_HowMuch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HowMuch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -300,6 +302,7 @@
 				9BB20889201CDEF600803237 /* CameraViewController.swift */,
 				9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */,
 				9B5A1CCE2018F3F40056D6DB /* CrossView.swift */,
+				9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -615,6 +618,7 @@
 				9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */,
 				9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */,
 				9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */,
+				9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */,
 				9B7FB25C201DC5E80031EFDC /* AppReducer.swift in Sources */,
 				9B7FB25A201DC5540031EFDC /* RecognizingState.swift in Sources */,
 				9B7FB264201DCE550031EFDC /* RecognizingActions.swift in Sources */,

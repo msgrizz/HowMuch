@@ -29,6 +29,19 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     var props = Props.zero {
         didSet {
+            let accessToCamera = props.accessToCamera
+            if accessToCamera {
+                cameraDeniedView.isHidden = true
+                if accessToCamera != oldValue.accessToCamera  {
+                    setupLiveVideoSession()
+                }
+            } else {
+                crossView.isHidden = true
+                cameraDeniedView.isHidden = false
+                return
+            }
+            
+            engine.tryParseFloat = props.tryParseFloat
             switch (oldValue.recognizingStatus, props.recognizingStatus) {
             case (.running, .stopped), (.suspended, .stopped):
                 stop()
@@ -41,11 +54,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             default:
                 break
             }
-            engine.tryParseFloat = props.tryParseFloat
-            let accessToCamera = props.accessToCamera
-            if accessToCamera, accessToCamera != oldValue.accessToCamera  {
-                setupLiveVideoSession()
-            }
         }
     }
     
@@ -56,8 +64,10 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         view.addSubview(cameraView)
         view.addSubview(dummyView)
         dummyView.addSubview(disabledView)
+        dummyView.addSubview(cameraDeniedView)
         dummyView.addSubview(crossView)
         disabledView.isHidden = true
+        cameraDeniedView.isHidden = true
         crossView.isHidden = false
         
 //        contentView.addSubview(debugCeilImageView)
@@ -79,14 +89,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         } else {
             requireCameraAccess()
         }
-        start()
+        store.dispatch(SetRecognizingStatusAction(status: .running))
     }
     
     
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        stop()
+        store.dispatch(SetRecognizingStatusAction(status: .stopped))
     }
     
     
@@ -106,6 +116,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var dummyView = UIView()
     private var cameraView = UIView()
     private var cameraLayer: AVCaptureVideoPreviewLayer!
+    private let cameraDeniedView = CameraAccessDeniedView()
     private let disabledView = DisabledCameraView()
     
     private var session = AVCaptureSession()
@@ -147,6 +158,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             ])
         
         disabledView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        cameraDeniedView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         crossView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
     }
     
@@ -191,6 +203,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     
     private func start() {
+        disabledView.isHidden = true
+        crossView.isHidden = false
         guard !session.isRunning else {
             return
         }
@@ -199,6 +213,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     
     private func stop() {
+        disabledView.isHidden = false
+        crossView.isHidden = true
         session.stopRunning()
     }
     

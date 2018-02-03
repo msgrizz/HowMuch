@@ -35,7 +35,6 @@ class RecognizerViewController: UIViewController {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillShow), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillHide), name: .UIKeyboardWillHide, object: nil)
-        store.dispatch(SetRecognizingStatusAction(status: .running))
     }
     
     
@@ -43,7 +42,6 @@ class RecognizerViewController: UIViewController {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
         NotificationCenter.default.removeObserver(self)
-        store.dispatch(SetRecognizingStatusAction(status: .stopped))
     }
     
     

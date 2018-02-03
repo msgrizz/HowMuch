@@ -10,7 +10,7 @@ import UIKit
 
 class DisabledCameraView: UIView {
     
-    static let messageText = "Нажмите, чтобы продолжить распознавание"
+    static let messageText = "Нажмите, чтобы продолжить"
     let messageLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -20,7 +20,7 @@ class DisabledCameraView: UIView {
         messageLabel.text = DisabledCameraView.messageText
         messageLabel.textAlignment = .center
         messageLabel.numberOfLines = 0        
-        backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+        backgroundColor = UIColor.white.withAlphaComponent(0.5)
         setupConstraints()
     }
     
