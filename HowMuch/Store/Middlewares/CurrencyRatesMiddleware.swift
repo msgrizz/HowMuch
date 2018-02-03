@@ -15,9 +15,11 @@ let LoadCurrencyRatesMiddleware: Middleware<AppState> = { dispatch, getState in
             guard let initAction = action as? ReSwiftInit else {
                 return next(action)
             }
-            DispatchQueue.main.async {
+            DispatchQueue.global(qos: .userInitiated).async {
                 if let rates = CurrencyService.shared.loadFromLocalStorage() {
-                    dispatch(SetCurrencyRatesAction(rates: rates))
+                    DispatchQueue.main.async {
+                        dispatch(SetCurrencyRatesAction(rates: rates))
+                    }                    
                 }
             }
             return next(action)
