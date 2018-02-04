@@ -13,5 +13,5 @@ struct SettingsState: StateType {
     let resultCurrency: Currency
     let tryParseFloat: Bool
     
-    static let `default` =  SettingsState(sourceCurrency: .usd, resultCurrency: .rub, tryParseFloat: true)
+    static let `default` =  SettingsState(sourceCurrency: .USD, resultCurrency: .RUB, tryParseFloat: true)
 }

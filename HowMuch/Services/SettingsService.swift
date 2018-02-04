@@ -21,8 +21,8 @@ class SettingsService {
             let source = Currency(rawValue: defaults.string(forKey: Keys.fromCurrencyKey) ?? "")
             let result = Currency(rawValue: defaults.string(forKey: Keys.toCurrencyKey) ?? "")
             let tryParseFloat = defaults.bool(forKey: Keys.tryParseFloatKey)
-            let settings = SettingsState(sourceCurrency: source ?? .usd,
-                                resultCurrency: result ?? .rub,
+            let settings = SettingsState(sourceCurrency: source ?? .USD,
+                                resultCurrency: result ?? .RUB,
                                 tryParseFloat: tryParseFloat)
             DispatchQueue.main.async {
                 onComplete(settings)

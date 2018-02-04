@@ -26,8 +26,8 @@ class SettingViewController: UITableViewController {
         }
         let tryParseToFloat: TryParseToFloatItem
         
-        static let zero = Props(sourceCurrency: CurrencyItem.init(currency: .usd, onSelect: nil),
-                                resultCurrency: CurrencyItem(currency: .usd, onSelect: nil),
+        static let zero = Props(sourceCurrency: CurrencyItem.init(currency: .USD, onSelect: nil),
+                                resultCurrency: CurrencyItem(currency: .EUR, onSelect: nil),
                                 tryParseToFloat: TryParseToFloatItem(value: true, onChange: nil))
     }
     
@@ -93,13 +93,13 @@ class SettingViewController: UITableViewController {
             switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать из", value: props.sourceCurrency.currency, values: Currency.all) { currency in
+                cell.setup(title: "Конвертировать из", value: props.sourceCurrency.currency, values: Currency.allCurrencies) { currency in
                     self.props.sourceCurrency.onSelect?(currency)
                 }
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать в", value: props.resultCurrency.currency, values: Currency.all) { currency in
+                cell.setup(title: "Конвертировать в", value: props.resultCurrency.currency, values: Currency.allCurrencies) { currency in
                     self.props.resultCurrency.onSelect?(currency)
                 }
                 return cell

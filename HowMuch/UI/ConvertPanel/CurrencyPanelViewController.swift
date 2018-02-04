@@ -23,7 +23,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
         let onBeginEditing: (() -> Void)?
         let onStopEditing: (() -> Void)?
         
-        static let zero = Props(manualEditingMode: false, sourceCurrency: Currency.usd, resultCurrency: Currency.usd,
+        static let zero = Props(manualEditingMode: false, sourceCurrency: Currency.USD, resultCurrency: Currency.USD,
                                 sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil, onBeginEditing: nil, onStopEditing: nil)
     }
     

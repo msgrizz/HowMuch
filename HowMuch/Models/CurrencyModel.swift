@@ -178,7 +178,8 @@ struct Currency: Hashable, RawRepresentable {
     static let USD = Currency(shortName: "USD", name: "Доллар США", sign: "$", flag: "🇺🇲" )
 
     
-    static let allCurrencies: Set<Currency> = [USD, EUR]
+    static let allCurrencies = [AED, AFN, ALL, AMD, AOA, ARS, AUD, AWG, AZN, BBD, BDT, BGN, BHD, BIF, BND, BOB, BRL, BSD, BTN, BWP, BYN, BZD, CAD, CDF, CHF, CLF, CNY, COP, CRC, CUC, CUP, CVE, CZK, DJF, DKK, DOP, DZD, EGP, ERN, ETB, EUR, FJD, FKP, GBP, GEL, GHS, GIP, GMD, GNF, GTQ, GYD, HKD, HNL, HRK, HTG, HUF, IDR, ILS, INR, IQD, IRR, ISK, JEP, JMD, JOD, JPY, KES, KGS, KHR, KMF, KPW, KRW, KWD, KYD, KZT, LAK, LBP, LKR, LRD, LSL, LTL, LVL, LYD, MAD, MDL, MGA, MKD, MMK, MNT, MOP, MRO, MUR, MVR, MWK, MXN, MYR, MZN, NAD, NGN, NOK, NPR, NZD, OMR, PAB, PEN, PGK, PHP, PKR, PLN, PYG, QAR, RON, RSD, RUB, RWF, SAR, SBD, SCR, SDG, SGD, SHP, SLL, SOS, SRD, SVC, SYP, SZL, THB, TJS, TMT, TND, TOP, TRY, TTD, TWD, TZS, UAH, UGX, USD,
+                                               UYU, UZS, VEF, VND, VUV, WST, XAF, XCD, XOF, XPF, YER, ZAR, ZMW, ZWL]
     
     public static func ==(lhs: Currency, rhs: Currency) -> Bool {
         return lhs.shortName == rhs.shortName
