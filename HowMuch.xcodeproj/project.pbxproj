@@ -48,6 +48,7 @@
 		9B7FB26D201DF3AB0031EFDC /* CurrencyRatesActoins.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */; };
 		9B7FB2712020E2C60031EFDC /* LoggingMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */; };
 		9B7FB2742020E74B0031EFDC /* CreateSetValuesAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB2732020E74B0031EFDC /* CreateSetValuesAction.swift */; };
+		9B9D60D620270525002BD5F7 /* Action+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D60D520270525002BD5F7 /* Action+Extention.swift */; };
 		9B9E2244200FC2220026122B /* ObserverList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E2243200FC2220026122B /* ObserverList.swift */; };
 		9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61620016406001AC1E8 /* libstdc++.tbd */; };
 		9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61820016410001AC1E8 /* CoreImage.framework */; };
@@ -118,6 +119,7 @@
 		9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRatesActoins.swift; sourceTree = "<group>"; };
 		9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingMiddleware.swift; sourceTree = "<group>"; };
 		9B7FB2732020E74B0031EFDC /* CreateSetValuesAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSetValuesAction.swift; sourceTree = "<group>"; };
+		9B9D60D520270525002BD5F7 /* Action+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Action+Extention.swift"; sourceTree = "<group>"; };
 		9B9E2243200FC2220026122B /* ObserverList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverList.swift; sourceTree = "<group>"; };
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
@@ -272,6 +274,7 @@
 				9B6FEADF200932CD00CEF94F /* CGRect+Extention.swift */,
 				9B5A1CC82018DC7C0056D6DB /* UIColor+Extension.swift */,
 				9B5A1CCA2018E0670056D6DB /* String+Extension.swift */,
+				9B9D60D520270525002BD5F7 /* Action+Extention.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -595,6 +598,7 @@
 				9B7FB25E201DC7550031EFDC /* SettingsReducer.swift in Sources */,
 				9B5A1CC92018DC7C0056D6DB /* UIColor+Extension.swift in Sources */,
 				9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */,
+				9B9D60D620270525002BD5F7 /* Action+Extention.swift in Sources */,
 				9B7FB262201DC79B0031EFDC /* RecognizingReducer.swift in Sources */,
 				9B7FB260201DC7650031EFDC /* CurrencyRatesReducer.swift in Sources */,
 				9B6FEAF9200A0EE500CEF94F /* SettingsService.swift in Sources */,

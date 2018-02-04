@@ -29,13 +29,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window!.rootViewController = initialViewController
         window!.makeKeyAndVisible()
         
-        store.dispatch(UpdateCurrencyRateAction())
+        store.dispatch(TryUpdateCurrencyRateAction())
         return true
     }
     
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        store.dispatch(UpdateCurrencyRateAction())
+        store.dispatch(TryUpdateCurrencyRateAction())
     }
 }
 

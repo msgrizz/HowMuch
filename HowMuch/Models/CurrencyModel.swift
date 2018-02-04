@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Currency: Hashable, RawRepresentable {
+struct Currency: Hashable, RawRepresentable, CustomStringConvertible {
     
     let shortName: String
     let name: String
@@ -197,6 +197,11 @@ struct Currency: Hashable, RawRepresentable {
     }
     
     var rawValue: String {
+        return shortName
+    }
+    
+    
+    var description: String {
         return shortName
     }
 }

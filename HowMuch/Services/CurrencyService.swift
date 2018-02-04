@@ -32,6 +32,7 @@ public class CurrencyService {
         
         let dataTask = session.dataTask(with: CurrencyService.url) { data, response, error in
             if let error = error {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 print("Sync rates network error: \(error)")
             } else if let data = data,
                 let response = response as? HTTPURLResponse,
@@ -111,8 +112,7 @@ public class CurrencyService {
             let lastUpdate = CurrencyService.dateFormatter.date(from: lastUpdateString) else {
                 return true
         }
-        
-        // обновляем если разница больше чем в 7 дней
+//         обновляем если разница больше чем в 7 дней
         guard let dayDiff = Calendar.current.dateComponents([.day], from: lastUpdate, to: Date()).day,
             dayDiff > 7
             else {

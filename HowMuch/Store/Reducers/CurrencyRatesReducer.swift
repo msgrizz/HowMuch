@@ -14,6 +14,8 @@ func CurrencyRatesReducer(action: Action, state: CurrencyRatesState?) -> Currenc
     switch action {
     case let setCurrencyRates as SetCurrencyRatesAction:
         return CurrencyRatesState(rates: setCurrencyRates.rates)
+    case let loadedCurrencyRates as UpdateCurrencyRatesAction:
+        return CurrencyRatesState(rates: loadedCurrencyRates.rates)
     default:
         return state
     }

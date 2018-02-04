@@ -8,11 +8,24 @@
 
 import ReSwift
 
-/// Задать значения курсов валют
-struct SetCurrencyRatesAction: Action {
+/// Считанные с диска курсы валют
+struct SetCurrencyRatesAction: Action, CustomActionStringConvertable  {
     let rates: [Currency : Float]
+    
+    var payloadDescription: String {
+        return "Rates count: \(rates.count)"
+    }
 }
 
 
+/// Загруженные из сети курсы валют
+struct UpdateCurrencyRatesAction: Action, CustomActionStringConvertable  {
+    let rates: [Currency : Float]
+    
+    var payloadDescription: String {
+        return "Rates count: \(rates.count)"
+    }
+}
+
 /// Обновить значения курсов валют
-struct UpdateCurrencyRateAction: Action { }
+struct TryUpdateCurrencyRateAction: Action { }
