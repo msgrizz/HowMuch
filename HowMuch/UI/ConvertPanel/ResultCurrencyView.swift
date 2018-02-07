@@ -8,10 +8,17 @@
 
 import UIKit
 
+protocol ResultCurrencyViewDelegate: class {
+    func onTapCurrency(sender: UIView)
+}
 
 class ResultCurrencyView: UIView {
     private let titleLabel = UILabel()
     private let valueLabel = UILabel()
+    private var tapRecognizer: UITapGestureRecognizer!
+    
+    weak var delegate: ResultCurrencyViewDelegate?
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,6 +35,16 @@ class ResultCurrencyView: UIView {
         valueLabel.font = UIFont.systemFont(ofSize: 24)
         valueLabel.adjustsFontSizeToFitWidth = true
         valueLabel.minimumScaleFactor = 0.5
+        
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectCurrency))
+        titleLabel.addGestureRecognizer(tapRecognizer)
+        titleLabel.isUserInteractionEnabled = true
+    }
+
+
+    
+    @objc func selectCurrency() {
+        delegate?.onTapCurrency(sender: self)
     }
     
     

@@ -13,12 +13,18 @@ protocol ConvertPanelViewDelegate: class {
 }
 
 
+
 class ConvertPanelView: UIView {
     
     weak var delegate: ConvertPanelViewDelegate?
     weak var sourceViewDelegate: SourceCurrencyViewDelegate? {
         didSet {
             sourceView.delegate = sourceViewDelegate
+        }
+    }    
+    weak var resultViewDelegate: ResultCurrencyViewDelegate? {
+        didSet {
+            resultView.delegate = resultViewDelegate
         }
     }
     
@@ -71,7 +77,7 @@ class ConvertPanelView: UIView {
     
     // MARK: -Private
     private let sourceView = SourceCurrencyView()
-    private let resultView = ResultCurrencyView()
+    private let resultView = ResultCurrencyView()    
     private let changeButton = UIButton(type: .system)
 
     

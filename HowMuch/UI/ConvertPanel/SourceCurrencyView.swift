@@ -8,15 +8,18 @@
 
 import UIKit
 
+
 protocol SourceCurrencyViewDelegate: class {
     func onChanged(value: String)    
     func onBeginEditing()
     func onStopEditing()
+    func onTapCurrency(sender: UIView)
 }
 
 
 class SourceCurrencyView: UIView, UITextFieldDelegate {
     private let titleLabel = UILabel()
+    private var tapRecognizer: UITapGestureRecognizer!
     private let valueTextField = UITextField()
     
     weak var delegate: SourceCurrencyViewDelegate?
@@ -46,8 +49,16 @@ class SourceCurrencyView: UIView, UITextFieldDelegate {
             strong.valueTextField.resignFirstResponder()
         }
         reset()
+        
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SourceCurrencyView.selectCurrency))
+        titleLabel.addGestureRecognizer(tapRecognizer)
+        titleLabel.isUserInteractionEnabled = true        
     }
     
+    
+    @objc func selectCurrency(sender: UITapGestureRecognizer? = nil) {
+        delegate?.onTapCurrency(sender: self)
+    }
     
     
     required init?(coder aDecoder: NSCoder) {

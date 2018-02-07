@@ -14,9 +14,9 @@ struct Currency: Hashable, RawRepresentable, CustomStringConvertible {
     let shortName: String
     let name: String
     let sign: String
-    let flag: Character
+    let flag: String
     
-    init(shortName: String, name: String, sign: String, flag: Character ) {
+    init(shortName: String, name: String, sign: String, flag: String ) {
         self.shortName = shortName
         self.name = name
         self.sign = sign

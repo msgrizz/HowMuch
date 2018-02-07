@@ -16,6 +16,8 @@
 		9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */; };
 		9B5A1CCF2018F3F40056D6DB /* CrossView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCE2018F3F40056D6DB /* CrossView.swift */; };
 		9B5A1CD1201A3DB70056D6DB /* ToolbarReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */; };
+		9B64E46B202B48B100D28C4E /* SelectCurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64E46A202B48B100D28C4E /* SelectCurrencyViewController.swift */; };
+		9B64E46D202B48C000D28C4E /* CurrencyViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64E46C202B48C000D28C4E /* CurrencyViewCell.swift */; };
 		9B6FEAA62002A53100CEF94F /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA02002A53100CEF94F /* tessdata */; };
 		9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA22002A53100CEF94F /* AppDelegate.swift */; };
 		9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA32002A53100CEF94F /* Assets.xcassets */; };
@@ -85,6 +87,8 @@
 		9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisabledCameraView.swift; sourceTree = "<group>"; };
 		9B5A1CCE2018F3F40056D6DB /* CrossView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossView.swift; sourceTree = "<group>"; };
 		9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarReturn.swift; sourceTree = "<group>"; };
+		9B64E46A202B48B100D28C4E /* SelectCurrencyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCurrencyViewController.swift; sourceTree = "<group>"; };
+		9B64E46C202B48C000D28C4E /* CurrencyViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyViewCell.swift; sourceTree = "<group>"; };
 		9B6FEAA02002A53100CEF94F /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = HowMuch/tessdata; sourceTree = SOURCE_ROOT; };
 		9B6FEAA22002A53100CEF94F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = HowMuch/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
 		9B6FEAA32002A53100CEF94F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = HowMuch/Assets.xcassets; sourceTree = SOURCE_ROOT; };
@@ -213,11 +217,20 @@
 			isa = PBXGroup;
 			children = (
 				9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */,
+				9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */,
 				9B5A1CC42018DBB80056D6DB /* SourceCurrencyView.swift */,
 				9B5A1CC62018DBC40056D6DB /* ResultCurrencyView.swift */,
-				9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */,
 			);
 			path = ConvertPanel;
+			sourceTree = "<group>";
+		};
+		9B64E469202B489C00D28C4E /* SelectCurrency */ = {
+			isa = PBXGroup;
+			children = (
+				9B64E46A202B48B100D28C4E /* SelectCurrencyViewController.swift */,
+				9B64E46C202B48C000D28C4E /* CurrencyViewCell.swift */,
+			);
+			path = SelectCurrency;
 			sourceTree = "<group>";
 		};
 		9B6FEA9F2002A3AA00CEF94F /* HowMuch */ = {
@@ -249,6 +262,7 @@
 		9B6FEAD4200547FA00CEF94F /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				9B64E469202B489C00D28C4E /* SelectCurrency */,
 				9B5A1CD2201CD8AA0056D6DB /* Recognizer */,
 				9B6FEAFC200A179700CEF94F /* Camera */,
 				9B5A1CD3201CD8CD0056D6DB /* ConvertPanel */,
@@ -438,6 +452,7 @@
 					8B0D6AFA1EFA582B00544F3D = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 0920;
+						ProvisioningStyle = Automatic;
 					};
 					9B6FEAEB2009F08600CEF94F = {
 						CreatedOnToolsVersion = 9.2;
@@ -622,6 +637,7 @@
 				9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */,
 				9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */,
 				9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */,
+				9B64E46D202B48C000D28C4E /* CurrencyViewCell.swift in Sources */,
 				9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */,
 				9B7FB25C201DC5E80031EFDC /* AppReducer.swift in Sources */,
 				9B7FB25A201DC5540031EFDC /* RecognizingState.swift in Sources */,
@@ -630,6 +646,7 @@
 				9B6FEAE52009419200CEF94F /* SelectCurrencyCellView.swift in Sources */,
 				9B7FB26A201DDB020031EFDC /* SettingsActions.swift in Sources */,
 				9B6FEAFE200A1C5E00CEF94F /* ConvertPanelView.swift in Sources */,
+				9B64E46B202B48B100D28C4E /* SelectCurrencyViewController.swift in Sources */,
 				9B6FEADB2005483100CEF94F /* CurrencyModel.swift in Sources */,
 				9B7FB258201DC4E20031EFDC /* CurrencyRatesState.swift in Sources */,
 				9B7FB26D201DF3AB0031EFDC /* CurrencyRatesActoins.swift in Sources */,
@@ -697,8 +714,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -715,6 +734,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_PROFILING_CODE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -752,8 +772,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -764,6 +786,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_PROFILING_CODE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -778,12 +801,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/HowMuch/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxkazakov.Howmuch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -796,12 +823,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/HowMuch/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxkazakov.Howmuch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=*]" = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
