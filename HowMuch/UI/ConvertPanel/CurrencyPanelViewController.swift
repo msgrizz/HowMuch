@@ -22,12 +22,9 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
         let onChange: ((Float) -> Void)?
         let onBeginEditing: (() -> Void)?
         let onStopEditing: (() -> Void)?
-        let onTapSourceCurrency: (() -> Void)?
-        let onTapResultCurrency: (() -> Void)?
         
         static let zero = Props(manualEditingMode: false, sourceCurrency: Currency.USD, resultCurrency: Currency.USD,
-                                sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil, onBeginEditing: nil, onStopEditing: nil,
-                                onTapSourceCurrency: nil, onTapResultCurrency: nil)
+                                sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil, onBeginEditing: nil, onStopEditing: nil)
     }
     
     
@@ -52,9 +49,9 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
     func onTapCurrency(sender: UIView) {
         switch sender {
         case is ResultCurrencyView:
-            props.onTapResultCurrency?()
+            openSelectCurrencyVC(isSource: false)
         case is SourceCurrencyView:
-            props.onTapSourceCurrency?()
+            openSelectCurrencyVC()
         default:
             return
         }
@@ -96,6 +93,30 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
             convertPanelView.centerYAnchor.constraint(equalTo: guide.centerYAnchor, constant: 0),
             ])
     }
+    
+    
+    private func openSelectCurrencyVC(isSource: Bool = true) {
+        let selectVC = SelectCurrencyViewController()
+        selectVC.connect(select: { $0 },
+                         isChanged: { old, new in
+                            return (old.currencyRates != new.currencyRates) || (old.settings != new.settings)
+        },
+                         onChanged: { state in
+                            let rates = state.currencyRates.rates
+                            let settings = state.settings
+                            let selected = isSource ? settings.sourceCurrency : settings.resultCurrency
+                            selectVC.props = SelectCurrencyViewController.Props(items: Currency.allCurrencies.map { currency in
+                                CurrencyItem(currency: currency, rate: rates[currency] ?? 0.0,
+                                             onSelect: {
+                                                let action: Action = isSource ? SetSourceCurrencyAction(currency: currency) : SetResultCurrencyAction(currency: currency)
+                                                store.dispatch(action)
+                                })
+                            }, selected: selected)
+        })
+        let navigation = UINavigationController(rootViewController: selectVC)
+        navigation.navigationBar.prefersLargeTitles = true
+        self.present(navigation, animated: true, completion: nil)
+    }
 }
 
 
@@ -125,16 +146,6 @@ extension ConvertPanelViewController: StoreSubscriber {
         },
                       onStopEditing: {
                         store.dispatch(SetIsManualEditing(value: false))
-        },
-                      onTapSourceCurrency: {
-                        let selectVC = SelectCurrencyViewController(changeSourceAction: true)
-                        selectVC.connect(to: store)
-                        self.present(UINavigationController(rootViewController: selectVC), animated: true, completion: nil)
-        },
-                      onTapResultCurrency: {
-                        let selectVC = SelectCurrencyViewController(changeSourceAction: false)
-                        selectVC.connect(to: store)
-                        self.present(UINavigationController(rootViewController: selectVC), animated: true, completion: nil)
         })
     }
 }

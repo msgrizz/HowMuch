@@ -14,6 +14,7 @@ var store = Store<AppState>(
     state: nil,
     middleware: [LoggingMiddleware, LoadCurrencyRatesMiddleware, UpdateCurrencyRatesMiddleware, LoadSettingsMiddleware, SaveSettingsMiddleware])
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -25,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let pictureListVc = RecognizerViewController()
         let initialViewController = UINavigationController(rootViewController: pictureListVc)
-        
+        initialViewController.navigationBar.prefersLargeTitles = true
         window!.rootViewController = initialViewController
         window!.makeKeyAndVisible()
         

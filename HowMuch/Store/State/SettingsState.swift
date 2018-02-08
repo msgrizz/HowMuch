@@ -8,10 +8,16 @@
 
 import ReSwift
 
-struct SettingsState: StateType {
+struct SettingsState: StateType, Equatable {
     let sourceCurrency: Currency
     let resultCurrency: Currency
     let tryParseFloat: Bool
     
     static let `default` =  SettingsState(sourceCurrency: .USD, resultCurrency: .RUB, tryParseFloat: true)
+    
+    static func ==(lhs: SettingsState, rhs: SettingsState) -> Bool {
+        return lhs.sourceCurrency == rhs.sourceCurrency
+            && lhs.resultCurrency == rhs.resultCurrency
+            && lhs.tryParseFloat == rhs.tryParseFloat
+    }
 }

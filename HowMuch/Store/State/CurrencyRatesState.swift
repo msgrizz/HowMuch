@@ -8,7 +8,7 @@
 
 import ReSwift
 
-struct CurrencyRatesState: StateType {
+struct CurrencyRatesState: StateType, Equatable {
     let rates: [Currency : Float]
     
     static let `default` = CurrencyRatesState(rates: defaultRetes)
@@ -168,4 +168,8 @@ struct CurrencyRatesState: StateType {
         .ZMW: 9.80359077,
         .ZWL: 322.355011
     ]
+    
+    static func ==(lhs: CurrencyRatesState, rhs: CurrencyRatesState) -> Bool {
+        return lhs.rates == rhs.rates
+    }
 }

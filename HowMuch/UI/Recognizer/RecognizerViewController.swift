@@ -25,7 +25,7 @@ class RecognizerViewController: UIViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        
+        navigationItem.largeTitleDisplayMode = .never        
         setupConstraints()
         createChildrenVC()
     }

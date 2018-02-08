@@ -45,6 +45,7 @@ class SettingViewController: UITableViewController {
         title = "Настройки"        
         tableView.register(SelectCurrencyCellView.self, forCellReuseIdentifier: SelectCurrencyCellView.identifier)
         tableView.register(CheckRecognizeFloatViewCell.self, forCellReuseIdentifier: CheckRecognizeFloatViewCell.identifier)
+        navigationItem.largeTitleDisplayMode = .always
     }
     
     private let sections = ["Выбор валюты", "Настройки распознавания"]

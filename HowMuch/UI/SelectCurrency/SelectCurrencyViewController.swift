@@ -20,11 +20,23 @@ struct CurrencyItem: Equatable {
 }
 
 
-class SelectCurrencyViewController: UITableViewController {
+class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdating, SimpleStoreSubscriber {
+        
+    var onStateChanged: ((AppState) -> Void)!
+    
     struct Props {
         let items: [CurrencyItem]
-        let selectedIdx: Int
-        static let zero = Props(items: [], selectedIdx: 0)
+        let selected: Currency?
+//        let filteredItems: [CurrencyItem]
+//        let selectedFilterIdx: Int
+//        let onSearchTextChanged: ((String) -> Void)?
+        
+        static let zero = Props(items: [],
+                                selected: nil
+//                                ,filteredItems: [],
+//                                selectedFilterIdx: -1,
+//                                onSearchTextChanged: nil
+        )
     }
     
     
@@ -33,34 +45,42 @@ class SelectCurrencyViewController: UITableViewController {
             if props.items != oldValue.items {
                 tableView.reloadData()
             }
-            if !initialized {
-                initialized = true
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-                    self.tableView.selectRow(at: IndexPath(row: self.props.selectedIdx, section: 0), animated: true, scrollPosition: .middle)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+                if self.tableView.indexPathForSelectedRow == nil {
+                    self.forceSelectCell()
                 }
             }
         }
     }
     
+    private var filteredItems = [CurrencyItem]()
+    
+    private func filter(text: String) {
+        let lowcasedText = text.lowercased()
+        filteredItems = props.items.filter { $0.currency.name.lowercased().contains(lowcasedText) ||  $0.currency.shortName.lowercased().contains(lowcasedText)}
+        tableView.reloadData()
+        forceSelectCell()
+    }
+    
+    private func isFiltering() -> Bool {
+        return searchController.isActive && !(searchController.searchBar.text ?? "").isEmpty
+    }
+    
+    private func forceSelectCell() {
+        if let selected = props.selected {
+            let visibleCurrencies = isFiltering() ? filteredItems : props.items
+            if let selectedIdx = visibleCurrencies.index(where: { $0.currency == selected }) {
+                tableView.selectRow(at: IndexPath(row: selectedIdx, section: 0), animated: true, scrollPosition: .middle)
+            }
+        }
+    }
+    
+    
+    var searchController: UISearchController!
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         clearsSelectionOnViewWillAppear = false
-    }
-    
-    private let changeSourceAction: Bool
-    private var initialized: Bool = false
-    
-    init(style: UITableViewStyle, changeSourceAction: Bool) {
-        self.changeSourceAction = changeSourceAction
-        super.init(style: style)        
-    }
-    
-    convenience init(changeSourceAction: Bool) {
-        self.init(style: .plain, changeSourceAction: changeSourceAction)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     
@@ -69,6 +89,14 @@ class SelectCurrencyViewController: UITableViewController {
         tableView.register(CurrencyViewCell.self, forCellReuseIdentifier: CurrencyViewCell.identifier)
         tableView.rowHeight = 50
         configureNavigation()
+        navigationItem.largeTitleDisplayMode = .always
+        
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     
@@ -95,42 +123,37 @@ class SelectCurrencyViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return props.items.count
+        return isFiltering() ? filteredItems.count : props.items.count
     }
     
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        props.items[indexPath.row].onSelect()
+        let visibleCurrencies = isFiltering() ? filteredItems : props.items
+        visibleCurrencies[indexPath.row].onSelect()
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyViewCell.identifier) as! CurrencyViewCell
-        cell.setup(currency: props.items[indexPath.row])
+        
+        let item: CurrencyItem
+        if isFiltering() {
+            item = filteredItems[indexPath.row]
+        } else {
+            item = props.items[indexPath.row]
+        }
+        cell.setup(currency: item)
         cell.selectionStyle = .none
         return cell
     }
-}
-
-
-extension SelectCurrencyViewController: StoreSubscriber {
-    func connect(to store: Store<AppState>) {
-        store.subscribe(self)
-    }
     
     
-    func newState(state: AppState) {
-        let rates = state.currencyRates.rates
-        let settings = state.settings
-        let selected = self.changeSourceAction ? settings.sourceCurrency : settings.resultCurrency
-        let selectedIdx = Currency.allCurrencies.index(of: selected) ?? 0
-        props = Props(items: Currency.allCurrencies.map { currency in
-            CurrencyItem(currency: currency, rate: rates[currency] ?? 0.0,
-                         onSelect: {
-                            let action: Action = self.changeSourceAction ? SetSourceCurrencyAction(currency: currency) : SetResultCurrencyAction(currency: currency)
-                            store.dispatch(action)
-            })
-        }, selectedIdx: selectedIdx)
+    //MARK: -UISearchResultsUpdating
+    public func updateSearchResults(for searchController: UISearchController) {
+//        props.onSearchTextChanged?(searchController.searchBar.text ?? "")
+        let searchBar = searchController.searchBar
+        filter(text: searchBar.text ?? "")
     }
 }
+

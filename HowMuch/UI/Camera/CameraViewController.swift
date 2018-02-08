@@ -76,7 +76,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
         dummyView.addGestureRecognizer(tapRecognizer)
-        engine.delegate = self
+        engine.delegate = self        
     }
     
     

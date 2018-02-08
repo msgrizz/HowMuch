@@ -17,7 +17,7 @@ enum RecongnizingStatus: Equatable {
     case running
 }
 
-struct RecognizingState: StateType {
+struct RecognizingState: StateType, Equatable {
     var sourceValue: Float
     var resultValue: Float
     var recongnizingStatus: RecongnizingStatus
@@ -26,4 +26,12 @@ struct RecognizingState: StateType {
     
     static let `default` = RecognizingState(sourceValue: 0.0, resultValue: 0.0, recongnizingStatus: .running,
                                             isManuallyEditing: false, accessToCamera: false)
+    
+    static func ==(lhs: RecognizingState, rhs: RecognizingState) -> Bool {
+        return lhs.sourceValue == rhs.sourceValue
+            && lhs.resultValue == rhs.resultValue
+            && lhs.recongnizingStatus == rhs.recongnizingStatus
+            && lhs.isManuallyEditing == rhs.isManuallyEditing
+            && lhs.accessToCamera == rhs.accessToCamera
+    }
 }

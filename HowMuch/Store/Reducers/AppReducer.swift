@@ -12,7 +12,8 @@ func AppReducer(action: Action, state: AppState?) -> AppState {
     return AppState(
         settings: SettingsReducer(action: action, state: state?.settings),
         currencyRates: CurrencyRatesReducer(action: action, state: state?.currencyRates),
-        recognizing: RecognizingReducer(action: action, state: state?.recognizing)
+        recognizing: RecognizingReducer(action: action, state: state?.recognizing),
+        selectionCurrencyState: SelectionCurrencyState(filteredCurrencies: [])
     )
 }
 
