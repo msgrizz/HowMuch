@@ -113,9 +113,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
                                 })
                             }, selected: selected)
         })
-        let navigation = UINavigationController(rootViewController: selectVC)
-        navigation.navigationBar.prefersLargeTitles = true
-        self.present(navigation, animated: true, completion: nil)
+        navigationController?.pushViewController(selectVC, animated: true)
     }
 }
 

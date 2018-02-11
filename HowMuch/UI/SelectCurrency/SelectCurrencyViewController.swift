@@ -20,7 +20,7 @@ struct CurrencyItem: Equatable {
 }
 
 
-class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdating, SimpleStoreSubscriber {
+class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdating, SimpleStoreSubscriber, UISearchBarDelegate {
         
     var onStateChanged: ((AppState) -> Void)!
     
@@ -44,11 +44,6 @@ class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdati
         didSet {
             if props.items != oldValue.items {
                 tableView.reloadData()
-            }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-                if self.tableView.indexPathForSelectedRow == nil {
-                    self.forceSelectCell()
-                }
             }
         }
     }
@@ -84,6 +79,12 @@ class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdati
     }
     
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        forceSelectCell()
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CurrencyViewCell.self, forCellReuseIdentifier: CurrencyViewCell.identifier)
@@ -94,9 +95,15 @@ class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdati
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.returnKeyType = .done
+        searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
         definesPresentationContext = true
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeLeftAction))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
     
     
@@ -107,12 +114,11 @@ class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdati
     
     func configureNavigation() {
         title = "Select currency"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "closeIcon"), style: .plain, target: self, action: #selector(close))
     }
     
     
-    @objc func close() {
-        dismiss(animated: true, completion: nil)
+    @objc func swipeLeftAction(gesture: UIGestureRecognizer) {
+        // TODO popViewController
     }
     
     
@@ -151,9 +157,15 @@ class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdati
     
     //MARK: -UISearchResultsUpdating
     public func updateSearchResults(for searchController: UISearchController) {
-//        props.onSearchTextChanged?(searchController.searchBar.text ?? "")
         let searchBar = searchController.searchBar
         filter(text: searchBar.text ?? "")
+    }
+    
+    
+    
+    //MARK: -UISearchBarDelegate
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchController.isActive = false
     }
 }
 
