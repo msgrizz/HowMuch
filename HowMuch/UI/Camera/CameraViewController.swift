@@ -115,7 +115,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var crossView = CrossView()
     private var dummyView = UIView()
     private var cameraView = UIView()
-    private var cameraLayer: AVCaptureVideoPreviewLayer!
     private let cameraDeniedView = CameraAccessDeniedView()
     private let disabledView = DisabledCameraView()
     
@@ -188,6 +187,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let cameraLayer = AVCaptureVideoPreviewLayer(session: session)
         cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraView.layer.addSublayer(cameraLayer)
+        view.setNeedsLayout()
         start()
     }
     
