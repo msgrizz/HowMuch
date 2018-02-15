@@ -11,31 +11,30 @@
 
 default_platform(:ios)
 
+appName = "HowMuch"
+
 platform :ios do
   desc "Push a new beta build to TestFlight"
-  lane :beta do  
+  lane :beta do    
     increment_version  
-    build_app(workspace: "HowMuch.xcworkspace", scheme: "HowMuch")    
+    build_app(
+      workspace: "#{appName}.xcworkspace",
+      scheme: appName,
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: { 
+          "com.maxkazakov.Howmuch" => "howMuch"          
+        }
+      }
+    )    
     upload_to_testflight
   end
 
   lane :increment_version do
-    # Ensure that your git status is not dirty
-    ensure_git_status_clean
-  
-    # Increment the build number (not the version number)
-    # Providing the xcodeproj is optional
-    increment_build_number(xcodeproj: "HowMuch.xcodeproj")
-  
-    # Commit the version bump
-    commit_version_bump(xcodeproj: "HowMuch.xcodeproj")
-  
-    # Add a git tag for this build. This will automatically
-    # use an appropriate git tag name
-    add_git_tag
-  
-    # Push the new commit and tag back to your git remote
-    push_to_git_remote
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1,
+      xcodeproj: "#{appName}.xcodeproj"
+    )
   end
 end
 

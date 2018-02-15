@@ -56,6 +56,7 @@
 		9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61620016406001AC1E8 /* libstdc++.tbd */; };
 		9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61820016410001AC1E8 /* CoreImage.framework */; };
 		9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */; };
+		9BA3A27A2035FA520017A448 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A2792035FA520017A448 /* Colors.swift */; };
 		9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB20889201CDEF600803237 /* CameraViewController.swift */; };
 		9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */; };
 		9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */; };
@@ -130,6 +131,7 @@
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BA3A2792035FA520017A448 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		9BB20889201CDEF600803237 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPanelViewController.swift; sourceTree = "<group>"; };
 		9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedView.swift; sourceTree = "<group>"; };
@@ -264,9 +266,9 @@
 		9B6FEAD4200547FA00CEF94F /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				9B64E469202B489C00D28C4E /* SelectCurrency */,
 				9B5A1CD2201CD8AA0056D6DB /* Recognizer */,
 				9B6FEAFC200A179700CEF94F /* Camera */,
+				9B64E469202B489C00D28C4E /* SelectCurrency */,
 				9B5A1CD3201CD8CD0056D6DB /* ConvertPanel */,
 				9B6FEAE32009414800CEF94F /* Settings */,
 			);
@@ -340,6 +342,7 @@
 			children = (
 				9B9E2243200FC2220026122B /* ObserverList.swift */,
 				9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */,
+				9BA3A2792035FA520017A448 /* Colors.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -644,6 +647,7 @@
 				9B64E46D202B48C000D28C4E /* CurrencyViewCell.swift in Sources */,
 				9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */,
 				9B7FB25C201DC5E80031EFDC /* AppReducer.swift in Sources */,
+				9BA3A27A2035FA520017A448 /* Colors.swift in Sources */,
 				9B7FB25A201DC5540031EFDC /* RecognizingState.swift in Sources */,
 				9B7FB264201DCE550031EFDC /* RecognizingActions.swift in Sources */,
 				9B7FB253201DC4750031EFDC /* AppState.swift in Sources */,
@@ -720,6 +724,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -745,6 +750,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -778,6 +784,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -796,6 +803,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -810,7 +818,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/HowMuch/Info.plist";
+				INFOPLIST_FILE = HowMuch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxkazakov.Howmuch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -834,7 +842,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/HowMuch/Info.plist";
+				INFOPLIST_FILE = HowMuch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxkazakov.Howmuch;
 				PRODUCT_NAME = "$(TARGET_NAME)";

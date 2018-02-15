@@ -24,6 +24,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
+//        let appearance = UINavigationBar.appearance()
+//        appearance.isTranslucent = false
+//        appearance.barTintColor = Colors.accent2
+//        appearance.tintColor = UIColor.white
+//        let textAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+//        appearance.titleTextAttributes = textAttributes
+        
         let pictureListVc = RecognizerViewController()
         let initialViewController = UINavigationController(rootViewController: pictureListVc)
         initialViewController.navigationBar.prefersLargeTitles = true
