@@ -10,7 +10,7 @@ import UIKit
 
 class DisabledCameraView: UIView {
     
-    static let messageText = "Нажмите, чтобы продолжить"
+    static let messageText = "TapToResume".localized
     let messageLabel = UILabel()
     
     override init(frame: CGRect) {

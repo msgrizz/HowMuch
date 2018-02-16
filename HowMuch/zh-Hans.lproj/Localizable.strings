@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  HowMuch
+
+  Created by Максим Казаков on 16/02/2018.
+  Copyright © 2018 AppCoda. All rights reserved.
+*/
+
+"TapToResume" = "Tap to resume";
+"OpenSettings" = "Open settings";
+"AccessCameraMessage" = "Application needs camera access to recongize price tags";
+"SelectCurrency" = "Select currency";
+"SettingsTitle" = "Settings";
+"RecognizingSettingsTitle" = "Recognizing settings";
+"RecognizeFloatTitle" = "Recognize fractional part";
+
+

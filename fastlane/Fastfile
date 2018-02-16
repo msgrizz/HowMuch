@@ -12,6 +12,7 @@
 default_platform(:ios)
 
 appName = "HowMuch"
+changelog = "HowMuch"
 
 platform :ios do
   desc "Push a new beta build to TestFlight"
@@ -24,16 +25,26 @@ platform :ios do
       export_options: {
         provisioningProfiles: { 
           "com.maxkazakov.Howmuch" => "howMuch"          
-        }
-      }
-    )    
-    upload_to_testflight
+        }      
+      }      
+    )  
+
+    upload
   end
 
   lane :increment_version do
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
       xcodeproj: "#{appName}.xcodeproj"
+    )
+  end
+
+  lane :upload do 
+    upload_to_testflight(
+      distribute_external: true,
+      changelog: changelog,
+      beta_app_description: "Привет ребята, я просто пока что тестирую скрипты",
+      groups: ["Друзья"]
     )
   end
 end

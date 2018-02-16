@@ -56,6 +56,7 @@ class ConvertPanelView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         changeButton.setImage(#imageLiteral(resourceName: "changeIcon"), for: .normal)
+        changeButton.tintColor = Colors.accent1
         changeButton.backgroundColor = UIColor.white
         changeButton.addTarget(self, action: #selector(onSwap), for: .touchUpInside)
         

@@ -113,7 +113,7 @@ class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdati
     
     
     func configureNavigation() {
-        title = "Select currency"
+        title = "SelectCurrency".localized
     }
     
     

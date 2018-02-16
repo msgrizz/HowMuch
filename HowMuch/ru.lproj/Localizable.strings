@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  HowMuch
+
+  Created by Максим Казаков on 16/02/2018.
+  Copyright © 2018 AppCoda. All rights reserved.
+*/
+"TapToResume" = "Нажмите чтобы продолжить";
+"OpenSettings" = "Открыть настройки";
+"AccessCameraMessage" = "Приложению необходим доступ к камере для распознавания ценников";
+"SelectCurrency" = "Выберите валюту";
+"SettingsTitle" = "Настройки";
+"RecognizingSettingsTitle" = "Настройки распознавания";
+"RecognizeFloatTitle" = "Распознавать дробную часть";

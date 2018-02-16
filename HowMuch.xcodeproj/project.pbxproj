@@ -57,6 +57,7 @@
 		9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61820016410001AC1E8 /* CoreImage.framework */; };
 		9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */; };
 		9BA3A27A2035FA520017A448 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A2792035FA520017A448 /* Colors.swift */; };
+		9BA3A27F20373EFB0017A448 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9BA3A27D20373EFB0017A448 /* Localizable.strings */; };
 		9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB20889201CDEF600803237 /* CameraViewController.swift */; };
 		9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */; };
 		9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */; };
@@ -132,6 +133,11 @@
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BA3A2792035FA520017A448 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		9BA3A27C20373E730017A448 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = HowMuch/ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		9BA3A27E20373EFB0017A448 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = HowMuch/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9BA3A28020373F050017A448 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = HowMuch/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9BA3A281203747210017A448 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HowMuch/zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		9BA3A282203747210017A448 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HowMuch/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9BB20889201CDEF600803237 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPanelViewController.swift; sourceTree = "<group>"; };
 		9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedView.swift; sourceTree = "<group>"; };
@@ -179,6 +185,7 @@
 		8B0D6AF21EFA582B00544F3D = {
 			isa = PBXGroup;
 			children = (
+				9BA3A27D20373EFB0017A448 /* Localizable.strings */,
 				9B6FEA9F2002A3AA00CEF94F /* HowMuch */,
 				9B6FEAED2009F08600CEF94F /* HowMuchTests */,
 				8B0D6AFC1EFA582B00544F3D /* Products */,
@@ -474,6 +481,8 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
+				"zh-Hans",
 			);
 			mainGroup = 8B0D6AF21EFA582B00544F3D;
 			productRefGroup = 8B0D6AFC1EFA582B00544F3D /* Products */;
@@ -491,6 +500,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BA3A27F20373EFB0017A448 /* Localizable.strings in Resources */,
 				9B6FEAAA2002A53100CEF94F /* Info.plist in Resources */,
 				9B6FEAC42002A79200CEF94F /* LaunchScreen.storyboard in Resources */,
 				9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */,
@@ -686,9 +696,21 @@
 			isa = PBXVariantGroup;
 			children = (
 				9B6FEAC12002A79100CEF94F /* Base */,
+				9BA3A27C20373E730017A448 /* ru */,
+				9BA3A281203747210017A448 /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		9BA3A27D20373EFB0017A448 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9BA3A27E20373EFB0017A448 /* Base */,
+				9BA3A28020373F050017A448 /* ru */,
+				9BA3A282203747210017A448 /* zh-Hans */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -698,6 +720,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -724,7 +747,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -758,6 +781,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -784,7 +808,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -815,7 +839,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HowMuch/Info.plist;
@@ -839,7 +863,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HowMuch/Info.plist;

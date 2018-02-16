@@ -11,8 +11,8 @@ import UIKit
 
 class CameraAccessDeniedView: UIView {
     
-    static let mainText = "Разрешите доступ к камере в настройках приложения, чтобы позволить приложению распознавать цену"
-    static let buttonText = "Открыть настройки"
+    static let mainText = "AccessCameraMessage".localized
+    static let buttonText = "OpenSettings".localized
     
     let mainLabel = UILabel()
     let settingsButton = UIButton(type: .system)

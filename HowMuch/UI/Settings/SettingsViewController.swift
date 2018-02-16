@@ -42,13 +42,13 @@ class SettingViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()        
-        title = "Настройки"        
+        title = "SettingsTitle".localized
         tableView.register(SelectCurrencyCellView.self, forCellReuseIdentifier: SelectCurrencyCellView.identifier)
         tableView.register(CheckRecognizeFloatViewCell.self, forCellReuseIdentifier: CheckRecognizeFloatViewCell.identifier)
         navigationItem.largeTitleDisplayMode = .always
     }
     
-    private let sections = ["Выбор валюты", "Настройки распознавания"]
+    private let sections = ["RecognizingSettingsTitle".localized]
     
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -70,8 +70,6 @@ class SettingViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 2
-        case 1:
             return 1
         default:
             fatalError()
@@ -91,23 +89,6 @@ class SettingViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            switch indexPath.row {
-            case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать из", value: props.sourceCurrency.currency, values: Currency.allCurrencies) { currency in
-                    self.props.sourceCurrency.onSelect?(currency)
-                }
-                return cell
-            case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: SelectCurrencyCellView.identifier) as! SelectCurrencyCellView
-                cell.setup(title: "Конвертировать в", value: props.resultCurrency.currency, values: Currency.allCurrencies) { currency in
-                    self.props.resultCurrency.onSelect?(currency)
-                }
-                return cell
-            default:
-                fatalError()
-            }
-        case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: CheckRecognizeFloatViewCell.identifier) as! CheckRecognizeFloatViewCell
             cell.setup(flag: props.tryParseToFloat.value) { isOn in
                 self.props.tryParseToFloat.onChange?(isOn)
