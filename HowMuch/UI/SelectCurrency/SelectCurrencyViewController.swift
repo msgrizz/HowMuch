@@ -20,9 +20,8 @@ struct CurrencyItem: Equatable {
 }
 
 
-class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdating, SimpleStoreSubscriber, UISearchBarDelegate {
-        
-    var onStateChanged: ((AppState) -> Void)!
+final class SelectCurrencyViewController: UITableViewController, UISearchResultsUpdating, SimpleStoreSubscriber, UISearchBarDelegate {        
+    var onStateChanged: ((SelectCurrencyViewController, AppState) -> Void)!
     
     struct Props {
         let items: [CurrencyItem]

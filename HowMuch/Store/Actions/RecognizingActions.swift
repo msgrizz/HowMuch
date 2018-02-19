@@ -21,18 +21,7 @@ struct SetRecognizingStatusAction: Action {
     let status: RecongnizingStatus
 }
 
-
-/// Переключить статус распознавания
-struct ToggleRecognizingStatus: Action {}
-
-
-struct SetIsManualEditing: Action {
+/// Установить статус распознавания
+struct SetIsManualEdtitingAction: Action {
     let value: Bool
 }
-
-struct SetCameraAccessAction: Action {
-    let value: Bool
-}
-
-
-

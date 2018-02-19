@@ -10,14 +10,14 @@ import ReSwift
 
 protocol SimpleStoreSubscriber: StoreSubscriber {
     associatedtype SubState
-    var onStateChanged: ((SubState) -> Void)! { get set }
+    var onStateChanged: ((Self, SubState) -> Void)! { get set }
 }
 
 
 extension SimpleStoreSubscriber {
     func connect(select: @escaping (AppState) -> StoreSubscriberStateType,
                  isChanged: @escaping (StoreSubscriberStateType, StoreSubscriberStateType) -> Bool,
-                 onChanged: @escaping (SubState) -> Void) {
+                 onChanged: @escaping (Self, SubState) -> Void) {
         
         onStateChanged = onChanged
         
@@ -29,6 +29,6 @@ extension SimpleStoreSubscriber {
     }
     
     func newState(state: SubState) {
-        onStateChanged(state)
+        onStateChanged(self, state)
     }
 }

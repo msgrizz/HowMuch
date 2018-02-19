@@ -11,56 +11,59 @@ import AVFoundation
 import Vision
 import ReSwift
 
-class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, SimpleStoreSubscriber {
+    
+    var onStateChanged: ((CameraViewController, AppState) -> Void)!
     
     struct Props {
-        let recognizingStatus: RecongnizingStatus
-        let isManualEditing: Bool
-        let onTap: ((RecongnizingStatus) -> Void)?
-        let onRecognized: ((Float) -> Void)?
+        let status: RecongnizingStatus
         let tryParseFloat: Bool
-        let accessToCamera: Bool
-        let onTryAccessCamera: ((Bool) -> Void)?
+        let onTap: (() -> Void)?
+        let onRecognized: ((Float) -> Void)?
+        let onWillAppear: (() -> Void)?
+        let onWillDisappear: (() -> Void)?
         
-        static let zero = Props(recognizingStatus: .running, isManualEditing: false,
-                                onTap: nil, onRecognized: nil, tryParseFloat: false,
-                                accessToCamera: false, onTryAccessCamera: nil)
+        static let zero = Props(status: .stopped, tryParseFloat: false,
+                                onTap: nil, onRecognized: nil, onWillAppear: nil, onWillDisappear: nil)
     }
     
     var props = Props.zero {
         didSet {
-            let accessToCamera = props.accessToCamera
-            if accessToCamera {
-                cameraDeniedView.isHidden = true
-                if accessToCamera != oldValue.accessToCamera  {
+            engine.tryParseFloat = props.tryParseFloat
+            guard oldValue.status != props.status else { return }
+            
+            crossView.isHidden = true
+            cameraView.isHidden = true
+            cameraDeniedView.isHidden = true
+            disabledView.isHidden = true
+            
+            switch (oldValue.status, props.status) {
+            case (_, .running):
+                crossView.isHidden = false
+                cameraView.isHidden = false
+                if !session.isRunning {
                     setupLiveVideoSession()
                 }
-            } else {
-                crossView.isHidden = true
+                
+            case (_, .noCameraAccess):
                 cameraDeniedView.isHidden = false
-                return
-            }
-            
-            engine.tryParseFloat = props.tryParseFloat
-            switch (oldValue.recognizingStatus, props.recognizingStatus) {
-            case (.running, .stopped), (.suspended, .stopped):
-                stop()
-            case (.running, .suspended):
-                suspend()
-            case (.suspended, .running):
-                resume()
-            case (.stopped, .running):
-                start()
-            default:
+                
+            case (_, .stopped):
+                cameraView.isHidden = false
                 break
+                
+            case (_, .suspended):
+                suspend()
+                disabledView.isHidden = false
+                cameraView.isHidden = false
             }
         }
     }
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.addSubview(cameraView)
         view.addSubview(dummyView)
         dummyView.addSubview(disabledView)
@@ -70,33 +73,27 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         cameraDeniedView.isHidden = true
         crossView.isHidden = false
         
-//        contentView.addSubview(debugCeilImageView)
-//        contentView.addSubview(debugFloorImageView)
         setupConstraints()
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
         dummyView.addGestureRecognizer(tapRecognizer)
         engine.delegate = self        
     }
-    
-    
+
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if checkHaveCameraAccess() {
-            props.onTryAccessCamera?(true)
-        } else {
-            requireCameraAccess()
-        }
-        store.dispatch(SetRecognizingStatusAction(status: .running))
+        
+        props.onWillAppear?()
     }
     
     
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        store.dispatch(SetRecognizingStatusAction(status: .stopped))
+        
+        props.onWillDisappear?()
     }
     
     
@@ -108,12 +105,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     
     // MARK: -Private
+    private let sessionQueue = DispatchQueue(label: "SessionQueue")
+    
     private let debugCeilImageView = UIImageView(frame: CGRect.zero)
     private let debugFloorImageView = UIImageView(frame: CGRect.zero)
     
     private var tapRecognizer: UITapGestureRecognizer!
-    private var crossView = CrossView()
     private var dummyView = UIView()
+    private var crossView = CrossView()
     private var cameraView = UIView()
     private let cameraDeniedView = CameraAccessDeniedView()
     private let disabledView = DisabledCameraView()
@@ -188,7 +187,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraView.layer.addSublayer(cameraLayer)
         view.setNeedsLayout()
-        start()
+        
+        session.startRunning()
     }
     
     
@@ -202,53 +202,22 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
     
     
-    private func start() {
-        disabledView.isHidden = true
-        crossView.isHidden = false
-        guard !session.isRunning else {
-            return
-        }
-        session.startRunning()
-    }
-    
-    
-    private func stop() {
-        disabledView.isHidden = false
-        crossView.isHidden = true
-        session.stopRunning()
-    }
-    
-    
-    private func resume() {
-        disabledView.isHidden = true
-        crossView.isHidden = false
-    }
-    
     
     private func suspend() {
         onCleanRects()
-        disabledView.isHidden = false
-        crossView.isHidden = true
     }
     
     
-    @objc private func onTapCamera(recognizer: UIGestureRecognizer) {        
-        switch props.recognizingStatus {
-        case .running:
-            props.onTap?(.suspended)
-        case .suspended:
-            if props.isManualEditing { return }
-            props.onTap?(.running)
-        case .stopped:
-            return
-        }
+    
+    @objc private func onTapCamera(recognizer: UIGestureRecognizer) {
+        props.onTap?()
     }
     
     
     
     // MARK: -AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard props.recognizingStatus == .running, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+        guard props.status == .running, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
         var requestOptions: [VNImageOption : Any] = [:]
@@ -260,23 +229,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: requestOptions)
         engine.perform(imageRequestHandler, sampleBuffer)
     }
-    
-    
-    
-    private func checkHaveCameraAccess() -> Bool {
-        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
-        return cameraAuthorizationStatus == .authorized
-    }
-    
-    
-    private func requireCameraAccess() {
-        AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
-            DispatchQueue.main.async {
-                self.props.onTryAccessCamera?(granted)
-            }            
-        }
-    }
 }
+
 
 
 extension CameraViewController: RecognizerEngineDelegate {
@@ -291,38 +245,14 @@ extension CameraViewController: RecognizerEngineDelegate {
     
     
     func onDrawRect(wordRect: RegionRects) {
-        guard props.recognizingStatus == .running else { return }
+        guard props.status.isRunning else { return }
         drawWord(rect: wordRect)
     }
     
     
     
     func onComplete(sourceValue: Float) {
-        guard props.recognizingStatus == .running else { return }
+        guard props.status.isRunning else { return }
         props.onRecognized?(sourceValue)
     }
 }
-
-
-extension CameraViewController:  StoreSubscriber {
-    func connect(to store: Store<AppState>) {
-        store.subscribe(self)
-    }
-    
-    
-    func newState(state: AppState) {
-        props = Props(recognizingStatus: state.recognizing.recongnizingStatus, isManualEditing: state.recognizing.isManuallyEditing,
-                      onTap: { status in
-                        store.dispatch(SetRecognizingStatusAction(status: status))
-        },
-                      onRecognized: { (value: Float) in
-                        store.dispatch(CreateSetValuesAction(state: state, source: value))
-        },
-                      tryParseFloat: state.settings.tryParseFloat,
-                      accessToCamera: state.recognizing.accessToCamera,
-                      onTryAccessCamera: { result in
-                        store.dispatch(SetCameraAccessAction(value: result))
-        })
-    }
-}
-

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import AVFoundation
 
 class RecognizerViewController: UIViewController {
 
@@ -35,6 +35,15 @@ class RecognizerViewController: UIViewController {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillShow), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillHide), name: .UIKeyboardWillHide, object: nil)
+        
+        
+        // TODO Replace
+        if checkHaveCameraAccess() {
+            store.dispatch(SetRecognizingStatusAction(status: .running))
+        } else {
+            store.dispatch(SetRecognizingStatusAction(status: .noCameraAccess))
+            requireCameraAccess()
+        }
     }
     
     
@@ -61,6 +70,7 @@ class RecognizerViewController: UIViewController {
     
     private func setupConstraints() {
         let guide = view.safeAreaLayoutGuide
+        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
@@ -86,7 +96,48 @@ class RecognizerViewController: UIViewController {
         addChildViewController(cameraViewController)
         let cameraView = cameraViewController.view!
         contentView.addSubview(cameraView)
-        cameraViewController.connect(to: store)
+        
+        cameraViewController.connect(select: { state in state },
+                                     isChanged: { _, _ in true },
+                                     onChanged: { vc, state in
+                                        let status = state.recognizing.recongnizingStatus
+                                        let isManualEditing = state.recognizing.isManuallyEditing
+                                        
+                                        vc.props = CameraViewController.Props(
+                                            status: isManualEditing ? .stopped : state.recognizing.recongnizingStatus,
+                                            tryParseFloat: state.settings.tryParseFloat,
+                                            onTap: {
+                                                switch status {
+                                                case .suspended:
+                                                    store.dispatch(SetRecognizingStatusAction(status: .running))
+                                                case .running:
+                                                    store.dispatch(SetRecognizingStatusAction(status: .suspended))
+                                                default:
+                                                    break
+                                                }
+                                        },
+                                            onRecognized: { (value: Float) in
+                                                store.dispatch(CreateSetValuesAction(state: state, source: value))
+                                        },
+                                            onWillAppear: {
+                                                switch status {
+                                                case .stopped:
+                                                    store.dispatch(SetRecognizingStatusAction(status: .running))
+                                                default:
+                                                    break
+                                                }
+                                        },
+                                            onWillDisappear: {
+                                                switch status {
+                                                case .running:
+                                                    store.dispatch(SetRecognizingStatusAction(status: .stopped))
+                                                default:
+                                                    break
+                                                }
+                                        })
+        })
+
+        
         
         let convertPanelViewController = ConvertPanelViewController()
         addChildViewController(convertPanelViewController)
@@ -94,6 +145,7 @@ class RecognizerViewController: UIViewController {
         contentView.addSubview(convertPanelView)
         convertPanelViewController.connect(to: store)
         
+        // set constraints
         let guide = contentView.safeAreaLayoutGuide
         cameraView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -123,7 +175,7 @@ class RecognizerViewController: UIViewController {
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-        store.dispatch(SetRecognizingStatusAction(status: .suspended))
+//        store.dispatch(SetRecognizingStatusAction(status: .stopped))
         
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: height)
@@ -137,11 +189,29 @@ class RecognizerViewController: UIViewController {
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-        store.dispatch(SetRecognizingStatusAction(status: .running))
+//        store.dispatch(SetRecognizingStatusAction(status: .running))
         
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: 0)
         })
+    }
+    
+    
+    
+    private func checkHaveCameraAccess() -> Bool {
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        return cameraAuthorizationStatus == .authorized
+    }
+    
+    
+    private func requireCameraAccess() {
+        AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
+            DispatchQueue.main.async {
+                if granted {
+                    store.dispatch(SetRecognizingStatusAction(status: .running))
+                }
+            }
+        }
     }
 }
 

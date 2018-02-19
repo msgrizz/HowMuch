@@ -9,29 +9,26 @@
 import ReSwift
 
 enum RecongnizingStatus: Equatable {
-    /// не обрабатываются кадры
-    case stopped
-    /// не обрабатываются кадры, экран заглушки
-    case suspended
-    /// запущено
+    case noCameraAccess
     case running
+    case suspended
+    case stopped
+    
+    var isRunning: Bool { return self == .running }
 }
 
 struct RecognizingState: StateType, Equatable {
     var sourceValue: Float
     var resultValue: Float
-    var recongnizingStatus: RecongnizingStatus
     var isManuallyEditing: Bool
-    var accessToCamera: Bool
+    var recongnizingStatus: RecongnizingStatus
     
-    static let `default` = RecognizingState(sourceValue: 0.0, resultValue: 0.0, recongnizingStatus: .running,
-                                            isManuallyEditing: false, accessToCamera: false)
+    static let `default` = RecognizingState(sourceValue: 0.0, resultValue: 0.0, isManuallyEditing: false, recongnizingStatus: .stopped)
     
     static func ==(lhs: RecognizingState, rhs: RecognizingState) -> Bool {
         return lhs.sourceValue == rhs.sourceValue
             && lhs.resultValue == rhs.resultValue
             && lhs.recongnizingStatus == rhs.recongnizingStatus
             && lhs.isManuallyEditing == rhs.isManuallyEditing
-            && lhs.accessToCamera == rhs.accessToCamera
     }
 }

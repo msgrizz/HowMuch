@@ -101,11 +101,11 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
                          isChanged: { old, new in
                             return (old.currencyRates != new.currencyRates) || (old.settings != new.settings)
         },
-                         onChanged: { state in
+                         onChanged: { vc, state in
                             let rates = state.currencyRates.rates
                             let settings = state.settings
                             let selected = isSource ? settings.sourceCurrency : settings.resultCurrency
-                            selectVC.props = SelectCurrencyViewController.Props(items: Currency.allCurrencies.map { currency in
+                            vc.props = SelectCurrencyViewController.Props(items: Currency.allCurrencies.map { currency in
                                 CurrencyItem(currency: currency, rate: rates[currency] ?? 0.0,
                                              onSelect: {
                                                 let action: Action = isSource ? SetSourceCurrencyAction(currency: currency) : SetResultCurrencyAction(currency: currency)
@@ -140,10 +140,10 @@ extension ConvertPanelViewController: StoreSubscriber {
                         store.dispatch(CreateSetValuesAction(state: state, source: value))
         },
                       onBeginEditing: {
-                        store.dispatch(SetIsManualEditing(value: true))
+                        store.dispatch(SetIsManualEdtitingAction(value: true))
         },
                       onStopEditing: {
-                        store.dispatch(SetIsManualEditing(value: false))
+                        store.dispatch(SetIsManualEdtitingAction(value: false))
         })
     }
 }

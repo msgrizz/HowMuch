@@ -18,11 +18,8 @@ func RecognizingReducer(action: Action, state: RecognizingState?) -> Recognizing
     case let setRecognizingStatus as SetRecognizingStatusAction:
         state.recongnizingStatus = setRecognizingStatus.status
         return state
-    case let setIsManualEditing as SetIsManualEditing:
-        state.isManuallyEditing = setIsManualEditing.value
-        return state
-    case let setCameraAccess as SetCameraAccessAction:
-        state.accessToCamera = setCameraAccess.value
+    case let setIsManualEdtitingAction as SetIsManualEdtitingAction:
+        state.isManuallyEditing = setIsManualEdtitingAction.value
         return state
     default:
         return state
