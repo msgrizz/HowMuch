@@ -8,6 +8,7 @@
 
 import UIKit
 import ReSwift
+import StoreKit
 
 var store = Store<AppState>(
     reducer: AppReducer,
@@ -44,6 +45,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         store.dispatch(TryUpdateCurrencyRateAction())
+        
+        StoreReviewHelper.incrementAppOpenedCounter()
+        StoreReviewHelper.checkAndAskForReview()
     }
 }
 

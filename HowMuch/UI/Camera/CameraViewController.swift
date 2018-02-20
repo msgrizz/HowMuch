@@ -104,8 +104,7 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
     }
     
     
-    // MARK: -Private
-    private let sessionQueue = DispatchQueue(label: "SessionQueue")
+    // MARK: -Private    
     
     private let debugCeilImageView = UIImageView(frame: CGRect.zero)
     private let debugFloorImageView = UIImageView(frame: CGRect.zero)

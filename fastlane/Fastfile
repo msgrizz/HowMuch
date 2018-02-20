@@ -12,7 +12,9 @@
 default_platform(:ios)
 
 appName = "HowMuch"
-changelog = "HowMuch"
+changelog = %q( Ускорена загрузка приложения.
+Устранены лаги при перехода с экрана на экран.  
+)
 
 platform :ios do
   desc "Push a new beta build to TestFlight"

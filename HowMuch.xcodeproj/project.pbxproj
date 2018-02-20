@@ -58,6 +58,7 @@
 		9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */; };
 		9BA3A27A2035FA520017A448 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A2792035FA520017A448 /* Colors.swift */; };
 		9BA3A27F20373EFB0017A448 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9BA3A27D20373EFB0017A448 /* Localizable.strings */; };
+		9BA3A284203C92560017A448 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A283203C92560017A448 /* StoreReviewHelper.swift */; };
 		9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB20889201CDEF600803237 /* CameraViewController.swift */; };
 		9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */; };
 		9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */; };
@@ -138,6 +139,7 @@
 		9BA3A28020373F050017A448 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = HowMuch/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9BA3A281203747210017A448 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HowMuch/zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		9BA3A282203747210017A448 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HowMuch/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		9BA3A283203C92560017A448 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
 		9BB20889201CDEF600803237 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPanelViewController.swift; sourceTree = "<group>"; };
 		9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedView.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 		9B9E2242200FC2050026122B /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				9BA3A283203C92560017A448 /* StoreReviewHelper.swift */,
 				9B9E2243200FC2220026122B /* ObserverList.swift */,
 				9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */,
 				9BA3A2792035FA520017A448 /* Colors.swift */,
@@ -628,6 +631,7 @@
 			files = (
 				9B7FB25E201DC7550031EFDC /* SettingsReducer.swift in Sources */,
 				9B5A1CC92018DC7C0056D6DB /* UIColor+Extension.swift in Sources */,
+				9BA3A284203C92560017A448 /* StoreReviewHelper.swift in Sources */,
 				9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */,
 				9B9D60D620270525002BD5F7 /* Action+Extention.swift in Sources */,
 				9B64E46F202CA74800D28C4E /* StoreSubcriber+Extention.swift in Sources */,
@@ -747,7 +751,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -808,7 +812,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -839,7 +843,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HowMuch/Info.plist;
@@ -863,7 +867,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HowMuch/Info.plist;
