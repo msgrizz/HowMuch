@@ -39,6 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window!.makeKeyAndVisible()
         
         store.dispatch(TryUpdateCurrencyRateAction())
+        
+        Products.store.requestProducts { _, _ in }
+        
         return true
     }
     
