@@ -59,6 +59,8 @@
 		9BA3A27A2035FA520017A448 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A2792035FA520017A448 /* Colors.swift */; };
 		9BA3A27F20373EFB0017A448 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9BA3A27D20373EFB0017A448 /* Localizable.strings */; };
 		9BA3A284203C92560017A448 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A283203C92560017A448 /* StoreReviewHelper.swift */; };
+		9BA3A287203DDEB90017A448 /* PurchasesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A286203DDEB90017A448 /* PurchasesHelper.swift */; };
+		9BA3A289203DDF100017A448 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA3A288203DDF100017A448 /* StoreKit.framework */; };
 		9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB20889201CDEF600803237 /* CameraViewController.swift */; };
 		9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */; };
 		9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */; };
@@ -140,6 +142,8 @@
 		9BA3A281203747210017A448 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HowMuch/zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		9BA3A282203747210017A448 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HowMuch/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9BA3A283203C92560017A448 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
+		9BA3A286203DDEB90017A448 /* PurchasesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesHelper.swift; sourceTree = "<group>"; };
+		9BA3A288203DDF100017A448 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9BB20889201CDEF600803237 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPanelViewController.swift; sourceTree = "<group>"; };
 		9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedView.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 			files = (
 				9B9FE61A20016421001AC1E8 /* TesseractOCR.framework in Frameworks */,
 				9B9FE61920016410001AC1E8 /* CoreImage.framework in Frameworks */,
+				9BA3A289203DDF100017A448 /* StoreKit.framework in Frameworks */,
 				9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */,
 				417A74DE4FD59F8731730D44 /* Pods_HowMuch.framework in Frameworks */,
 			);
@@ -208,6 +213,7 @@
 		952D547E0FBE78BB575BD3B5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9BA3A288203DDF100017A448 /* StoreKit.framework */,
 				9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */,
 				9B9FE61820016410001AC1E8 /* CoreImage.framework */,
 				9B9FE61620016406001AC1E8 /* libstdc++.tbd */,
@@ -275,6 +281,7 @@
 		9B6FEAD4200547FA00CEF94F /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				9BA3A285203DDE8D0017A448 /* Purchases */,
 				9B5A1CD2201CD8AA0056D6DB /* Recognizer */,
 				9B6FEAFC200A179700CEF94F /* Camera */,
 				9B64E469202B489C00D28C4E /* SelectCurrency */,
@@ -353,8 +360,16 @@
 				9B9E2243200FC2220026122B /* ObserverList.swift */,
 				9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */,
 				9BA3A2792035FA520017A448 /* Colors.swift */,
+				9BA3A286203DDEB90017A448 /* PurchasesHelper.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		9BA3A285203DDE8D0017A448 /* Purchases */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Purchases;
 			sourceTree = "<group>";
 		};
 		9BB2088F201DC25000803237 /* Store */ = {
@@ -469,6 +484,11 @@
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					9B6FEAEB2009F08600CEF94F = {
 						CreatedOnToolsVersion = 9.2;
@@ -650,6 +670,7 @@
 				9B7FB266201DD2160031EFDC /* CurrencyRatesMiddleware.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
 				9B5A1CC52018DBB80056D6DB /* SourceCurrencyView.swift in Sources */,
+				9BA3A287203DDEB90017A448 /* PurchasesHelper.swift in Sources */,
 				9B5A1CCB2018E0670056D6DB /* String+Extension.swift in Sources */,
 				9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */,
 				9B5A1CC72018DBC40056D6DB /* ResultCurrencyView.swift in Sources */,

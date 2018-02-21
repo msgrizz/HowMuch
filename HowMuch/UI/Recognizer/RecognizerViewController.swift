@@ -175,7 +175,6 @@ class RecognizerViewController: UIViewController {
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-//        store.dispatch(SetRecognizingStatusAction(status: .stopped))
         
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: height)
@@ -189,7 +188,6 @@ class RecognizerViewController: UIViewController {
         let duration = info[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let opts = UIViewAnimationOptions(rawValue: curve << 16)
-//        store.dispatch(SetRecognizingStatusAction(status: .running))
         
         UIView.animate(withDuration: duration, delay: 0, options: opts, animations: {
             self.scrollView.contentOffset = CGPoint(x: 0, y: 0)

@@ -13,7 +13,7 @@ class StoreReviewHelper {
     static let OpenedCounterKey = "OpenedCounterKey"
     
     static func incrementAppOpenedCounter() {
-        let defaults = UserDefaults.standard
+        let defaults = UserDefaults.standard        
         guard var appOpenCount = defaults.value(forKey: OpenedCounterKey) as? Int else {
             defaults.set(1, forKey: OpenedCounterKey)
             return
