@@ -63,6 +63,8 @@
 		9BA3A289203DDF100017A448 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA3A288203DDF100017A448 /* StoreKit.framework */; };
 		9BA3A28C203DE1D90017A448 /* Products.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A28B203DE1D90017A448 /* Products.swift */; };
 		9BA3A28E203DE52F0017A448 /* ProductsLocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A28D203DE52F0017A448 /* ProductsLocalStorage.swift */; };
+		9BA3A290203F34070017A448 /* PurchasesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A28F203F34070017A448 /* PurchasesViewController.swift */; };
+		9BA3A294203F3BD20017A448 /* PurchaseViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A293203F3BD20017A448 /* PurchaseViewCell.swift */; };
 		9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB20889201CDEF600803237 /* CameraViewController.swift */; };
 		9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */; };
 		9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */; };
@@ -148,6 +150,8 @@
 		9BA3A288203DDF100017A448 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9BA3A28B203DE1D90017A448 /* Products.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Products.swift; sourceTree = "<group>"; };
 		9BA3A28D203DE52F0017A448 /* ProductsLocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsLocalStorage.swift; sourceTree = "<group>"; };
+		9BA3A28F203F34070017A448 /* PurchasesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesViewController.swift; sourceTree = "<group>"; };
+		9BA3A293203F3BD20017A448 /* PurchaseViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewCell.swift; sourceTree = "<group>"; };
 		9BB20889201CDEF600803237 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPanelViewController.swift; sourceTree = "<group>"; };
 		9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedView.swift; sourceTree = "<group>"; };
@@ -372,6 +376,8 @@
 		9BA3A285203DDE8D0017A448 /* Purchases */ = {
 			isa = PBXGroup;
 			children = (
+				9BA3A28F203F34070017A448 /* PurchasesViewController.swift */,
+				9BA3A293203F3BD20017A448 /* PurchaseViewCell.swift */,
 			);
 			path = Purchases;
 			sourceTree = "<group>";
@@ -684,6 +690,8 @@
 				9B7FB268201DD2680031EFDC /* SettingsMiddleware.swift in Sources */,
 				9B7FB266201DD2160031EFDC /* CurrencyRatesMiddleware.swift in Sources */,
 				9BA3A28E203DE52F0017A448 /* ProductsLocalStorage.swift in Sources */,
+				9BA3A294203F3BD20017A448 /* PurchaseViewCell.swift in Sources */,
+				9BA3A290203F34070017A448 /* PurchasesViewController.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
 				9B5A1CC52018DBB80056D6DB /* SourceCurrencyView.swift in Sources */,
 				9BA3A287203DDEB90017A448 /* PurchaseHelper.swift in Sources */,
@@ -788,7 +796,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -849,7 +857,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -880,7 +888,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HowMuch/Info.plist;
@@ -904,7 +912,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = U8743T8Z48;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HowMuch/Info.plist;
