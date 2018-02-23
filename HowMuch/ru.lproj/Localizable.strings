@@ -12,3 +12,10 @@
 "SettingsTitle" = "Настройки";
 "RecognizingSettingsTitle" = "Настройки распознавания";
 "RecognizeFloatTitle" = "Распознавать дробную часть";
+"PurchasesTitle" = "Покупки";
+"Purchase.BuyButtonTitle" = "Разблокировать все валюты и отключить рекламу";
+"BuyButton.Title" = "Купить";
+"Forever" = "Навсегда";
+"Subscriptions" = "Подписки";
+"Purchases" = "Покупки";
+"Restore" = "Восстановить";

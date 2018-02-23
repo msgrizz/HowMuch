@@ -13,7 +13,7 @@ func AppReducer(action: Action, state: AppState?) -> AppState {
         settings: SettingsReducer(action: action, state: state?.settings),
         currencyRates: CurrencyRatesReducer(action: action, state: state?.currencyRates),
         recognizing: RecognizingReducer(action: action, state: state?.recognizing),
-        selectionCurrencyState: SelectionCurrencyState(filteredCurrencies: [])
+        purchaseState: PurchaseReducer(action: action, state: state?.purchaseState)
     )
 }
 

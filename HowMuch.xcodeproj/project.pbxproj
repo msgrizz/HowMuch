@@ -62,9 +62,14 @@
 		9BA3A287203DDEB90017A448 /* PurchaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A286203DDEB90017A448 /* PurchaseHelper.swift */; };
 		9BA3A289203DDF100017A448 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA3A288203DDF100017A448 /* StoreKit.framework */; };
 		9BA3A28C203DE1D90017A448 /* Products.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A28B203DE1D90017A448 /* Products.swift */; };
-		9BA3A28E203DE52F0017A448 /* ProductsLocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A28D203DE52F0017A448 /* ProductsLocalStorage.swift */; };
 		9BA3A290203F34070017A448 /* PurchasesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A28F203F34070017A448 /* PurchasesViewController.swift */; };
 		9BA3A294203F3BD20017A448 /* PurchaseViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A293203F3BD20017A448 /* PurchaseViewCell.swift */; };
+		9BA3A296203FFC3C0017A448 /* PurchaseActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A295203FFC3C0017A448 /* PurchaseActions.swift */; };
+		9BA3A298203FFC510017A448 /* PurchaseState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A297203FFC510017A448 /* PurchaseState.swift */; };
+		9BA3A29A204000E70017A448 /* ButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A299204000E70017A448 /* ButtonViewCell.swift */; };
+		9BA3A29C20400C130017A448 /* PurchaseMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A29B20400C130017A448 /* PurchaseMiddleware.swift */; };
+		9BA3A29F20400F890017A448 /* PurchaseReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A29E20400F890017A448 /* PurchaseReducer.swift */; };
+		9BA3A2A120402A070017A448 /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3A2A020402A070017A448 /* LoadingIndicatorView.swift */; };
 		9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB20889201CDEF600803237 /* CameraViewController.swift */; };
 		9BB2088E201CDF3B00803237 /* CurrencyPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */; };
 		9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */; };
@@ -149,9 +154,14 @@
 		9BA3A286203DDEB90017A448 /* PurchaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseHelper.swift; sourceTree = "<group>"; };
 		9BA3A288203DDF100017A448 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9BA3A28B203DE1D90017A448 /* Products.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Products.swift; sourceTree = "<group>"; };
-		9BA3A28D203DE52F0017A448 /* ProductsLocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsLocalStorage.swift; sourceTree = "<group>"; };
 		9BA3A28F203F34070017A448 /* PurchasesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesViewController.swift; sourceTree = "<group>"; };
 		9BA3A293203F3BD20017A448 /* PurchaseViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewCell.swift; sourceTree = "<group>"; };
+		9BA3A295203FFC3C0017A448 /* PurchaseActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseActions.swift; sourceTree = "<group>"; };
+		9BA3A297203FFC510017A448 /* PurchaseState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseState.swift; sourceTree = "<group>"; };
+		9BA3A299204000E70017A448 /* ButtonViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonViewCell.swift; sourceTree = "<group>"; };
+		9BA3A29B20400C130017A448 /* PurchaseMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseMiddleware.swift; sourceTree = "<group>"; };
+		9BA3A29E20400F890017A448 /* PurchaseReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReducer.swift; sourceTree = "<group>"; };
+		9BA3A2A020402A070017A448 /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
 		9BB20889201CDEF600803237 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPanelViewController.swift; sourceTree = "<group>"; };
 		9BD0C4DA2025A38E00F963C8 /* CameraAccessDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedView.swift; sourceTree = "<group>"; };
@@ -296,6 +306,7 @@
 				9B64E469202B489C00D28C4E /* SelectCurrency */,
 				9B5A1CD3201CD8CD0056D6DB /* ConvertPanel */,
 				9B6FEAE32009414800CEF94F /* Settings */,
+				9BA3A2A020402A070017A448 /* LoadingIndicatorView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -329,6 +340,7 @@
 				9B6FEAE120093FAE00CEF94F /* SettingsViewController.swift */,
 				9B6FEAE42009419200CEF94F /* SelectCurrencyCellView.swift */,
 				9B6FEAE620094A1000CEF94F /* CheckRecognizeFloatViewCell.swift */,
+				9BA3A299204000E70017A448 /* ButtonViewCell.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -387,7 +399,6 @@
 			children = (
 				9BA3A286203DDEB90017A448 /* PurchaseHelper.swift */,
 				9BA3A28B203DE1D90017A448 /* Products.swift */,
-				9BA3A28D203DE52F0017A448 /* ProductsLocalStorage.swift */,
 			);
 			path = Purchases;
 			sourceTree = "<group>";
@@ -408,6 +419,7 @@
 			isa = PBXGroup;
 			children = (
 				9B7FB252201DC4750031EFDC /* AppState.swift */,
+				9BA3A297203FFC510017A448 /* PurchaseState.swift */,
 				9B7FB254201DC4C90031EFDC /* SettingsState.swift */,
 				9B7FB257201DC4E20031EFDC /* CurrencyRatesState.swift */,
 				9B7FB259201DC5540031EFDC /* RecognizingState.swift */,
@@ -422,6 +434,7 @@
 				9B7FB25D201DC7550031EFDC /* SettingsReducer.swift */,
 				9B7FB25F201DC7650031EFDC /* CurrencyRatesReducer.swift */,
 				9B7FB261201DC79B0031EFDC /* RecognizingReducer.swift */,
+				9BA3A29E20400F890017A448 /* PurchaseReducer.swift */,
 			);
 			path = Reducers;
 			sourceTree = "<group>";
@@ -432,6 +445,7 @@
 				9B7FB269201DDB020031EFDC /* SettingsActions.swift */,
 				9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */,
 				9B7FB263201DCE550031EFDC /* RecognizingActions.swift */,
+				9BA3A295203FFC3C0017A448 /* PurchaseActions.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -442,6 +456,7 @@
 				9B7FB265201DD2160031EFDC /* CurrencyRatesMiddleware.swift */,
 				9B7FB267201DD2680031EFDC /* SettingsMiddleware.swift */,
 				9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */,
+				9BA3A29B20400C130017A448 /* PurchaseMiddleware.swift */,
 			);
 			path = Middlewares;
 			sourceTree = "<group>";
@@ -679,6 +694,7 @@
 				9B7FB260201DC7650031EFDC /* CurrencyRatesReducer.swift in Sources */,
 				9B6FEAF9200A0EE500CEF94F /* SettingsService.swift in Sources */,
 				9B6FEAE720094A1000CEF94F /* CheckRecognizeFloatViewCell.swift in Sources */,
+				9BA3A29A204000E70017A448 /* ButtonViewCell.swift in Sources */,
 				9B5A1CD1201A3DB70056D6DB /* ToolbarReturn.swift in Sources */,
 				9BA3A28C203DE1D90017A448 /* Products.swift in Sources */,
 				9B7FB255201DC4C90031EFDC /* SettingsState.swift in Sources */,
@@ -689,7 +705,6 @@
 				9B9E2244200FC2220026122B /* ObserverList.swift in Sources */,
 				9B7FB268201DD2680031EFDC /* SettingsMiddleware.swift in Sources */,
 				9B7FB266201DD2160031EFDC /* CurrencyRatesMiddleware.swift in Sources */,
-				9BA3A28E203DE52F0017A448 /* ProductsLocalStorage.swift in Sources */,
 				9BA3A294203F3BD20017A448 /* PurchaseViewCell.swift in Sources */,
 				9BA3A290203F34070017A448 /* PurchasesViewController.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
@@ -706,13 +721,18 @@
 				9B64E46D202B48C000D28C4E /* CurrencyViewCell.swift in Sources */,
 				9BD0C4DB2025A38E00F963C8 /* CameraAccessDeniedView.swift in Sources */,
 				9B7FB25C201DC5E80031EFDC /* AppReducer.swift in Sources */,
+				9BA3A298203FFC510017A448 /* PurchaseState.swift in Sources */,
 				9BA3A27A2035FA520017A448 /* Colors.swift in Sources */,
 				9B7FB25A201DC5540031EFDC /* RecognizingState.swift in Sources */,
 				9B7FB264201DCE550031EFDC /* RecognizingActions.swift in Sources */,
 				9B7FB253201DC4750031EFDC /* AppState.swift in Sources */,
 				9B6FEAE52009419200CEF94F /* SelectCurrencyCellView.swift in Sources */,
 				9B7FB26A201DDB020031EFDC /* SettingsActions.swift in Sources */,
+				9BA3A29C20400C130017A448 /* PurchaseMiddleware.swift in Sources */,
+				9BA3A2A120402A070017A448 /* LoadingIndicatorView.swift in Sources */,
 				9B6FEAFE200A1C5E00CEF94F /* ConvertPanelView.swift in Sources */,
+				9BA3A29F20400F890017A448 /* PurchaseReducer.swift in Sources */,
+				9BA3A296203FFC3C0017A448 /* PurchaseActions.swift in Sources */,
 				9B64E46B202B48B100D28C4E /* SelectCurrencyViewController.swift in Sources */,
 				9B6FEADB2005483100CEF94F /* CurrencyModel.swift in Sources */,
 				9B7FB258201DC4E20031EFDC /* CurrencyRatesState.swift in Sources */,

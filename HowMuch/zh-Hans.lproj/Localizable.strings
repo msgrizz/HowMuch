@@ -13,5 +13,11 @@
 "SettingsTitle" = "Settings";
 "RecognizingSettingsTitle" = "Recognizing settings";
 "RecognizeFloatTitle" = "Recognize fractional part";
-
+"PurchasesTitle" = "Purchases";
+"Purchase.BuyButtonTitle" = "Enable all currencies and disable ads";
+"BuyButton.Title" = "Buy";
+"Forever" = "Forever";
+"Subscriptions" = "Subscriptions";
+"Purchases" = "Purchases";
+"Restore" = "Restore";
 

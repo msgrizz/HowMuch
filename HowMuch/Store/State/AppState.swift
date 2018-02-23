@@ -9,24 +9,19 @@
 import ReSwift
 
 struct AppState: StateType, Equatable {
+    // Настройки приложения
     let settings: SettingsState
+    // Курсы валют
     let currencyRates: CurrencyRatesState
+    // Состояние экрана распознавания
     let recognizing: RecognizingState
-    let selectionCurrencyState: SelectionCurrencyState
+    // Информация о покупках
+    let purchaseState: PurchaseState
     
     static func ==(lhs: AppState, rhs: AppState) -> Bool {
         return lhs.settings == rhs.settings
             && lhs.currencyRates == rhs.currencyRates
             && lhs.recognizing == rhs.recognizing
-            && lhs.selectionCurrencyState == rhs.selectionCurrencyState
+            && lhs.purchaseState == rhs.purchaseState
     }
-}
-
-
-struct SelectionCurrencyState: Equatable {
-    static func ==(lhs: SelectionCurrencyState, rhs: SelectionCurrencyState) -> Bool {
-        return lhs.filteredCurrencies == rhs.filteredCurrencies
-    }
-    
-    let filteredCurrencies: [Currency]
 }

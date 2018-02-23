@@ -13,7 +13,10 @@ import StoreKit
 var store = Store<AppState>(
     reducer: AppReducer,
     state: nil,
-    middleware: [LoggingMiddleware, LoadCurrencyRatesMiddleware, UpdateCurrencyRatesMiddleware, LoadSettingsMiddleware, SaveSettingsMiddleware])
+    middleware: [LoggingMiddleware, LoadCurrencyRatesMiddleware,
+                 UpdateCurrencyRatesMiddleware, LoadSettingsMiddleware,
+                 SaveSettingsMiddleware, ProductsLoadingMiddleware,
+                 PurchaseMiddleware])
 
 
 @UIApplicationMain
@@ -23,8 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
+        let window = UIWindow(frame: UIScreen.main.bounds)
         
+        window.tintColor = Colors.accent1
         let appearance = UINavigationBar.appearance()
 //        appearance.isTranslucent = false
 //        appearance.barTintColor = Colors.accent2
@@ -35,13 +39,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let pictureListVc = RecognizerViewController()
         let initialViewController = UINavigationController(rootViewController: pictureListVc)
         initialViewController.navigationBar.prefersLargeTitles = true
-        window!.rootViewController = initialViewController
-        window!.makeKeyAndVisible()
+        window.rootViewController = initialViewController
+        window.makeKeyAndVisible()
         
         store.dispatch(TryUpdateCurrencyRateAction())
         
-        Products.store.requestProducts { _, _ in }
+        let purchaseInfos = Products.allIdentifiers.flatMap { id in
+            return PurchaseHelper.shared.loadPurchase(identifier: id).map{ date in PurchaseInfo(identifier: id, date: date) }
+        }
+        store.dispatch(LoadPurchasedAction(purchaseInfos: purchaseInfos))
         
+        self.window = window
         return true
     }
     

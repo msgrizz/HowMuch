@@ -8,6 +8,7 @@
 
 import UIKit
 import ReSwift
+import StoreKit
 
 
 class SettingViewController: UITableViewController {
@@ -45,10 +46,9 @@ class SettingViewController: UITableViewController {
         title = "SettingsTitle".localized
         tableView.register(SelectCurrencyCellView.self, forCellReuseIdentifier: SelectCurrencyCellView.identifier)
         tableView.register(CheckRecognizeFloatViewCell.self, forCellReuseIdentifier: CheckRecognizeFloatViewCell.identifier)
+        tableView.register(ButtonViewCell.self, forCellReuseIdentifier: ButtonViewCell.identifier)
         navigationItem.largeTitleDisplayMode = .always
     }
-    
-    private let sections = ["RecognizingSettingsTitle".localized]
     
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -62,42 +62,108 @@ class SettingViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section]
+        return sections[section].description
     }
     
     
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let section = sections[section]
         switch section {
-        case 0:
+        case .recognizingSettings:
             return 1
-        default:
-            fatalError()
+        case .purchases:
+            return 1
         }
     }
     
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cellView = tableView.cellForRow(at: indexPath) as? SelectCurrencyCellView {
-            cellView.select()
+        let section = sections[indexPath.section]
+        switch section {
+        case .purchases:
+            switch indexPath.row {
+            case 0:
+                let vc = PurchasesViewController(style: .grouped)
+                navigationController?.pushViewController(vc, animated: true)
+                vc.connect(select: { $0.purchaseState },
+                           isChanged: { $0 != $1 },
+                           onChanged: { vc, state in
+                            
+                            let viewModelCreator: ((SKProduct, ProductInfo) -> ProductViewModel) = { product, info in
+                                var paidUpState: ProductState = .notBought
+                                if product == state.productInProcess {
+                                    paidUpState = .inProcess
+                                } else if let purchaseInfo = state.purchasedProducts.first(where: { $0.identifier ==  product.productIdentifier }) {
+                                    paidUpState = .bought(date: purchaseInfo.date)
+                                }
+                                return ProductViewModel(name: product.localizedDescription, price: "\(product.price) \(product.priceLocale.currencySymbol ?? "")", type: info.type, state: paidUpState, onBuy: {
+                                    store.dispatch(BuyProductAction(product: product))
+                                })
+                            }
+                            
+                            vc.props = PurchasesViewController.Props(
+                                products: state.products.flatMap { product in
+                                    guard let info = Products.getInfoBy(identifier: product.productIdentifier) else { return nil }
+                                    let viewModel = viewModelCreator(product, info)
+                                    return viewModel
+                                },
+                                isLoading: state.isLoading,
+                                onRestore: {
+                                    store.dispatch(RestorePurchasesAction())
+                                },
+                                onLoaded: {
+                                    store.dispatch(LoadProductsAction())
+                                }
+                            )
+                })
+                
+            default:
+                break
+            }
+        default:
+            break
         }
     }
     
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
+        let section = sections[indexPath.section]
+        switch section {
+        case .recognizingSettings:
             let cell = tableView.dequeueReusableCell(withIdentifier: CheckRecognizeFloatViewCell.identifier) as! CheckRecognizeFloatViewCell
             cell.setup(flag: props.tryParseToFloat.value) { isOn in
                 self.props.tryParseToFloat.onChange?(isOn)
             }
             return cell
-        default:
-            fatalError()
+        case .purchases:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ButtonViewCell.identifier) as! ButtonViewCell
+            cell.setup(title: "Purchase.BuyButtonTitle".localized)
+            return cell
         }
     }
+    
+    
+    
+    // MARK: -Private
+    enum Sections: CustomStringConvertible {
+        case recognizingSettings
+        case purchases
+        
+        var description: String {
+            switch self {
+            case .recognizingSettings:
+                return "RecognizingSettingsTitle".localized
+            case .purchases:
+                return "PurchasesTitle".localized
+            }
+        }
+    }
+    
+    private let sections: [Sections] = [.recognizingSettings, .purchases]
+    
 }
 
 
