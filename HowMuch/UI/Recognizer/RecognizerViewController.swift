@@ -134,7 +134,8 @@ class RecognizerViewController: UIViewController {
                                                 default:
                                                     break
                                                 }
-                                        })
+                                        },
+                                            showBanner: !state.purchaseState.isPurchased)
         })
 
         

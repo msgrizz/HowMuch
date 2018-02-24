@@ -19,6 +19,8 @@
 		9B64E46B202B48B100D28C4E /* SelectCurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64E46A202B48B100D28C4E /* SelectCurrencyViewController.swift */; };
 		9B64E46D202B48C000D28C4E /* CurrencyViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64E46C202B48C000D28C4E /* CurrencyViewCell.swift */; };
 		9B64E46F202CA74800D28C4E /* StoreSubcriber+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64E46E202CA74800D28C4E /* StoreSubcriber+Extention.swift */; };
+		9B6A072720413D6200789C14 /* AdMobConsts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6A072620413D6200789C14 /* AdMobConsts.swift */; };
+		9B6A072920415EBD00789C14 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6A072820415EBD00789C14 /* Router.swift */; };
 		9B6FEAA62002A53100CEF94F /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA02002A53100CEF94F /* tessdata */; };
 		9B6FEAA82002A53100CEF94F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA22002A53100CEF94F /* AppDelegate.swift */; };
 		9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B6FEAA32002A53100CEF94F /* Assets.xcassets */; };
@@ -105,6 +107,8 @@
 		9B64E46A202B48B100D28C4E /* SelectCurrencyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCurrencyViewController.swift; sourceTree = "<group>"; };
 		9B64E46C202B48C000D28C4E /* CurrencyViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyViewCell.swift; sourceTree = "<group>"; };
 		9B64E46E202CA74800D28C4E /* StoreSubcriber+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreSubcriber+Extention.swift"; sourceTree = "<group>"; };
+		9B6A072620413D6200789C14 /* AdMobConsts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobConsts.swift; sourceTree = "<group>"; };
+		9B6A072820415EBD00789C14 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		9B6FEAA02002A53100CEF94F /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = HowMuch/tessdata; sourceTree = SOURCE_ROOT; };
 		9B6FEAA22002A53100CEF94F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = HowMuch/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
 		9B6FEAA32002A53100CEF94F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = HowMuch/Assets.xcassets; sourceTree = SOURCE_ROOT; };
@@ -381,6 +385,7 @@
 				9B9E2243200FC2220026122B /* ObserverList.swift */,
 				9B5A1CD0201A3DB70056D6DB /* ToolbarReturn.swift */,
 				9BA3A2792035FA520017A448 /* Colors.swift */,
+				9B6A072620413D6200789C14 /* AdMobConsts.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -411,6 +416,7 @@
 				9BB20892201DC26900803237 /* Actions */,
 				9B7FB2722020E71C0031EFDC /* ActionCreators */,
 				9BB20893201DC26E00803237 /* Middlewares */,
+				9B6A072820415EBD00789C14 /* Router.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -708,6 +714,7 @@
 				9BA3A294203F3BD20017A448 /* PurchaseViewCell.swift in Sources */,
 				9BA3A290203F34070017A448 /* PurchasesViewController.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
+				9B6A072920415EBD00789C14 /* Router.swift in Sources */,
 				9B5A1CC52018DBB80056D6DB /* SourceCurrencyView.swift in Sources */,
 				9BA3A287203DDEB90017A448 /* PurchaseHelper.swift in Sources */,
 				9B5A1CCB2018E0670056D6DB /* String+Extension.swift in Sources */,
@@ -738,6 +745,7 @@
 				9B7FB258201DC4E20031EFDC /* CurrencyRatesState.swift in Sources */,
 				9B7FB26D201DF3AB0031EFDC /* CurrencyRatesActoins.swift in Sources */,
 				9B6FEAD72005482300CEF94F /* CurrencyService.swift in Sources */,
+				9B6A072720413D6200789C14 /* AdMobConsts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

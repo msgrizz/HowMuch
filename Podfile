@@ -8,6 +8,7 @@ target 'HowMuch' do
   # Pods for HowMuch
   pod 'TesseractOCRiOS'  
   pod 'ReSwift'
+  pod 'Google-Mobile-Ads-SDK'
 end
 
 target 'HowMuchTests' do

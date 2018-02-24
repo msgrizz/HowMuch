@@ -9,6 +9,7 @@
 import UIKit
 import ReSwift
 import StoreKit
+import GoogleMobileAds
 
 var store = Store<AppState>(
     reducer: AppReducer,
@@ -17,6 +18,9 @@ var store = Store<AppState>(
                  UpdateCurrencyRatesMiddleware, LoadSettingsMiddleware,
                  SaveSettingsMiddleware, ProductsLoadingMiddleware,
                  PurchaseMiddleware])
+
+
+
 
 
 @UIApplicationMain
@@ -49,6 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         store.dispatch(LoadPurchasedAction(purchaseInfos: purchaseInfos))
         
+        // Initialize the Google Mobile Ads SDK.
+        GADMobileAds.configure(withApplicationID: AdMob.adMobId)
+        
         self.window = window
         return true
     }
@@ -56,9 +63,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         store.dispatch(TryUpdateCurrencyRateAction())
+        store.dispatch(CheckExpiredPurchasesAction())
         
         StoreReviewHelper.incrementAppOpenedCounter()
         StoreReviewHelper.checkAndAskForReview()
+        
     }
 }
 

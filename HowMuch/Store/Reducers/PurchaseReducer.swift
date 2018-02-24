@@ -19,12 +19,13 @@ func PurchaseReducer(action: Action, state: PurchaseState?) -> PurchaseState {
         state.isLoading = false
         state.products = successLoaded.products
         
-    case let failureLoaded as FailureLoadedProductsAction:
+    case is FailureLoadedProductsAction:
         state.isLoading = false
         
     case let successPayment as SuccessPaymentAction:
         state.purchasedProducts.append(successPayment.purchaseInfo)
         state.productInProcess = nil
+        state.isPurchased = true
         
     case let buyProduct as BuyProductAction:
         state.productInProcess = buyProduct.product
@@ -33,8 +34,14 @@ func PurchaseReducer(action: Action, state: PurchaseState?) -> PurchaseState {
         state.productInProcess = nil
         
     case let action as LoadPurchasedAction:
-        state.purchasedProducts += action.purchaseInfos
-
+        let actualPurchases = removedExpired(purchases: action.purchaseInfos)
+        state.isPurchased = actualPurchases.count > 0
+        state.purchasedProducts = actualPurchases
+    
+    case is CheckExpiredPurchasesAction:
+        let actualPurchases = removedExpired(purchases: state.purchasedProducts)
+        state.isPurchased = actualPurchases.count > 0
+        state.purchasedProducts = actualPurchases
     default:
         break
     }
@@ -42,7 +49,25 @@ func PurchaseReducer(action: Action, state: PurchaseState?) -> PurchaseState {
 }
 
 
+/// Отфильтровывает устаревшие покупки, возвращает акутальные
+fileprivate func removedExpired(purchases: [PurchaseInfo]) -> [PurchaseInfo] {
+    return purchases.flatMap { purchase in
+        let product = Products.getInfoBy(identifier: purchase.identifier)!
+        switch product.type {
+        case .forever:
+            return purchase
+        case .subscription(let term):
+            let dayDiff = Calendar.current.dateComponents([.day], from: purchase.date, to: Date()).day ?? 0
+            if dayDiff > term {
+                PurchaseHelper.shared.removePurchase(identifier: purchase.identifier)
+                return nil
+            }
+            return purchase
+        }
+    }
+}
 
-func initState() -> PurchaseState {
+
+fileprivate func initState() -> PurchaseState {
     return PurchaseState.default
 }

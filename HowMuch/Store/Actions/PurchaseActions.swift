@@ -43,7 +43,13 @@ struct FailurePaymentAction: Action {}
 
 
 
-/// Загрузить локальную информацию о покупках
+/// Загрузить из локальной базы информацию о покупках
 struct LoadPurchasedAction: Action {
     let purchaseInfos: [PurchaseInfo]
+}
+
+
+/// Проверить актуальность покупок
+struct CheckExpiredPurchasesAction: Action {
+    
 }

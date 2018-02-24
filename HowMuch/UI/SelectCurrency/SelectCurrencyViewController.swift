@@ -29,13 +29,21 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
 //        let filteredItems: [CurrencyItem]
 //        let selectedFilterIdx: Int
 //        let onSearchTextChanged: ((String) -> Void)?
+        let isSourceCurrency: Bool
+        let isPurchased: Bool
         
         static let zero = Props(items: [],
-                                selected: nil
+                                selected: nil,
+                                isSourceCurrency: true,
+                                isPurchased: true
 //                                ,filteredItems: [],
 //                                selectedFilterIdx: -1,
 //                                onSearchTextChanged: nil
         )
+        
+        var blocked: Bool {
+            return !(isSourceCurrency || isPurchased)
+        }
     }
     
     
@@ -70,7 +78,7 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     }
     
     
-    var searchController: UISearchController!
+    let searchController = UISearchController(searchResultsController: nil)
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -80,6 +88,7 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        navigationItem.searchController = props.blocked ? nil : searchController
         forceSelectCell()
     }
     
@@ -87,16 +96,16 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CurrencyViewCell.self, forCellReuseIdentifier: CurrencyViewCell.identifier)
+        tableView.register(ButtonViewCell.self, forCellReuseIdentifier: ButtonViewCell.identifier)
         tableView.rowHeight = 50
         configureNavigation()
         navigationItem.largeTitleDisplayMode = .always
         
-        searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.returnKeyType = .done
         searchController.searchBar.delegate = self
-        navigationItem.searchController = searchController
+        navigationItem.searchController = props.blocked ? nil : searchController
         definesPresentationContext = true
         navigationItem.hidesSearchBarWhenScrolling = false
         
@@ -106,14 +115,10 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     }
     
     
-    override func viewDidDisappear(_ animated: Bool) {
-        store.unsubscribe(self)
-    }
-    
-    
     func configureNavigation() {
         title = "SelectCurrency".localized
     }
+    
     
     
     @objc func swipeLeftAction(gesture: UIGestureRecognizer) {
@@ -128,20 +133,40 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isFiltering() ? filteredItems.count : props.items.count
+        if isFiltering() {
+            return filteredItems.count
+        } else {
+            if props.blocked {
+                return props.items.count + 1
+            }
+            return props.items.count
+        }
     }
     
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == props.items.count {
+            openPurchases()
+            return
+        }
         let visibleCurrencies = isFiltering() ? filteredItems : props.items
         visibleCurrencies[indexPath.row].onSelect()
     }
     
     
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyViewCell.identifier) as! CurrencyViewCell
         
+        if indexPath.row == props.items.count {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ButtonViewCell.identifier) as! ButtonViewCell
+            cell.selectionStyle = .none
+            cell.setup(title: "UnlockAllCurrencies".localized)
+            cell.setup(background: Colors.accent1, textColor: UIColor.white)
+            return cell
+        }
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyViewCell.identifier) as! CurrencyViewCell
         let item: CurrencyItem
         if isFiltering() {
             item = filteredItems[indexPath.row]

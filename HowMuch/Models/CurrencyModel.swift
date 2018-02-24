@@ -173,9 +173,9 @@ struct Currency: Hashable, RawRepresentable, CustomStringConvertible {
     static let YER = Currency(shortName: "YER", name: "Yemeni Rial", sign: "YR", flag: "🇾🇪" ) // Йемен
     static let XPF = Currency(shortName: "XPF", name: "CFP Franc", sign: "₣", flag: "🇳🇨" ) // Новая Каледония
     static let LKR = Currency(shortName: "LKR", name: "Sri Lanka Rupee", sign: "Re", flag: "🇱🇰" ) // Шри Ланка
-    static let RUB = Currency(shortName: "RUB", name: "Российский рубль", sign: "₽", flag: "🇷🇺" )
-    static let EUR = Currency(shortName: "EUR", name: "Евро", sign: "€", flag: "🇪🇺"  )
-    static let USD = Currency(shortName: "USD", name: "Доллар США", sign: "$", flag: "🇺🇲" )
+    static let RUB = Currency(shortName: "RUB", name: "Russian Rubble", sign: "₽", flag: "🇷🇺" )
+    static let EUR = Currency(shortName: "EUR", name: "Euro", sign: "€", flag: "🇪🇺"  )
+    static let USD = Currency(shortName: "USD", name: "United States dollar", sign: "$", flag: "🇺🇲" )
 
     
     static let allCurrencies = [AED, AFN, ALL, AMD, AOA, ARS, AUD, AWG, AZN, BBD, BDT, BGN, BHD, BIF, BND, BOB, BRL, BSD, BTN, BWP, BYN, BZD, CAD, CDF, CHF, CLF, CNY, COP, CRC, CUC, CUP, CVE, CZK, DJF, DKK, DOP, DZD, EGP, ERN, ETB, EUR, FJD, FKP, GBP, GEL, GHS, GIP, GMD, GNF, GTQ, GYD, HKD, HNL, HRK, HTG, HUF, IDR, ILS, INR, IQD, IRR, ISK, JEP, JMD, JOD, JPY, KES, KGS, KHR, KMF, KPW, KRW, KWD, KYD, KZT, LAK, LBP, LKR, LRD, LSL, LTL, LVL, LYD, MAD, MDL, MGA, MKD, MMK, MNT, MOP, MRO, MUR, MVR, MWK, MXN, MYR, MZN, NAD, NGN, NOK, NPR, NZD, OMR, PAB, PEN, PGK, PHP, PKR, PLN, PYG, QAR, RON, RSD, RUB, RWF, SAR, SBD, SCR, SDG, SGD, SHP, SLL, SOS, SRD, SVC, SYP, SZL, THB, TJS, TMT, TND, TOP, TRY, TTD, TWD, TZS, UAH, UGX, USD,

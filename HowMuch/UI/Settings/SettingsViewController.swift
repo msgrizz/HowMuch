@@ -85,40 +85,7 @@ class SettingViewController: UITableViewController {
         case .purchases:
             switch indexPath.row {
             case 0:
-                let vc = PurchasesViewController(style: .grouped)
-                navigationController?.pushViewController(vc, animated: true)
-                vc.connect(select: { $0.purchaseState },
-                           isChanged: { $0 != $1 },
-                           onChanged: { vc, state in
-                            
-                            let viewModelCreator: ((SKProduct, ProductInfo) -> ProductViewModel) = { product, info in
-                                var paidUpState: ProductState = .notBought
-                                if product == state.productInProcess {
-                                    paidUpState = .inProcess
-                                } else if let purchaseInfo = state.purchasedProducts.first(where: { $0.identifier ==  product.productIdentifier }) {
-                                    paidUpState = .bought(date: purchaseInfo.date)
-                                }
-                                return ProductViewModel(name: product.localizedDescription, price: "\(product.price) \(product.priceLocale.currencySymbol ?? "")", type: info.type, state: paidUpState, onBuy: {
-                                    store.dispatch(BuyProductAction(product: product))
-                                })
-                            }
-                            
-                            vc.props = PurchasesViewController.Props(
-                                products: state.products.flatMap { product in
-                                    guard let info = Products.getInfoBy(identifier: product.productIdentifier) else { return nil }
-                                    let viewModel = viewModelCreator(product, info)
-                                    return viewModel
-                                },
-                                isLoading: state.isLoading,
-                                onRestore: {
-                                    store.dispatch(RestorePurchasesAction())
-                                },
-                                onLoaded: {
-                                    store.dispatch(LoadProductsAction())
-                                }
-                            )
-                })
-                
+                openPurchases()                
             default:
                 break
             }

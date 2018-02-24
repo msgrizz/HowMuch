@@ -46,4 +46,10 @@ class ButtonViewCell: UITableViewCell {
     func setup(title: String) {
         titleLabel.text = title
     }
+    
+    
+    func setup(background: UIColor = .white, textColor: UIColor = .black) {
+        titleLabel.textColor = textColor
+        self.backgroundColor = background
+    }
 }

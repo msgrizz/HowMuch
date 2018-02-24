@@ -55,6 +55,13 @@ class PurchaseHelper: NSObject {
     
     
     
+    // Local storage
+    
+    func removePurchase(identifier: ProductIdentifier) {
+        return UserDefaults.standard.removeObject(forKey: identifier)
+    }
+    
+    
     func loadPurchase(identifier: ProductIdentifier) -> Date? {
         return UserDefaults.standard.object(forKey: identifier) as? Date
     }

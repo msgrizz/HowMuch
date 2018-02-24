@@ -47,17 +47,19 @@ struct PurchaseInfo: Equatable {
 
 
 struct PurchaseState: StateType, Equatable {
+    var isPurchased: Bool
     var isLoading: Bool
     var products: [SKProduct]
     var productInProcess: SKProduct?
     var purchasedProducts = [PurchaseInfo]()
     
-    static let `default` = PurchaseState(isLoading: false, products: [], productInProcess: nil, purchasedProducts: [])
+    static let `default` = PurchaseState(isPurchased: false, isLoading: false, products: [], productInProcess: nil, purchasedProducts: [])
     
     static func ==(lhs: PurchaseState, rhs: PurchaseState) -> Bool {
         return lhs.purchasedProducts == rhs.purchasedProducts
             && lhs.products == rhs.products
             && lhs.isLoading == rhs.isLoading
             && lhs.productInProcess == rhs.productInProcess
+            && lhs.isPurchased == rhs.isPurchased
     }
 }

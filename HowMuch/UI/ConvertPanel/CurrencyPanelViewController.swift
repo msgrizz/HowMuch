@@ -99,19 +99,26 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
         let selectVC = SelectCurrencyViewController()
         selectVC.connect(select: { $0 },
                          isChanged: { old, new in
-                            return (old.currencyRates != new.currencyRates) || (old.settings != new.settings)
+                            return (old.currencyRates != new.currencyRates)
+                                || (old.settings != new.settings)
+                                || (!isSource && old.purchaseState != new.purchaseState)
         },
                          onChanged: { vc, state in
                             let rates = state.currencyRates.rates
                             let settings = state.settings
                             let selected = isSource ? settings.sourceCurrency : settings.resultCurrency
-                            vc.props = SelectCurrencyViewController.Props(items: Currency.allCurrencies.map { currency in
+                            let isPurchased = state.purchaseState.isPurchased
+                            
+                            let allCurrencies = !(isPurchased || isSource) ? [Currency.USD] : Currency.allCurrencies
+                            vc.props = SelectCurrencyViewController.Props(items: allCurrencies.map { currency in
                                 CurrencyItem(currency: currency, rate: rates[currency] ?? 0.0,
                                              onSelect: {
                                                 let action: Action = isSource ? SetSourceCurrencyAction(currency: currency) : SetResultCurrencyAction(currency: currency)
                                                 store.dispatch(action)
                                 })
-                            }, selected: selected)
+                            }, selected: selected,
+                               isSourceCurrency: isSource,
+                               isPurchased: isPurchased)
         })
         navigationController?.pushViewController(selectVC, animated: true)
     }

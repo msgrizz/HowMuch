@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 import Vision
 import ReSwift
+import GoogleMobileAds
+
 
 final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, SimpleStoreSubscriber {
     
@@ -22,14 +24,16 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         let onRecognized: ((Float) -> Void)?
         let onWillAppear: (() -> Void)?
         let onWillDisappear: (() -> Void)?
+        let showBanner: Bool
         
         static let zero = Props(status: .stopped, tryParseFloat: false,
-                                onTap: nil, onRecognized: nil, onWillAppear: nil, onWillDisappear: nil)
+                                onTap: nil, onRecognized: nil, onWillAppear: nil, onWillDisappear: nil, showBanner: true)
     }
     
     var props = Props.zero {
         didSet {
             engine.tryParseFloat = props.tryParseFloat
+            bannerView.isHidden = !props.showBanner
             guard oldValue.status != props.status else { return }
             
             crossView.isHidden = true
@@ -73,11 +77,17 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         cameraDeniedView.isHidden = true
         crossView.isHidden = false
         
+        bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
+        bannerView.adUnitID = AdMob.testBannerId
+        bannerView.rootViewController = self
+        bannerView.load(GADRequest())
+        view.addSubview(bannerView)
+        
         setupConstraints()
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
         dummyView.addGestureRecognizer(tapRecognizer)
-        engine.delegate = self        
+        engine.delegate = self
     }
 
     
@@ -115,6 +125,7 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
     private var cameraView = UIView()
     private let cameraDeniedView = CameraAccessDeniedView()
     private let disabledView = DisabledCameraView()
+    private var bannerView: GADBannerView!
     
     private var session = AVCaptureSession()
     private let engine = RecognizerEngine()
@@ -157,6 +168,13 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         disabledView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         cameraDeniedView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         crossView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            bannerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
+            bannerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
+            bannerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
+        ])
     }
     
     
