@@ -78,7 +78,11 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         crossView.isHidden = false
         
         bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
-        bannerView.adUnitID = AdMob.testBannerId
+        #if DEBUG
+            bannerView.adUnitID = AdMob.testBannerId
+        #else
+            bannerView.adUnitID = AdMob.bannerId
+        #endif
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
         view.addSubview(bannerView)
