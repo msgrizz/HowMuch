@@ -47,11 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.makeKeyAndVisible()
         
         store.dispatch(TryUpdateCurrencyRateAction())
-        
-        let purchaseInfos = Products.allIdentifiers.flatMap { id in
-            return PurchaseHelper.shared.loadPurchase(identifier: id).map{ date in PurchaseInfo(identifier: id, date: date) }
-        }
-        store.dispatch(LoadPurchasedAction(purchaseInfos: purchaseInfos))
+        store.dispatch(LoadLocalPurchasesAction(state: store.state))
         
         // Initialize the Google Mobile Ads SDK.
         GADMobileAds.configure(withApplicationID: AdMob.adMobId)
@@ -63,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         store.dispatch(TryUpdateCurrencyRateAction())
-        store.dispatch(CheckExpiredPurchasesAction())
+        store.dispatch(ActualizePurchasesAction(state: store.state))        
         
         StoreReviewHelper.incrementAppOpenedCounter()
         StoreReviewHelper.checkAndAskForReview()

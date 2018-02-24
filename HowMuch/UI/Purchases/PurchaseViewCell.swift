@@ -95,7 +95,7 @@ class PurchaseViewCell: UITableViewCell {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 12),
-            nameLabel.trailingAnchor.constraint(equalTo: buyButton.trailingAnchor, constant: -8),
+            nameLabel.trailingAnchor.constraint(equalTo: buyButton.leadingAnchor),
             nameLabel.topAnchor.constraint(equalTo: guide.topAnchor, constant: 6),
         ])
         
@@ -120,10 +120,9 @@ class PurchaseViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             buyButton.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -12),
             buyButton.centerYAnchor.constraint(equalTo: guide.centerYAnchor),
-//            buyButton.widthAnchor.constraint(equalToConstant: 35),
-//            buyButton.heightAnchor.constraint(equalToConstant: 35)
         ])
-        
+        buyButton.setContentCompressionResistancePriority(UILayoutPriority(751), for: .horizontal)
+
         boughtImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             boughtImage.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -12),

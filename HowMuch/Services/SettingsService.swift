@@ -20,7 +20,10 @@ class SettingsService {
         settingQueue.async {
             let source = Currency(rawValue: defaults.string(forKey: Keys.fromCurrencyKey) ?? "")
             let result = Currency(rawValue: defaults.string(forKey: Keys.toCurrencyKey) ?? "")
-            let tryParseFloat = defaults.bool(forKey: Keys.tryParseFloatKey)
+            var tryParseFloat = true
+            if let value = defaults.object(forKey: Keys.tryParseFloatKey) as? Bool {
+                tryParseFloat = value
+            }            
             let settings = SettingsState(sourceCurrency: source ?? .RUB,
                                 resultCurrency: result ?? .USD,
                                 tryParseFloat: tryParseFloat)
