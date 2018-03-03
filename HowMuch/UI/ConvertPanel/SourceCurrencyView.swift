@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MMNumberKeyboard
 
 
 protocol SourceCurrencyViewDelegate: class {
@@ -17,7 +18,7 @@ protocol SourceCurrencyViewDelegate: class {
 }
 
 
-class SourceCurrencyView: UIView, UITextFieldDelegate {
+class SourceCurrencyView: UIView, UITextFieldDelegate, MMNumberKeyboardDelegate {
     private let titleLabel = UILabel()
     private var tapRecognizer: UITapGestureRecognizer!
     private let valueTextField = UITextField()
@@ -43,11 +44,12 @@ class SourceCurrencyView: UIView, UITextFieldDelegate {
         valueTextField.adjustsFontSizeToFitWidth = true
         valueTextField.minimumFontSize = 0.5
         valueTextField.delegate = self
-        valueTextField.keyboardType = .decimalPad
-        valueTextField.inputAccessoryView = ToolbarReturn(tintColor: tintColor) { [weak self] in
-            guard let strong = self else { return }
-            strong.valueTextField.resignFirstResponder()
-        }
+        
+        let keyboard = MMNumberKeyboard()
+        keyboard.allowsDecimalPoint = true
+        keyboard.returnKeyTitle = "DoneButtonTitle".localized
+        valueTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        valueTextField.inputView = keyboard
         reset()
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SourceCurrencyView.selectCurrency))
@@ -115,11 +117,7 @@ class SourceCurrencyView: UIView, UITextFieldDelegate {
     }
     
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if let text = textField.text as NSString? {
-            let textAfterUpdate = text.replacingCharacters(in: range, with: string)
-            delegate?.onChanged(value: textAfterUpdate)
-        }
-        return true
+    @objc func textFieldDidChange(textField: UITextField) {
+        delegate?.onChanged(value: textField.text ?? "")
     }
 }

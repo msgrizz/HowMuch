@@ -592,11 +592,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-HowMuch/Pods-HowMuch-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/MMNumberKeyboard/MMNumberKeyboard.framework",
 				"${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/TesseractOCRiOS/TesseractOCR.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMNumberKeyboard.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TesseractOCR.framework",
 			);
