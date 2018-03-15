@@ -32,16 +32,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
         
+        // На случай ввода промокода
+        let _ = PurchaseHelper.shared        
+        
         window.tintColor = Colors.accent1
         let appearance = UINavigationBar.appearance()
-//        appearance.isTranslucent = false
-//        appearance.barTintColor = Colors.accent2
         appearance.tintColor = Colors.accent1
-//        let textAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
-//        appearance.titleTextAttributes = textAttributes
         
-        let pictureListVc = RecognizerViewController()
-        let initialViewController = UINavigationController(rootViewController: pictureListVc)
+        let rootVc = RecognizerViewController()
+        let initialViewController = UINavigationController(rootViewController: rootVc)
         initialViewController.navigationBar.prefersLargeTitles = true
         window.rootViewController = initialViewController
         window.makeKeyAndVisible()
@@ -63,7 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         StoreReviewHelper.incrementAppOpenedCounter()
         StoreReviewHelper.checkAndAskForReview()
-        
     }
 }
 

@@ -39,6 +39,7 @@ extension UIViewController {
                         },
                         isLoading: state.isLoading,
                         onRestore: {
+                            store.dispatch(LoadLocalPurchasesAction(state: store.state))
                             store.dispatch(RestorePurchasesAction())
                     },
                         onLoaded: {

@@ -23,6 +23,7 @@ func ActualizePurchasesAction(state: AppState) -> SetPurchasesAction {
 
 
 func LoadLocalPurchasesAction(state: AppState) -> SetPurchasesAction {
+    NSUbiquitousKeyValueStore.default.synchronize()
     let purchaseInfos = Products.allIdentifiers.flatMap { id in
         return PurchaseHelper.shared.loadPurchase(identifier: id).map{ date in PurchaseInfo(identifier: id, date: date) }
     }

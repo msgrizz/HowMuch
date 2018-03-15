@@ -17,8 +17,6 @@ enum ProductType: Equatable {
         switch (lhs, rhs) {
         case (.forever, .forever):
             return true
-//        case (.subscription(let term1), .subscription(let term2)):
-//            return term1 == term2
         case (.subscription, .subscription):
             return true
         default:
@@ -32,7 +30,7 @@ struct ProductInfo {
     let type: ProductType
 }
 
-public struct Products {
+public struct Products {    
     static let all = [
         ProductInfo(identifier: "com.maxkazakov.Howmuch.AllCurrenciesNoAds", type: .forever),
         ProductInfo(identifier: "com.maxkazakov.Howmuch.AllCurrenciesNoAds1Week", type: .subscription(term: 7)),

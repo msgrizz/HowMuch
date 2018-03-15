@@ -48,7 +48,7 @@ class PurchaseViewCell: UITableViewCell {
             if case .bought(let date) = viewModel.state {
                 let dayDiff = Calendar.current.dateComponents([.day], from: date, to: Date()).day ?? 0
                 let expiredThrough = term - dayDiff
-                expiresLabel.text = "Days left: \(expiredThrough)"
+                expiresLabel.text = "\("DaysLeft".localized) \(expiredThrough)"
             }
         default:
             expiresLabel.text = ""
@@ -59,9 +59,8 @@ class PurchaseViewCell: UITableViewCell {
         activityIndicator.stopAnimating()
         
         switch viewModel.state {
-        case .bought(let _):
+        case .bought:
             boughtImage.isHidden = false
-            // expired text
         case .inProcess:
             activityIndicator.startAnimating()
         case .notBought:

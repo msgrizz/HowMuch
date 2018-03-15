@@ -164,9 +164,7 @@ class RecognizerEngine {
             #endif
             // Парсим
             if let sourceValue = self.floatFrom(ceilPart, floorPart) {
-                DispatchQueue.main.async {
-                    self.delegate?.onComplete(sourceValue: sourceValue)
-                }
+                self.delegate?.onComplete(sourceValue: sourceValue)
             }
         }
     }
