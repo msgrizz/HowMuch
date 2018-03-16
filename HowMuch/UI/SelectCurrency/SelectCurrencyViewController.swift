@@ -42,7 +42,9 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
         )
         
         var blocked: Bool {
-            return !(isSourceCurrency || isPurchased)
+            return false
+            // выключил блокировку валют
+//            return !(isSourceCurrency || isPurchased)
         }
     }
     
