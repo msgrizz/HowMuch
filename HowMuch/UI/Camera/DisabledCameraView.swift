@@ -20,7 +20,7 @@ class DisabledCameraView: UIView {
         messageLabel.text = DisabledCameraView.messageText
         messageLabel.textAlignment = .center
         messageLabel.numberOfLines = 0        
-        backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        backgroundColor = UIColor.white.withAlphaComponent(0.8)
         setupConstraints()
     }
     
