@@ -26,26 +26,11 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     struct Props {
         let items: [CurrencyItem]
         let selected: Currency?
-//        let filteredItems: [CurrencyItem]
-//        let selectedFilterIdx: Int
-//        let onSearchTextChanged: ((String) -> Void)?
         let isSourceCurrency: Bool
-        let isPurchased: Bool
-        
         static let zero = Props(items: [],
                                 selected: nil,
-                                isSourceCurrency: true,
-                                isPurchased: true
-//                                ,filteredItems: [],
-//                                selectedFilterIdx: -1,
-//                                onSearchTextChanged: nil
+                                isSourceCurrency: true
         )
-        
-        var blocked: Bool {
-            return false
-            // выключил блокировку валют
-//            return !(isSourceCurrency || isPurchased)
-        }
     }
     
     
@@ -90,7 +75,6 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        navigationItem.searchController = props.blocked ? nil : searchController
         forceSelectCell()
     }
     
@@ -107,7 +91,7 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.returnKeyType = .done
         searchController.searchBar.delegate = self
-        navigationItem.searchController = props.blocked ? nil : searchController
+        navigationItem.searchController = searchController
         definesPresentationContext = true
         navigationItem.hidesSearchBarWhenScrolling = false
         
@@ -138,9 +122,6 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
         if isFiltering() {
             return filteredItems.count
         } else {
-            if props.blocked {
-                return props.items.count + 1
-            }
             return props.items.count
         }
     }

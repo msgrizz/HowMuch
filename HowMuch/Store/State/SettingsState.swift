@@ -13,7 +13,7 @@ struct SettingsState: StateType, Equatable {
     let resultCurrency: Currency
     let tryParseFloat: Bool
     
-    static let `default` =  SettingsState(sourceCurrency: .RUB, resultCurrency: .USD, tryParseFloat: true)
+    static let `default` =  SettingsState(sourceCurrency: .USD, resultCurrency: .EUR, tryParseFloat: true)
     
     static func ==(lhs: SettingsState, rhs: SettingsState) -> Bool {
         return lhs.sourceCurrency == rhs.sourceCurrency

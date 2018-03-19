@@ -11,7 +11,6 @@ import Vision
 import TesseractOCR
 import AVFoundation
 
-
 struct RegionRects {
     /// Прямоугольник всего слова
     let wordRect: CGRect
@@ -66,9 +65,9 @@ class RecognizerEngine {
     
     // MARK: -Private
     private var recognizeInProcess = false
-    static private let gabrageString = "$£p.-,"
+    static private let gabrageString = "ABCDEFGHJKLMNOPQRTUVWXY$£p.-,₽£€₣₡₦Sh₾c฿¥₲"
     static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
-    private var tesseractCeil: G8Tesseract! // = G8Tesseract(language: "eng")
+    private var tesseractCeil: G8Tesseract!
     private var tesseractFloor: G8Tesseract!
     private let ceilSerialQueue = DispatchQueue(label: "ceilSerialQueue", qos: .userInitiated)
     private let floorSerialQueue = DispatchQueue(label: "floorSerialQueue", qos: .userInitiated)
@@ -184,26 +183,21 @@ class RecognizerEngine {
     
     
     private func recognizePrice(tesseract: G8Tesseract, image: UIImage, callback: @escaping (String) -> Void) {
-        // тут нужно добавлять символы, которые обычно могут стоять рядом с ценой
-        // например валюта. Частый случай, что валюту он начинает распознавать как цифры, если
-        // символ этой валюты не добавлять в whitelist
-        //        let tesseract = G8Tesseract(language: "eng")!
         tesseract.charWhitelist = "0123456789-" + RecognizerEngine.gabrageString
         tesseract.engineMode = .tesseractOnly
         tesseract.pageSegmentationMode = .singleWord
         tesseract.image = image.g8_grayScale()
         tesseract.recognize()
         let result = tesseract.recognizedText ?? ""
-        
         DispatchQueue.main.async {
             callback(result)
         }
     }
-    
+
     
     
     private func handleStringCost(src: String) -> String {
-        var trimed = src.trimmingCharacters(in: RecognizerEngine.gabrageSet) //.trimmingCharacters(in: .whitespacesAndNewlines)
+        var trimed = src.trimmingCharacters(in: RecognizerEngine.gabrageSet)
         trimed = trimed.replacingOccurrences(of: " ", with: "")
         return trimed
     }

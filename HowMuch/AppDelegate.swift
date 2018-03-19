@@ -47,11 +47,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         store.dispatch(TryUpdateCurrencyRateAction())
         store.dispatch(LoadLocalPurchasesAction(state: store.state))
-        
-        // Initialize the Google Mobile Ads SDK.
+                
         GADMobileAds.configure(withApplicationID: AdMob.adMobId)
+
+        if StoreReviewHelper.isFirstStart() {
+            if let currencyCode = (Locale.current as NSLocale).object(forKey: .currencyCode) as? String,
+                let currency = Currency(rawValue: currencyCode) {
+                    store.dispatch(SetResultCurrencyAction(currency: currency))
+            }
+        }
+        StoreReviewHelper.incrementAppOpenedCounter()
         
         self.window = window
+
         return true
     }
     

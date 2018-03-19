@@ -85,8 +85,8 @@ class RecognizerViewController: UIViewController {
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
-            contentView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0),
-            contentView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 0),
+            contentView.widthAnchor.constraint(equalTo: guide.widthAnchor, constant: 0),
+            contentView.heightAnchor.constraint(equalTo: guide.heightAnchor, constant: 0),
             ])
     }
     

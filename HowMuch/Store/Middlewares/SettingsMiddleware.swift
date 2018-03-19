@@ -15,9 +15,8 @@ let LoadSettingsMiddleware: Middleware<AppState> = { dispatch, getState in
             guard let initAction = action as? ReSwiftInit else {
                 return next(action)
             }
-            SettingsService.shared.loadSettings() { settings in
-                dispatch(LoadedSettingsAction(settings: settings))
-            }
+            let loadedSettings = SettingsService.shared.loadSettings()
+            dispatch(LoadedSettingsAction(settings: loadedSettings))
             return next(action)
         }
     }

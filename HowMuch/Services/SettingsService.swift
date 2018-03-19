@@ -15,7 +15,7 @@ class SettingsService {
     
     static let shared = SettingsService()
     
-    func loadSettings(onComplete: @escaping (SettingsState) -> Void) {
+    func loadSettings() -> SettingsState {
         let defaults = UserDefaults.standard
         let source = Currency(rawValue: defaults.string(forKey: Keys.fromCurrencyKey) ?? "")
         let result = Currency(rawValue: defaults.string(forKey: Keys.toCurrencyKey) ?? "")
@@ -23,13 +23,10 @@ class SettingsService {
         if let value = defaults.object(forKey: Keys.tryParseFloatKey) as? Bool {
             tryParseFloat = value
         }
-        let settings = SettingsState(sourceCurrency: source ?? .RUB,
-                                     resultCurrency: result ?? .USD,
+        let settings = SettingsState(sourceCurrency: source ?? .USD,
+                                     resultCurrency: result ?? .EUR,
                                      tryParseFloat: tryParseFloat)
-        DispatchQueue.main.async {
-            onComplete(settings)
-        }
-        
+        return settings
     }
     
     

@@ -87,10 +87,10 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
         
         convertPanelView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            convertPanelView.widthAnchor.constraint(equalTo: guide.widthAnchor, constant: 0),
-            convertPanelView.heightAnchor.constraint(equalTo: guide.heightAnchor, constant: 0),
-            convertPanelView.centerXAnchor.constraint(equalTo: guide.centerXAnchor, constant: 0),
-            convertPanelView.centerYAnchor.constraint(equalTo: guide.centerYAnchor, constant: 0),
+            convertPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
+            convertPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
+            convertPanelView.topAnchor.constraint(equalTo: guide.topAnchor),
+            convertPanelView.bottomAnchor.constraint(equalTo: guide.bottomAnchor)
             ])
     }
     
@@ -106,10 +106,9 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
                          onChanged: { vc, state in
                             let rates = state.currencyRates.rates
                             let settings = state.settings
-                            let selected = isSource ? settings.sourceCurrency : settings.resultCurrency
-                            let isPurchased = state.purchaseState.isPurchased
+                            let selected = isSource ? settings.sourceCurrency : settings.resultCurrency                            
                             
-                            let allCurrencies = !(isPurchased || isSource) ? [Currency.USD] : Currency.allCurrencies
+                            let allCurrencies = Currency.allCurrencies
                             vc.props = SelectCurrencyViewController.Props(items: allCurrencies.map { currency in
                                 CurrencyItem(currency: currency, rate: rates[currency] ?? 0.0,
                                              onSelect: {
@@ -117,8 +116,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
                                                 store.dispatch(action)
                                 })
                             }, selected: selected,
-                               isSourceCurrency: isSource,
-                               isPurchased: isPurchased)
+                               isSourceCurrency: isSource)
         })
         navigationController?.pushViewController(selectVC, animated: true)
     }

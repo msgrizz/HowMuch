@@ -12,11 +12,6 @@ import ReSwift
 
 func ActualizePurchasesAction(state: AppState) -> SetPurchasesAction {
     let actualInfos = removedExpired(purchases: state.purchaseState.purchasedProducts)
-    if actualInfos.count == 0 {
-        DispatchQueue.main.async {
-            store.dispatch(SetResultCurrencyAction(currency: .USD))
-        }
-    }
     return SetPurchasesAction(purchaseInfos: actualInfos)
 }
 
