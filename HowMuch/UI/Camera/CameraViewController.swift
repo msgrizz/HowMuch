@@ -13,6 +13,30 @@ import ReSwift
 import GoogleMobileAds
 
 
+func measure(info: String = "No info", _ block: () -> ()) {
+    let start = DispatchTime.now() // <<<<<<<<<< Start time
+    block()
+    let end = DispatchTime.now()   // <<<<<<<<<<   end time
+    
+    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
+    let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
+    
+    print("---\(info). Time: \(timeInterval) seconds")
+}
+
+func measure<T>(info: String = "No info", _ block: () -> (T)) -> T {
+    let start = DispatchTime.now() // <<<<<<<<<< Start time
+    let result = block()
+    let end = DispatchTime.now()   // <<<<<<<<<<   end time
+    
+    let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
+    let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
+    
+    print("---\(info). Time: \(timeInterval) seconds")
+    return result
+}
+
+
 final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, SimpleStoreSubscriber {
     
     var onStateChanged: ((CameraViewController, AppState) -> Void)!
@@ -33,7 +57,6 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
     var props = Props.zero {
         didSet {
             engine.tryParseFloat = props.tryParseFloat
-            bannerView.isHidden = !props.showBanner
             guard oldValue.status != props.status else { return }
             
             crossView.isHidden = true
@@ -67,6 +90,7 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
     
     
     override func viewDidLoad() {
+        measure {
         super.viewDidLoad()
         view.addSubview(cameraView)
         view.addSubview(dummyView)
@@ -79,23 +103,14 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         
         crossView.contentMode = .redraw
         
-        bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
-        #if DEBUG
-            bannerView.adUnitID = AdMob.testBannerId
-        #else
-            bannerView.adUnitID = AdMob.bannerId
-        #endif
-        bannerView.rootViewController = self
-        bannerView.load(GADRequest())
-        view.addSubview(bannerView)
-        
         setupConstraints()
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
         dummyView.addGestureRecognizer(tapRecognizer)
         engine.delegate = self
+        }
     }
-
+    
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -131,37 +146,21 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
     private var cameraView = UIView()
     private let cameraDeniedView = CameraAccessDeniedView()
     private let disabledView = DisabledCameraView()
-    private var bannerView: GADBannerView!
     
     private var session = AVCaptureSession()
     private let engine = RecognizerEngine()
+    private let sessionQueue = DispatchQueue(label: "session")
     
     private func setupConstraints() {
         let guide = view.safeAreaLayoutGuide
         
         cameraView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cameraView.widthAnchor.constraint(equalTo: guide.widthAnchor, constant: 0),
-            cameraView.heightAnchor.constraint(equalTo: guide.heightAnchor, constant: 0),
-            cameraView.centerXAnchor.constraint(equalTo: guide.centerXAnchor, constant: 0),
-            cameraView.centerYAnchor.constraint(equalTo: guide.centerYAnchor, constant: 0),
+            cameraView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            cameraView.leftAnchor.constraint(equalTo: guide.leftAnchor, constant: 0),
+            cameraView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: 0),
+            cameraView.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: 0),
             ])
-        
-        //        debugCeilImageView.translatesAutoresizingMaskIntoConstraints = false
-        //        NSLayoutConstraint.activate([
-        //            debugCeilImageView.widthAnchor.constraint(equalToConstant: 50),
-        //            debugCeilImageView.heightAnchor.constraint(equalToConstant: 50),
-        //            debugCeilImageView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
-        //            debugCeilImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
-        //            ])
-        //
-        //        debugFloorImageView.translatesAutoresizingMaskIntoConstraints = false
-        //        NSLayoutConstraint.activate([
-        //            debugFloorImageView.widthAnchor.constraint(equalToConstant: 50),
-        //            debugFloorImageView.heightAnchor.constraint(equalToConstant: 50),
-        //            debugFloorImageView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
-        //            debugFloorImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
-        //            ])
         
         dummyView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -174,13 +173,6 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         disabledView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         cameraDeniedView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         crossView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            bannerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
-            bannerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
-            bannerView.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
-        ])
     }
     
     
@@ -211,8 +203,12 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         cameraView.layer.addSublayer(cameraLayer)
         view.setNeedsLayout()
         
-        session.startRunning()
+        sessionQueue.async {
+            self.session.startRunning()
+        }
     }
+    
+    
     
     
     
@@ -244,11 +240,11 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
             return
         }
         var requestOptions: [VNImageOption : Any] = [:]
-
+        
         if let camData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
             requestOptions = [.cameraIntrinsics : camData]
         }
-
+        
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: requestOptions)
         engine.perform(imageRequestHandler, sampleBuffer)
     }

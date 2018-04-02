@@ -69,8 +69,8 @@ class RecognizerEngine {
     static private let gabrageSet = CharacterSet(charactersIn: gabrageString)
     private var tesseractCeil: G8Tesseract!
     private var tesseractFloor: G8Tesseract!
-    private let ceilSerialQueue = DispatchQueue(label: "ceilSerialQueue", qos: .userInitiated)
-    private let floorSerialQueue = DispatchQueue(label: "floorSerialQueue", qos: .userInitiated)
+    private let ceilSerialQueue = DispatchQueue(label: "ceilSerialQueue", qos: .utility)
+    private let floorSerialQueue = DispatchQueue(label: "floorSerialQueue", qos: .utility)
     
     
     private var sampleBuffer: CMSampleBuffer!

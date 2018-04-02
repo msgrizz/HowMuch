@@ -20,7 +20,16 @@ class RecognizerViewController: UIViewController {
         
         title = "How much"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settingsIcon"), style: .plain, target: self, action: #selector(openSettings))
-        navigationController?.navigationBar.isTranslucent = false
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.view.backgroundColor = UIColor.clear
+        self.navigationController?.isNavigationBarHidden = true
+        
+        UITabBar.appearance().barTintColor = UIColor.clear
+        UITabBar.appearance().backgroundImage = UIImage()
+        
         view.backgroundColor = UIColor.white
         
         view.addSubview(scrollView)
@@ -28,6 +37,10 @@ class RecognizerViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         setupConstraints()
         createChildrenVC()
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return false
     }
     
     
@@ -70,10 +83,10 @@ class RecognizerViewController: UIViewController {
     
     private func setupConstraints() {
         let guide = view.safeAreaLayoutGuide
-        
+        scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             scrollView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
             scrollView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
             scrollView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: 0),
@@ -85,26 +98,53 @@ class RecognizerViewController: UIViewController {
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0),
-            contentView.widthAnchor.constraint(equalTo: guide.widthAnchor, constant: 0),
-            contentView.heightAnchor.constraint(equalTo: guide.heightAnchor, constant: 0),
+            contentView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0),
+            contentView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 0),
             ])
     }
     
     
     private func createChildrenVC() {
+        
+        let guide = contentView.safeAreaLayoutGuide
+        
+        let convertPanelViewController = ConvertPanelViewController()
+        addChildViewController(convertPanelViewController)
+        let convertPanelView = convertPanelViewController.view!
+        contentView.addSubview(convertPanelView)
+        convertPanelViewController.connect(to: store)
+
+        convertPanelView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            convertPanelView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -8),
+            convertPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 8),
+            convertPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -8),
+            convertPanelView.heightAnchor.constraint(equalToConstant: 80)
+            ])
+        convertPanelViewController.didMove(toParentViewController: self)
+        
+        
         let cameraViewController = CameraViewController()
         addChildViewController(cameraViewController)
         let cameraView = cameraViewController.view!
         contentView.addSubview(cameraView)
-        
+        cameraView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cameraView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
+            cameraView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
+            cameraView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
+            cameraView.bottomAnchor.constraint(equalTo: convertPanelView.topAnchor, constant: 0),
+            ])
+        cameraViewController.didMove(toParentViewController: self)
+
         cameraViewController.connect(select: { state in state },
                                      isChanged: { _, _ in true },
                                      onChanged: { vc, state in
-                                        let status = state.recognizing.recongnizingStatus
                                         let isManualEditing = state.recognizing.isManuallyEditing
-                                        
+                                        let status = isManualEditing ? .stopped : state.recognizing.recongnizingStatus
+
                                         vc.props = CameraViewController.Props(
-                                            status: isManualEditing ? .stopped : state.recognizing.recongnizingStatus,
+                                            status: status,
                                             tryParseFloat: state.settings.tryParseFloat,
                                             onTap: {
                                                 switch status {
@@ -137,35 +177,6 @@ class RecognizerViewController: UIViewController {
                                         },
                                             showBanner: !state.purchaseState.isPurchased)
         })
-
-        
-        
-        let convertPanelViewController = ConvertPanelViewController()
-        addChildViewController(convertPanelViewController)
-        let convertPanelView = convertPanelViewController.view!
-        contentView.addSubview(convertPanelView)
-        convertPanelViewController.connect(to: store)
-        
-        // set constraints
-        let guide = contentView.safeAreaLayoutGuide
-        cameraView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cameraView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0),
-            cameraView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
-            cameraView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
-            cameraView.bottomAnchor.constraint(equalTo: convertPanelView.topAnchor, constant: 0),
-            ])
-        
-        convertPanelView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            convertPanelView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -8),
-            convertPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 8),
-            convertPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -8),
-            convertPanelView.heightAnchor.constraint(equalToConstant: 80)
-            ])
-        
-        cameraViewController.didMove(toParentViewController: self)
-        convertPanelViewController.didMove(toParentViewController: self)
     }
     
     

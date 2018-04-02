@@ -14,10 +14,12 @@ import GoogleMobileAds
 var store = Store<AppState>(
     reducer: AppReducer,
     state: nil,
-    middleware: [LoggingMiddleware, LoadCurrencyRatesMiddleware,
-                 UpdateCurrencyRatesMiddleware, LoadSettingsMiddleware,
-                 SaveSettingsMiddleware, ProductsLoadingMiddleware,
-                 PurchaseMiddleware])
+    middleware: [
+        LoggingMiddleware, LoadCurrencyRatesMiddleware,
+        UpdateCurrencyRatesMiddleware, LoadSettingsMiddleware,
+        SaveSettingsMiddleware, ProductsLoadingMiddleware,
+        PurchaseMiddleware
+    ])
 
 
 
@@ -25,20 +27,22 @@ var store = Store<AppState>(
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
-
-
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
         
         // На случай ввода промокода
-        let _ = PurchaseHelper.shared        
+        let _ = PurchaseHelper.shared
         
         window.tintColor = Colors.accent1
         let appearance = UINavigationBar.appearance()
         appearance.tintColor = Colors.accent1
         
+        
+        //        let rootVc = UIViewController()
         let rootVc = RecognizerViewController()
         let initialViewController = UINavigationController(rootViewController: rootVc)
         initialViewController.navigationBar.prefersLargeTitles = true
@@ -47,19 +51,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         store.dispatch(TryUpdateCurrencyRateAction())
         store.dispatch(LoadLocalPurchasesAction(state: store.state))
-                
-        GADMobileAds.configure(withApplicationID: AdMob.adMobId)
-
+        
         if StoreReviewHelper.isFirstStart() {
             if let currencyCode = (Locale.current as NSLocale).object(forKey: .currencyCode) as? String,
                 let currency = Currency(rawValue: currencyCode) {
-                    store.dispatch(SetResultCurrencyAction(currency: currency))
+                store.dispatch(SetResultCurrencyAction(currency: currency))
             }
         }
         StoreReviewHelper.incrementAppOpenedCounter()
         
         self.window = window
-
         return true
     }
     

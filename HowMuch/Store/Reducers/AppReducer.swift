@@ -9,6 +9,7 @@
 import ReSwift
 
 func AppReducer(action: Action, state: AppState?) -> AppState {
+//    return AppState(settings: initState(), currencyRates: initState(), recognizing: .default, purchaseState: .default)
     return AppState(
         settings: SettingsReducer(action: action, state: state?.settings),
         currencyRates: CurrencyRatesReducer(action: action, state: state?.currencyRates),

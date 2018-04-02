@@ -34,7 +34,7 @@ class StoreReviewHelper {
             defaults.set(1, forKey: OpenedCounterKey)
             return
         }
-        if appOpenCount == 5 || appOpenCount == 30 || appOpenCount % 100 == 0 {
+        if appOpenCount == 3 || appOpenCount == 10 || appOpenCount % 50 == 0 {
             SKStoreReviewController.requestReview()
         }
     }

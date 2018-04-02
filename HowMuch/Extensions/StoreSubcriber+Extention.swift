@@ -13,12 +13,6 @@ protocol SimpleStoreSubscriber: StoreSubscriber {
     var onStateChanged: ((Self, SubState) -> Void)! { get set }
 }
 
-//extension SimpleStoreSubscriber {
-//    deinit {
-//        store.
-//    }
-//}
-
 
 extension SimpleStoreSubscriber {
     func connect(select: @escaping (AppState) -> StoreSubscriberStateType,

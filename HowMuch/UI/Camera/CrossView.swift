@@ -22,15 +22,40 @@ class CrossView: UIView {
     
     override func draw(_ rect: CGRect) {
         let center = rect.center
-        let startX = center.x - 10
-        let startY = center.y - 10
-        let path = UIBezierPath()
-        path.move(to: CGPoint(x: startX, y: startY + 10))
-        path.addLine(to: CGPoint(x: startX + 20, y: startY + 10))
-        path.move(to: CGPoint(x: startX + 10, y: startY))
-        path.addLine(to: CGPoint(x: startX + 10, y: startY + 20))
         
+        let centerX = center.x
+        let centerY = center.y
+        let path = UIBezierPath()
+        
+        let baselength = CGFloat(20)
+        let halfBaseLength = baselength / 2
+        let height = CGFloat(50)
+        let width = CGFloat(90)
+        
+        let startX = centerX - halfBaseLength
+        let startY = centerY - halfBaseLength
+        
+        path.move(to: CGPoint(x: startX, y: startY + halfBaseLength))
+        path.addLine(to: CGPoint(x: startX + baselength, y: startY + halfBaseLength))
+        path.move(to: CGPoint(x: startX + halfBaseLength, y: startY))
+        path.addLine(to: CGPoint(x: startX + halfBaseLength, y: startY + baselength))
+        
+        path.move(to: CGPoint(x: centerX - width, y: centerY - height + baselength))
+        path.addLine(to: CGPoint(x: centerX - width, y: centerY - height))
+        path.addLine(to: CGPoint(x: centerX - width + baselength, y: centerY - height))
+        
+        path.move(to: CGPoint(x: centerX + width, y: centerY + height - baselength))
+        path.addLine(to: CGPoint(x: centerX + width, y: centerY + height))
+        path.addLine(to: CGPoint(x: centerX + width - baselength, y: centerY + height))
+        
+        path.move(to: CGPoint(x: centerX + width, y: centerY - height + baselength))
+        path.addLine(to: CGPoint(x: centerX + width, y: centerY - height))
+        path.addLine(to: CGPoint(x: centerX + width - baselength, y: centerY - height))
         UIColor.red.setStroke()
+        
+        path.move(to: CGPoint(x: centerX - width, y: centerY + height - baselength))
+        path.addLine(to: CGPoint(x: centerX - width, y: centerY + height))
+        path.addLine(to: CGPoint(x: centerX - width + baselength, y: centerY + height))
         path.stroke()
     }
 }
