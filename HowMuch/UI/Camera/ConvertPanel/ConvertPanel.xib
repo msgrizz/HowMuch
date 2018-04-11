@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConvertPanelView" customModule="HowMuch" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="Jd8-zE-Qvw" id="KSm-p2-89u"/>
+                <outlet property="resultCurrencyName" destination="aQI-Xy-BOk" id="iZq-gA-RIA"/>
+                <outlet property="resultFlag" destination="THc-A9-7Dj" id="KlW-Ch-2q1"/>
+                <outlet property="resultPrice" destination="j7c-da-2bJ" id="L9e-En-hPR"/>
+                <outlet property="sourceCurrencyName" destination="35s-2d-nIE" id="buH-9n-QQI"/>
+                <outlet property="sourceFlag" destination="L5n-ws-lWD" id="bQl-q9-W9c"/>
+                <outlet property="sourcePrice" destination="FZe-R9-quS" id="EEf-7U-H0A"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Jd8-zE-Qvw">
+            <rect key="frame" x="0.0" y="0.0" width="218" height="104"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Clt-qj-Jx5">
+                    <rect key="frame" x="8" y="3" width="38" height="43"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🇲🇾" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5n-ws-lWD">
+                            <rect key="frame" x="0.0" y="0.0" width="38" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" horizontalCompressionResistancePriority="751" text="RON" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="35s-2d-nIE">
+                            <rect key="frame" x="0.0" y="21.5" width="38" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="gX9-T9-h3B" appends="YES" id="B6U-Ii-GSP"/>
+                    </connections>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1wx-6B-5gs">
+                    <rect key="frame" x="8" y="58" width="38.5" height="43"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🇷🇴" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THc-A9-7Dj">
+                            <rect key="frame" x="0.0" y="0.0" width="38.5" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="MYR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQI-Xy-BOk">
+                            <rect key="frame" x="0.0" y="21.5" width="38.5" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="w6W-iv-KwQ" appends="YES" id="4k6-Xu-P8a"/>
+                    </connections>
+                </stackView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="19.90" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j7c-da-2bJ">
+                    <rect key="frame" x="54.5" y="57" width="155.5" height="43"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QGp-s3-czz">
+                    <rect key="frame" x="0.0" y="51" width="218" height="2"/>
+                    <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="AgV-qk-wXh"/>
+                    </constraints>
+                </view>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="170.99" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FZe-R9-quS">
+                    <rect key="frame" x="54" y="4" width="156" height="43"/>
+                    <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="QGp-s3-czz" firstAttribute="leading" secondItem="u8d-gF-qbg" secondAttribute="leading" id="4pX-RE-QkD"/>
+                <constraint firstItem="1wx-6B-5gs" firstAttribute="leading" secondItem="u8d-gF-qbg" secondAttribute="leading" constant="8" id="4s7-ie-KiC"/>
+                <constraint firstItem="u8d-gF-qbg" firstAttribute="trailing" secondItem="FZe-R9-quS" secondAttribute="trailing" constant="8" id="6FF-jA-3wE"/>
+                <constraint firstItem="j7c-da-2bJ" firstAttribute="leading" secondItem="1wx-6B-5gs" secondAttribute="trailing" constant="8" id="7GN-dk-00a"/>
+                <constraint firstItem="u8d-gF-qbg" firstAttribute="bottom" secondItem="j7c-da-2bJ" secondAttribute="bottom" constant="4" id="9Cu-Fg-5Lr"/>
+                <constraint firstAttribute="bottom" secondItem="1wx-6B-5gs" secondAttribute="bottom" constant="3" id="9wM-Mk-f0U"/>
+                <constraint firstItem="Clt-qj-Jx5" firstAttribute="top" secondItem="u8d-gF-qbg" secondAttribute="top" constant="3" id="HAp-CR-SWX"/>
+                <constraint firstItem="QGp-s3-czz" firstAttribute="centerY" secondItem="Jd8-zE-Qvw" secondAttribute="centerY" id="JsR-yr-bb3"/>
+                <constraint firstItem="FZe-R9-quS" firstAttribute="top" secondItem="u8d-gF-qbg" secondAttribute="top" constant="4" id="LnM-PA-nkc"/>
+                <constraint firstItem="FZe-R9-quS" firstAttribute="leading" secondItem="Clt-qj-Jx5" secondAttribute="trailing" constant="8" id="QXq-Sy-Ig5"/>
+                <constraint firstItem="QGp-s3-czz" firstAttribute="trailing" secondItem="u8d-gF-qbg" secondAttribute="trailing" id="S7G-8l-pa3"/>
+                <constraint firstItem="Clt-qj-Jx5" firstAttribute="leading" secondItem="u8d-gF-qbg" secondAttribute="leading" constant="8" id="ajZ-eK-04F"/>
+                <constraint firstItem="j7c-da-2bJ" firstAttribute="height" secondItem="1wx-6B-5gs" secondAttribute="height" id="bi5-6r-CZT"/>
+                <constraint firstItem="FZe-R9-quS" firstAttribute="height" secondItem="Clt-qj-Jx5" secondAttribute="height" id="cvG-d5-iKs"/>
+                <constraint firstItem="u8d-gF-qbg" firstAttribute="trailing" secondItem="j7c-da-2bJ" secondAttribute="trailing" constant="8" id="yVy-An-DQq"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="u8d-gF-qbg"/>
+            <point key="canvasLocation" x="-160" y="-27"/>
+        </view>
+        <tapGestureRecognizer id="gX9-T9-h3B">
+            <connections>
+                <action selector="onTapSourceCurrency:" destination="-1" id="CFa-ol-ghR"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="w6W-iv-KwQ">
+            <connections>
+                <action selector="onTapResultCurrency:" destination="-1" id="1A9-mJ-MOi"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+</document>

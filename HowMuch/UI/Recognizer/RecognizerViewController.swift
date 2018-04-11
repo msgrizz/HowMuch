@@ -108,22 +108,6 @@ class RecognizerViewController: UIViewController {
         
         let guide = contentView.safeAreaLayoutGuide
         
-        let convertPanelViewController = ConvertPanelViewController()
-        addChildViewController(convertPanelViewController)
-        let convertPanelView = convertPanelViewController.view!
-        contentView.addSubview(convertPanelView)
-        convertPanelViewController.connect(to: store)
-
-        convertPanelView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            convertPanelView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -8),
-            convertPanelView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 8),
-            convertPanelView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -8),
-            convertPanelView.heightAnchor.constraint(equalToConstant: 80)
-            ])
-        convertPanelViewController.didMove(toParentViewController: self)
-        
-        
         let cameraViewController = CameraViewController()
         addChildViewController(cameraViewController)
         let cameraView = cameraViewController.view!
@@ -133,7 +117,7 @@ class RecognizerViewController: UIViewController {
             cameraView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             cameraView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
             cameraView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
-            cameraView.bottomAnchor.constraint(equalTo: convertPanelView.topAnchor, constant: 0),
+            cameraView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: 0),
             ])
         cameraViewController.didMove(toParentViewController: self)
 
@@ -177,6 +161,22 @@ class RecognizerViewController: UIViewController {
                                         },
                                             showBanner: !state.purchaseState.isPurchased)
         })
+        
+        
+        let convertPanelViewController = ConvertPanelViewController()
+        addChildViewController(convertPanelViewController)
+        let convertPanelView = convertPanelViewController.view!
+        contentView.addSubview(convertPanelView)
+        convertPanelViewController.connect(to: store)
+        
+        convertPanelView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            convertPanelView.widthAnchor.constraint(equalToConstant: ConvertPanelView.width),
+            convertPanelView.heightAnchor.constraint(equalToConstant: ConvertPanelView.height),
+            convertPanelView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor),
+            convertPanelView.topAnchor.constraint(equalTo: cameraView.centerYAnchor, constant: CrossView.height / 2 + 10)
+            ])
+        convertPanelViewController.didMove(toParentViewController: self)
     }
     
     

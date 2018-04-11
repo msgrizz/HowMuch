@@ -9,7 +9,7 @@
 import UIKit
 import ReSwift
 
-class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, SourceCurrencyViewDelegate, ResultCurrencyViewDelegate {
+class ConvertPanelViewController: UIViewController, SourceCurrencyViewDelegate, ResultCurrencyViewDelegate {
     
     struct Props {
         let manualEditingMode: Bool
@@ -18,13 +18,12 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
         let sourceValue: Float
         let resultValue: Float
         
-        let onSwap: (() -> Void)?
         let onChange: ((Float) -> Void)?
         let onBeginEditing: (() -> Void)?
         let onStopEditing: (() -> Void)?
         
         static let zero = Props(manualEditingMode: false, sourceCurrency: Currency.USD, resultCurrency: Currency.USD,
-                                sourceValue: 0.0, resultValue: 0.0, onSwap: nil, onChange: nil, onBeginEditing: nil, onStopEditing: nil)
+                                sourceValue: 0.0, resultValue: 0.0, onChange: nil, onBeginEditing: nil, onStopEditing: nil)
     }
     
     
@@ -39,31 +38,24 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(convertPanelView)
-        convertPanelView.delegate = self
         convertPanelView.sourceViewDelegate = self
         convertPanelView.resultViewDelegate = self
         setupConstraints()
     }
     
     // MARK: -ResultCurrencyViewDelegate
-    func onTapCurrency(sender: UIView) {
-        switch sender {
-        case is ResultCurrencyView:
-            openSelectCurrencyVC(isSource: false)
-        case is SourceCurrencyView:
-            openSelectCurrencyVC()
-        default:
-            return
-        }
+    func onTapResultCurrencyView() {
+        openSelectCurrencyVC(isSource: false)
     }
-    
-    // MARK: -ConvertPanelViewDelegate
-    func onSwap() {
-        props.onSwap?()
-    }
+
     
     
     // MARK: -SourceCurrencyViewDelegate
+    func onTapSourceCurrencyView() {
+        openSelectCurrencyVC()
+    }
+    
+    
     func onChanged(value: String) {
         props.onChange?(value.float)
     }
@@ -78,6 +70,7 @@ class ConvertPanelViewController: UIViewController, ConvertPanelViewDelegate, So
         props.onStopEditing?()
     }
 
+    
     
     // MARK: -Private
     private let convertPanelView = ConvertPanelView()
@@ -135,12 +128,12 @@ extension ConvertPanelViewController: StoreSubscriber {
                       resultCurrency: settings.resultCurrency,
                       sourceValue: state.recognizing.sourceValue,
                       resultValue: state.recognizing.resultValue,
-                      onSwap: {
-                        let src = self.props.resultCurrency
-                        let res = self.props.sourceCurrency
-                        store.dispatch(SetSourceCurrencyAction(currency: src))
-                        store.dispatch(SetResultCurrencyAction(currency: res))
-        },
+//                      onSwap: {
+//                        let src = self.props.resultCurrency
+//                        let res = self.props.sourceCurrency
+//                        store.dispatch(SetSourceCurrencyAction(currency: src))
+//                        store.dispatch(SetResultCurrencyAction(currency: res))
+//        },
                       onChange: { value in
                         store.dispatch(CreateSetValuesAction(state: state, source: value))
         },

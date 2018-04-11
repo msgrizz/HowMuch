@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		417A74DE4FD59F8731730D44 /* Pods_HowMuch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B478BE9529A10BB90CE361 /* Pods_HowMuch.framework */; };
 		5E1A7C10B732481A2D9659CC /* Pods_HowMuchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937431F07A095D3F0BDD5923 /* Pods_HowMuchTests.framework */; };
-		9B5A1CC52018DBB80056D6DB /* SourceCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CC42018DBB80056D6DB /* SourceCurrencyView.swift */; };
-		9B5A1CC72018DBC40056D6DB /* ResultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CC62018DBC40056D6DB /* ResultCurrencyView.swift */; };
 		9B5A1CC92018DC7C0056D6DB /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CC82018DC7C0056D6DB /* UIColor+Extension.swift */; };
 		9B5A1CCB2018E0670056D6DB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCA2018E0670056D6DB /* String+Extension.swift */; };
 		9B5A1CCD2018EDEA0056D6DB /* DisabledCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */; };
@@ -54,6 +52,7 @@
 		9B7FB26D201DF3AB0031EFDC /* CurrencyRatesActoins.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */; };
 		9B7FB2712020E2C60031EFDC /* LoggingMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */; };
 		9B7FB2742020E74B0031EFDC /* CreateSetValuesAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7FB2732020E74B0031EFDC /* CreateSetValuesAction.swift */; };
+		9B9A6D84207D2BF90080671F /* ConvertPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B9A6D83207D2BF90080671F /* ConvertPanel.xib */; };
 		9B9D60D620270525002BD5F7 /* Action+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D60D520270525002BD5F7 /* Action+Extention.swift */; };
 		9B9E2244200FC2220026122B /* ObserverList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9E2243200FC2220026122B /* ObserverList.swift */; };
 		9B9FE61720016406001AC1E8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B9FE61620016406001AC1E8 /* libstdc++.tbd */; };
@@ -98,8 +97,6 @@
 		88A2DF89A76323E178E8991E /* Pods-Text Detection Starter Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text Detection Starter Project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Text Detection Starter Project/Pods-Text Detection Starter Project.release.xcconfig"; sourceTree = "<group>"; };
 		8B0D6AFB1EFA582B00544F3D /* HowMuch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HowMuch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		937431F07A095D3F0BDD5923 /* Pods_HowMuchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HowMuchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9B5A1CC42018DBB80056D6DB /* SourceCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCurrencyView.swift; sourceTree = "<group>"; };
-		9B5A1CC62018DBC40056D6DB /* ResultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCurrencyView.swift; sourceTree = "<group>"; };
 		9B5A1CC82018DC7C0056D6DB /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		9B5A1CCA2018E0670056D6DB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisabledCameraView.swift; sourceTree = "<group>"; };
@@ -145,6 +142,7 @@
 		9B7FB26C201DF3AB0031EFDC /* CurrencyRatesActoins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRatesActoins.swift; sourceTree = "<group>"; };
 		9B7FB2702020E2C60031EFDC /* LoggingMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingMiddleware.swift; sourceTree = "<group>"; };
 		9B7FB2732020E74B0031EFDC /* CreateSetValuesAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSetValuesAction.swift; sourceTree = "<group>"; };
+		9B9A6D83207D2BF90080671F /* ConvertPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConvertPanel.xib; sourceTree = "<group>"; };
 		9B9D60D520270525002BD5F7 /* Action+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Action+Extention.swift"; sourceTree = "<group>"; };
 		9B9E2243200FC2220026122B /* ObserverList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverList.swift; sourceTree = "<group>"; };
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
@@ -257,17 +255,6 @@
 			path = Recognizer;
 			sourceTree = "<group>";
 		};
-		9B5A1CD3201CD8CD0056D6DB /* ConvertPanel */ = {
-			isa = PBXGroup;
-			children = (
-				9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */,
-				9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */,
-				9B5A1CC42018DBB80056D6DB /* SourceCurrencyView.swift */,
-				9B5A1CC62018DBC40056D6DB /* ResultCurrencyView.swift */,
-			);
-			path = ConvertPanel;
-			sourceTree = "<group>";
-		};
 		9B64E469202B489C00D28C4E /* SelectCurrency */ = {
 			isa = PBXGroup;
 			children = (
@@ -312,7 +299,6 @@
 				9B5A1CD2201CD8AA0056D6DB /* Recognizer */,
 				9B6FEAFC200A179700CEF94F /* Camera */,
 				9B64E469202B489C00D28C4E /* SelectCurrency */,
-				9B5A1CD3201CD8CD0056D6DB /* ConvertPanel */,
 				9B6FEAE32009414800CEF94F /* Settings */,
 				9BA3A2A020402A070017A448 /* LoadingIndicatorView.swift */,
 			);
@@ -366,6 +352,7 @@
 		9B6FEAFC200A179700CEF94F /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				9B9A6D85207D335C0080671F /* ConvertPanel */,
 				9BB20889201CDEF600803237 /* CameraViewController.swift */,
 				9B5A1CCC2018EDEA0056D6DB /* DisabledCameraView.swift */,
 				9B5A1CCE2018F3F40056D6DB /* CrossView.swift */,
@@ -381,6 +368,16 @@
 				9B750BD8204164910030114C /* PurchaseActionCreators.swift */,
 			);
 			path = ActionCreators;
+			sourceTree = "<group>";
+		};
+		9B9A6D85207D335C0080671F /* ConvertPanel */ = {
+			isa = PBXGroup;
+			children = (
+				9BB2088D201CDF3B00803237 /* CurrencyPanelViewController.swift */,
+				9B6FEAFD200A1C5E00CEF94F /* ConvertPanelView.swift */,
+				9B9A6D83207D2BF90080671F /* ConvertPanel.xib */,
+			);
+			path = ConvertPanel;
 			sourceTree = "<group>";
 		};
 		9B9E2242200FC2050026122B /* Utils */ = {
@@ -574,6 +571,7 @@
 			files = (
 				9BA3A27F20373EFB0017A448 /* Localizable.strings in Resources */,
 				9B6FEAAA2002A53100CEF94F /* Info.plist in Resources */,
+				9B9A6D84207D2BF90080671F /* ConvertPanel.xib in Resources */,
 				9B6FEAC42002A79200CEF94F /* LaunchScreen.storyboard in Resources */,
 				9B6FEAA92002A53100CEF94F /* Assets.xcassets in Resources */,
 				9B6FEAA62002A53100CEF94F /* tessdata in Resources */,
@@ -725,12 +723,10 @@
 				9BA3A290203F34070017A448 /* PurchasesViewController.swift in Sources */,
 				9B6FEAE220093FAE00CEF94F /* SettingsViewController.swift in Sources */,
 				9B6A072920415EBD00789C14 /* Router.swift in Sources */,
-				9B5A1CC52018DBB80056D6DB /* SourceCurrencyView.swift in Sources */,
 				9BA3A287203DDEB90017A448 /* PurchaseHelper.swift in Sources */,
 				9B5A1CCB2018E0670056D6DB /* String+Extension.swift in Sources */,
 				9B6FEAE0200932CD00CEF94F /* CGRect+Extention.swift in Sources */,
 				9B750BD9204164910030114C /* PurchaseActionCreators.swift in Sources */,
-				9B5A1CC72018DBC40056D6DB /* ResultCurrencyView.swift in Sources */,
 				9B5A1CCF2018F3F40056D6DB /* CrossView.swift in Sources */,
 				9B7FB2712020E2C60031EFDC /* LoggingMiddleware.swift in Sources */,
 				9BB2088A201CDEF600803237 /* CameraViewController.swift in Sources */,

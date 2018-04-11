@@ -9,6 +9,10 @@
 import UIKit
 
 class CrossView: UIView {
+    
+    static let height = CGFloat(100)
+    static let width = CGFloat(180)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.clear
@@ -29,8 +33,8 @@ class CrossView: UIView {
         
         let baselength = CGFloat(20)
         let halfBaseLength = baselength / 2
-        let height = CGFloat(50)
-        let width = CGFloat(90)
+        let height = CrossView.height / 2
+        let width = CrossView.width / 2
         
         let startX = centerX - halfBaseLength
         let startY = centerY - halfBaseLength
@@ -51,11 +55,16 @@ class CrossView: UIView {
         path.move(to: CGPoint(x: centerX + width, y: centerY - height + baselength))
         path.addLine(to: CGPoint(x: centerX + width, y: centerY - height))
         path.addLine(to: CGPoint(x: centerX + width - baselength, y: centerY - height))
-        UIColor.red.setStroke()
+        CrossView.crossColor.setStroke()
         
         path.move(to: CGPoint(x: centerX - width, y: centerY + height - baselength))
         path.addLine(to: CGPoint(x: centerX - width, y: centerY + height))
         path.addLine(to: CGPoint(x: centerX - width + baselength, y: centerY + height))
+        
+        path.lineWidth = 2
         path.stroke()
     }
+    
+    
+    private static let crossColor: UIColor = #colorLiteral(red: 1, green: 0.1411764706, blue: 0.3568627451, alpha: 1)
 }

@@ -90,7 +90,6 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
     
     
     override func viewDidLoad() {
-        measure {
         super.viewDidLoad()
         view.addSubview(cameraView)
         view.addSubview(dummyView)
@@ -108,8 +107,8 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onTapCamera(recognizer:)))
         dummyView.addGestureRecognizer(tapRecognizer)
         engine.delegate = self
-        }
     }
+    
     
     
     
