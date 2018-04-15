@@ -98,9 +98,21 @@ class ConvertPanelView: UIView {
     
     
     private func commonInit() {
+        if !UIAccessibilityIsReduceTransparencyEnabled() {
+            backgroundColor = .clear
+            let blurEffect = UIBlurEffect(style: .extraLight)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = bounds
+            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            addSubview(blurEffectView)
+        } else {
+            backgroundColor = .white
+        }
+        
         Bundle.main.loadNibNamed("ConvertPanel", owner: self, options: nil)
         addSubview(contentView)
         contentView.frame = bounds
+        contentView.backgroundColor = .clear
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         reset()
         

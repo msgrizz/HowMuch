@@ -49,4 +49,33 @@ extension UIViewController {
         })
     }
     
+    
+    
+    
+    func openSelectCurrencyVC(isSource: Bool = true) {
+        let selectVC = SelectCurrencyViewController()
+        selectVC.connect(select: { $0 },
+                         isChanged: { old, new in
+                            return (old.currencyRates != new.currencyRates)
+                                || (old.settings != new.settings)
+                                || (!isSource && old.purchaseState != new.purchaseState)
+        },
+                         onChanged: { vc, state in
+                            let rates = state.currencyRates.rates
+                            let settings = state.settings
+                            let selected = isSource ? settings.sourceCurrency : settings.resultCurrency
+                            
+                            let allCurrencies = Currency.allCurrencies
+                            vc.props = SelectCurrencyViewController.Props(items: allCurrencies.map { currency in
+                                CurrencyItem(currency: currency, rate: rates[currency] ?? 0.0,
+                                             onSelect: {
+                                                let action: Action = isSource ? SetSourceCurrencyAction(currency: currency) : SetResultCurrencyAction(currency: currency)
+                                                store.dispatch(action)
+                                })
+                                }, selected: selected,
+                                   isSourceCurrency: isSource)
+        })
+        navigationController?.pushViewController(selectVC, animated: true)
+    }
+    
 }

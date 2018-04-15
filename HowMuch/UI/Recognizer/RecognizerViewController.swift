@@ -18,18 +18,7 @@ class RecognizerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "How much"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settingsIcon"), style: .plain, target: self, action: #selector(openSettings))
-        
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.view.backgroundColor = UIColor.clear
-        self.navigationController?.isNavigationBarHidden = true
-        
-        UITabBar.appearance().barTintColor = UIColor.clear
-        UITabBar.appearance().backgroundImage = UIImage()
-        
         view.backgroundColor = UIColor.white
         
         view.addSubview(scrollView)
@@ -49,6 +38,8 @@ class RecognizerViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillShow), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onKeyBoardWillHide), name: .UIKeyboardWillHide, object: nil)
         
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
         
         // TODO Replace
         if checkHaveCameraAccess() {

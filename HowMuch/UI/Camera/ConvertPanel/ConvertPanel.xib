@@ -107,6 +107,11 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="u8d-gF-qbg"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="QGp-s3-czz"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="-160" y="-27"/>
         </view>
         <tapGestureRecognizer id="gX9-T9-h3B">

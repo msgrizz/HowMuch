@@ -70,6 +70,9 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         clearsSelectionOnViewWillAppear = false
+        navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = nil
+        searchController.searchBar.setBackgroundImage(nil, for: UIBarPosition.any, barMetrics: UIBarMetrics.default)
     }
     
     
@@ -85,20 +88,25 @@ final class SelectCurrencyViewController: UITableViewController, UISearchResults
         tableView.register(ButtonViewCell.self, forCellReuseIdentifier: ButtonViewCell.identifier)
         tableView.rowHeight = 50
         configureNavigation()
-        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.largeTitleDisplayMode = .never
         
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.returnKeyType = .done
         searchController.searchBar.delegate = self
+        
         navigationItem.searchController = searchController
         definesPresentationContext = true
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeLeftAction))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
     }
+    
+    
     
     
     func configureNavigation() {

@@ -48,6 +48,9 @@ class SettingViewController: UITableViewController {
         tableView.register(CheckRecognizeFloatViewCell.self, forCellReuseIdentifier: CheckRecognizeFloatViewCell.identifier)
         tableView.register(ButtonViewCell.self, forCellReuseIdentifier: ButtonViewCell.identifier)
         navigationItem.largeTitleDisplayMode = .always
+        
+        navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = nil
     }
     
     
@@ -129,7 +132,7 @@ class SettingViewController: UITableViewController {
         }
     }
     
-    private let sections: [Sections] = [.recognizingSettings, .purchases]
+    private let sections: [Sections] = [.recognizingSettings/*, .purchases*/]
     
 }
 
