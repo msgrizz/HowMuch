@@ -19,6 +19,7 @@ class RecognizerViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settingsIcon"), style: .plain, target: self, action: #selector(openSettings))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "changeIcon"), style: .plain, target: self, action: #selector(swapCurrencies))
         view.backgroundColor = UIColor.white
         
         view.addSubview(scrollView)
@@ -68,6 +69,16 @@ class RecognizerViewController: UIViewController {
         let settingsVc = SettingViewController(style: .grouped)
         settingsVc.connect(to: store)
         navigationController?.pushViewController(settingsVc, animated: true)
+    }
+    
+    
+    
+    @objc private func swapCurrencies() {
+        let settings = store.state.settings
+        
+        store.dispatch(SetSourceCurrencyAction(currency: settings.resultCurrency))
+        store.dispatch(SetResultCurrencyAction(currency: settings.sourceCurrency))
+        store.dispatch(CreateSetValuesAction(state: store.state, source: store.state.recognizing.sourceValue))
     }
     
     

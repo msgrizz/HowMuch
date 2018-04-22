@@ -32,6 +32,7 @@ struct RegionRects {
 protocol RecognizerEngineDelegate: class {
     func onCleanRects()
     func onDrawRect(wordRect: RegionRects)
+    func onDrawCeil(image: UIImage)
     func onComplete(sourceValue: Float)
 }
 
@@ -53,6 +54,8 @@ class RecognizerEngine {
             print(error)
         }
     }
+    
+    
     
     init() {
         ceilSerialQueue.async {
@@ -98,6 +101,7 @@ class RecognizerEngine {
         guard regions.count > 0 else {
             return
         }
+        let image = imageFromSampleBuffer(sampleBuffer: sampleBuffer)
         
         let rects = regions.flatMap {
             return self.getWordRegion(box: $0)
@@ -105,28 +109,34 @@ class RecognizerEngine {
         guard rects.count > 0 else {
             return
         }
-        guard let centerRect = rects.first(where: { $0.wordRect.contains(cameraRect.center) }) else {
+        
+        guard let centerRect = rects.first(where: {
+            $0.wordRect.contains(cameraRect.center)
+        }) else {
             return
         }
         DispatchQueue.main.async {
             self.delegate?.onDrawRect(wordRect: centerRect)
         }
-        recognizePrice(rect: centerRect)
+        recognizePrice(rect: centerRect, image: image)
     }
     
     
-    private func recognizePrice(rect: RegionRects) {
+    private func recognizePrice(rect: RegionRects, image: UIImage) {
         if recognizeInProcess {
             return
         }
-        recognizeInProcess = true
-        
-        let image = imageFromSampleBuffer(sampleBuffer: sampleBuffer)
+
         // распознаем целую часть
         guard let cgimg = image.cgImage, let ceilImage = cgimg.cropping(to: rect.ceilRect).map(UIImage.init)   else {
             return
         }
-//        debugCeilImageView.image = ceilImage
+        recognizeInProcess = true
+        
+        DispatchQueue.main.async {
+            self.delegate?.onDrawCeil(image: ceilImage)
+        }
+        
         let recognizeGroup = DispatchGroup()
         
         var ceilPart = ""
@@ -271,57 +281,56 @@ class RecognizerEngine {
     
     
     func getRect(maxX: CGFloat, maxY: CGFloat, minX: CGFloat, minY: CGFloat) -> CGRect {
-        let viewHeight = cameraRect.size.height
-        let viewWidth = cameraRect.size.width
+        let dx = scaledRect.origin.x
+        let dy = scaledRect.origin.y
         
-        let xCord = minX * viewWidth
-        let yCord = (1 - maxY) * viewHeight
-        let width = (maxX - minX) * viewWidth
-        let height = (maxY - minY) * viewHeight
-        return CGRect(x: xCord, y: yCord, width: width, height: height)
+        let width = scaledRect.width
+        let height = scaledRect.height
+        
+        let xCord = minX * width + dx
+        let yCord = (1 - maxY) * height + dy
+        let rectWidth = (maxX - minX) * width
+        let rectHeight = (maxY - minY) * height
+        let resRect = CGRect(x: xCord, y: yCord, width: rectWidth, height: rectHeight)
+        return resRect
     }
+            
+    private var scaledRect = CGRect.zero
     
     
-    
-    private func imageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> UIImage
-    {
-        // Get a CMSampleBuffer's Core Video image buffer for the media data
-        let  imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    private func imageFromSampleBuffer(sampleBuffer: CMSampleBuffer) -> UIImage {
+        let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
         // Lock the base address of the pixel buffer
-        CVPixelBufferLockBaseAddress(imageBuffer!, CVPixelBufferLockFlags.readOnly);
+        CVPixelBufferLockBaseAddress(imageBuffer, CVPixelBufferLockFlags.readOnly);
         
         // Get the number of bytes per row for the pixel buffer
-        let baseAddress = CVPixelBufferGetBaseAddress(imageBuffer!);
+        let baseAddress = CVPixelBufferGetBaseAddress(imageBuffer);
         
         // Get the number of bytes per row for the pixel buffer
-        let bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer!);
-        
-        // Get the pixel buffer width and height
-        let width = CVPixelBufferGetWidth(imageBuffer!);
-        let height = CVPixelBufferGetHeight(imageBuffer!);
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer);
         
         // Create a device-dependent RGB color space
         let colorSpace = CGColorSpaceCreateDeviceRGB();
         
+        let width = CVPixelBufferGetWidth(imageBuffer)
+        let height = CVPixelBufferGetHeight(imageBuffer)
+        
         // Create a bitmap graphics context with the sample buffer data
         var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
-        bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
+            bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
+        
         //let bitmapInfo: UInt32 = CGBitmapInfo.alphaInfoMask.rawValue
-        let context = CGContext.init(data: baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: bitmapInfo)
+        let context = CGContext(data: baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: bitmapInfo)
         // Create a Quartz image from the pixel data in the bitmap graphics context
         let quartzImage = context?.makeImage();
         // Unlock the pixel buffer
-        CVPixelBufferUnlockBaseAddress(imageBuffer!, CVPixelBufferLockFlags.readOnly);
+        CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags.readOnly);
         
         // Create an image object from the Quartz image
-        //        let image = UIImage.init(cgImage: quartzImage!);
-        let image = UIImage.init(cgImage: quartzImage!, scale: 1.0, orientation: UIImageOrientation.right)
-        
-        let newSize = CGSize(width: cameraRect.width, height: cameraRect.height)
-        UIGraphicsBeginImageContext(newSize)
-        image.draw(in: CGRect(origin: CGPoint(x: 0, y: 0), size: newSize))
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
+        let image = UIImage(cgImage: quartzImage!, scale: UIScreen.main.scale, orientation: UIImageOrientation.right)
+        let newImage: UIImage
+        (scaledRect, newImage) = image.scaled(to: cameraRect.size)
+    
         return newImage
     }
 }

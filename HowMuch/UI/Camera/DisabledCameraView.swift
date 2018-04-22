@@ -15,12 +15,23 @@ class DisabledCameraView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        if !UIAccessibilityIsReduceTransparencyEnabled() {
+            backgroundColor = .clear
+            let blurEffect = UIBlurEffect(style: .extraLight)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = bounds
+            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            addSubview(blurEffectView)
+        } else {
+            backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        }
+        
         addSubview(messageLabel)
         messageLabel.font = UIFont.systemFont(ofSize: 24)
         messageLabel.text = DisabledCameraView.messageText
         messageLabel.textAlignment = .center
-        messageLabel.numberOfLines = 0        
-        backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        messageLabel.numberOfLines = 0
         setupConstraints()
     }
     

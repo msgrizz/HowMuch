@@ -11,6 +11,13 @@ import CoreGraphics
 
 extension CGRect {
     var center: CGPoint {
-        return CGPoint(x: maxX - width / 2, y: maxY - height / 2)
+        return CGPoint(x: minX + width / 2, y: minY + height / 2)
+    }
+}
+
+
+extension CGSize {
+    var center: CGPoint {
+        return CGPoint(x: width / 2, y: height / 2)
     }
 }

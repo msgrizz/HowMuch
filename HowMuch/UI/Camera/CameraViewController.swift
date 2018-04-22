@@ -93,6 +93,8 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         super.viewDidLoad()
         view.addSubview(cameraView)
         view.addSubview(dummyView)
+        view.addSubview(debugCeilImageView)
+        
         dummyView.addSubview(disabledView)
         dummyView.addSubview(cameraDeniedView)
         dummyView.addSubview(crossView)
@@ -161,6 +163,22 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
             cameraView.rightAnchor.constraint(equalTo: guide.rightAnchor, constant: 0),
             ])
         
+        debugCeilImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            debugCeilImageView.widthAnchor.constraint(equalToConstant: 50),
+            debugCeilImageView.heightAnchor.constraint(equalToConstant: 50),
+            debugCeilImageView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 0),
+            debugCeilImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
+            ])
+//
+//        debugFloorImageView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            debugFloorImageView.widthAnchor.constraint(equalToConstant: 50),
+//            debugFloorImageView.heightAnchor.constraint(equalToConstant: 50),
+//            debugFloorImageView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: 0),
+//            debugFloorImageView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
+//            ])
+        
         dummyView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dummyView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor),
@@ -196,6 +214,7 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
         deviceOutput.setSampleBufferDelegate(self, queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.default))
         session.addInput(deviceInput)
         session.addOutput(deviceOutput)
+        
         
         let cameraLayer = AVCaptureVideoPreviewLayer(session: session)
         cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
@@ -252,6 +271,14 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
 
 
 extension CameraViewController: RecognizerEngineDelegate {
+    func onDrawCeil(image: UIImage) {
+        #if DEBUG
+        debugCeilImageView.image = image
+        #endif
+    }
+    
+    
+    
     func onCleanRects() {
         let count = cameraView.layer.sublayers?.count ?? 0
         guard count > 1 else {
@@ -264,7 +291,9 @@ extension CameraViewController: RecognizerEngineDelegate {
     
     func onDrawRect(wordRect: RegionRects) {
         guard props.status.isRunning else { return }
+        #if DEBUG
         drawWord(rect: wordRect)
+        #endif
     }
     
     
