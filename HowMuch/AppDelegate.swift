@@ -9,7 +9,6 @@
 import UIKit
 import ReSwift
 import StoreKit
-import GoogleMobileAds
 
 var store = Store<AppState>(
     reducer: AppReducer,
