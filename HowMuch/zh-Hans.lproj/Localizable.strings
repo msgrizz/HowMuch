@@ -6,20 +6,20 @@
   Copyright © 2018 AppCoda. All rights reserved.
 */
 
-"TapToResume" = "Tap to resume";
-"OpenSettings" = "Open settings";
-"AccessCameraMessage" = "Application needs camera access to recongize price tags";
-"SelectCurrency" = "Select currency";
-"SettingsTitle" = "Settings";
-"RecognizingSettingsTitle" = "Recognizing settings";
-"RecognizeFloatTitle" = "Recognize fractional part";
-"PurchasesTitle" = "Purchases";
-"Purchase.BuyButtonTitle" = "Remove advertisement";
-"BuyButton.Title" = "Buy";
-"Forever" = "Forever";
-"Subscriptions" = "Subscriptions";
-"Purchases" = "Purchases";
-"Restore" = "Restore";
-"UnlockAllCurrencies" = "Unlock all currencies";
-"DoneButtonTitle" = "Done";
-"DaysLeft" = "Days left:";
+"TapToResume" = "轻触重启";
+"OpenSettings" = "打开设置";
+"AccessCameraMessage" = "应用程序需要相机有权限识别价格标签";
+"SelectCurrency" = "选择币种";
+"SettingsTitle" = "设置";
+"RecognizingSettingsTitle" = "识别设置";
+"RecognizeFloatTitle" = "细节识别";
+"PurchasesTitle" = "购买";
+"Purchase.BuyButtonTitle" = "去除广告";
+"BuyButton.Title" = "采购";
+"Forever" = "永久";
+"Subscriptions" = "订阅";
+"Purchases" = "购买";
+"Restore" = "恢复";
+"UnlockAllCurrencies" = "解锁所有币种";
+"DoneButtonTitle" = "完成";
+"DaysLeft" = "剩余天数:";

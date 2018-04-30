@@ -148,6 +148,7 @@
 		9B9FE61620016406001AC1E8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		9B9FE61820016410001AC1E8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		9B9FE61B20016421001AC1E8 /* TesseractOCR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TesseractOCR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BA2E4E52096F8DD003665E6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = HowMuch/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9BA3A2792035FA520017A448 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		9BA3A27C20373E730017A448 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = HowMuch/ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		9BA3A27E20373EFB0017A448 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = HowMuch/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -552,6 +553,7 @@
 				Base,
 				ru,
 				"zh-Hans",
+				es,
 			);
 			mainGroup = 8B0D6AF21EFA582B00544F3D;
 			productRefGroup = 8B0D6AFC1EFA582B00544F3D /* Products */;
@@ -793,6 +795,7 @@
 				9BA3A27E20373EFB0017A448 /* Base */,
 				9BA3A28020373F050017A448 /* ru */,
 				9BA3A282203747210017A448 /* zh-Hans */,
+				9BA2E4E52096F8DD003665E6 /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

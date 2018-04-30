@@ -10,7 +10,6 @@ import UIKit
 import AVFoundation
 import Vision
 import ReSwift
-import GoogleMobileAds
 
 
 func measure(info: String = "No info", _ block: () -> ()) {

@@ -1,0 +1,27 @@
+/* 
+  Localizable.strings
+  HowMuch
+
+  Created by Максим Казаков on 16/02/2018.
+  Copyright © 2018 AppCoda. All rights reserved.
+*/
+
+"TapToResume" = "Presiona para ver el resumen";
+"OpenSettings" = "Abrir configuraciones";
+"AccessCameraMessage" = "La aplicación necesita acceder a la cámara para poder reconocer las etiquetas de precio";
+"SelectCurrency" = "Seleccione la moneda";
+"SettingsTitle" = "Configuraciones";
+"RecognizingSettingsTitle" = "Reconociendo configuraciones";
+"RecognizeFloatTitle" = "Reconoce parte decimal";
+"PurchasesTitle" = "Compras";
+"Purchase.BuyButtonTitle" = "Eliminar publicidad";
+"BuyButton.Title" = "Compras";
+"Forever" = "Siempre";
+"Subscriptions" = "Suscripciones";
+"Purchases" = "Compras";
+"Restore" = "Almacenar";
+"UnlockAllCurrencies" = "Desbloquear todas las monedas";
+"DoneButtonTitle" = "Listo";
+"DaysLeft" = "Días que hacen falta";
+
+
